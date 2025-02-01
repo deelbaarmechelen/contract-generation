@@ -1,4 +1,5 @@
-const setButton = document.getElementById('btn')
+const setPathButton = document.getElementById('btnSetPath')
+const generateButton = document.getElementById('btnGenerate')
 const firstnameInput = document.getElementById('firstname')
 const lastnameInput = document.getElementById('lastname')
 const addressInput = document.getElementById('address')
@@ -13,11 +14,19 @@ const structuredReferenceInput = document.getElementById('structuredReference')
 const messageElement = document.getElementById('message')
 const filePathElement = document.getElementById('filePath')
 
-setButton.addEventListener('click', async () => {
+setPathButton.addEventListener('click', async () => {
+  const filePath = await window.electronAPI.openFile()
+  filePathElement.innerText = filePath
+})
+
+generateButton.addEventListener('click', async () => {
   messageElement.innerText = 'In verwerking...'
   const lastname = lastnameInput.value
   const firstname = firstnameInput.value
   var data = {
+    generationInfo: {
+      path: filePathElement.innerText
+    },
     firstname : firstname,
     lastname: lastname,
     address: addressInput.value,
@@ -39,6 +48,5 @@ setButton.addEventListener('click', async () => {
   };
   const filePath = await window.carbone.generatePdf(data)
   console.log('path: ' + filePath)
-  messageElement.innerText = 'Contract aangemaakt!'
-  filePathElement.innerText = filePath
+  messageElement.innerText = 'Contract aangemaakt! (' + filePath + ')' 
 })

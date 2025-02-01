@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const path = require('path');
 const carbone = require('carbone');
 const fs = require('fs');
@@ -23,6 +23,13 @@ const createWindow = () => {
   //win.webContents.openDevTools()
 }
 
+async function handleFileOpen () {
+  const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory'] })
+  if (!canceled) {
+    return filePaths[0]
+  }
+}
+
 // const renderDoc = (event, data) => {
 //   var options = {
 //     convertTo: 'pdf'
@@ -35,8 +42,10 @@ const createWindow = () => {
 // }
 
 async function handleRenderPdf (event, data) {
+  // const extension = 'pdf'
+  const extension = 'odt'
   var options = {
-    //convertTo: 'pdf'
+    convertTo: extension
   };
   var templatePath = path.join(__dirname, 'resources', 'template.odt')
   // template file path input
@@ -44,17 +53,25 @@ async function handleRenderPdf (event, data) {
     if (err) {
       return console.log(err);
     }
-    //const path = './test.pdf'
-    const path = './test.odt'
-    fs.writeFileSync(path, result);
+    const pathDirectory = data.generationInfo.path.trim().length === 0 ? '.' : data.generationInfo.path
+    var fileName
+    if (data.contractId.trim().length === 0) {
+      fileName = 'contract'
+    } else {
+      fileName = data.contractId
+    }
+    fileName += '.' + extension
+    const filePath = path.join(pathDirectory, fileName)
+    fs.writeFileSync(filePath, result);
     // FIXME: when converting to PDF, a 'busy' error is thrown at exit (probably from libreoffice?)
     // process.exit(); // to kill automatically LibreOffice workers
-    return path
+    return filePath
   });
   return filePath
 }
 
 app.whenReady().then(() => {
+  ipcMain.handle('dialog:openFile', handleFileOpen)
   //ipcMain.on('generateDoc', renderDoc)
   ipcMain.handle('generatePdf', handleRenderPdf)
   createWindow()

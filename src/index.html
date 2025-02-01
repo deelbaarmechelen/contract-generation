@@ -18,6 +18,10 @@
     <p>👋</p>
   </body>
   <p>
+    <button id="btnSetPath" type="button">Selecteer een map</button>
+    Target path: <strong id="filePath"></strong>
+  </p>
+  <p>
     ContractNummer: <input id="contractId"/><br/>
     Klantnummer: <input id="clientId"/><br/>
     Voornaam: <input id="firstname"/>
@@ -30,9 +34,8 @@
     UIT-pas: <input id="UITPas"/><br/>
     Gestructureerde mededeling: <input id="structuredReference"/><br/>
   </p>
-  <button id="btn" type="button">PDF genereren</button>
+  <button id="btnGenerate" type="button">PDF genereren</button>
   <p><strong id="message"></strong></p>
-  <p>File path: <strong id="filePath"></strong></p>
   <script src="./renderer.js"></script>
   </body>
 </html>
