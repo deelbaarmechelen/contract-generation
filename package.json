@@ -1,15 +1,16 @@
 {
-  "name": "my-electron-app",
+  "name": "contract-generator",
   "version": "1.0.0",
-  "description": "electron test",
+  "description": "Contract generator",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
+    "start-debug": "set DEBUG=* && electron-forge start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "author": "bbutaye",
+  "author": "Deelbaar Mechelen vzw",
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^7.6.1",
@@ -24,7 +25,7 @@
   },
   "dependencies": {
     "carbone": "^3.5.6",
-    "electron-squirrel-startup": "^1.0.1",
-    "pdf-to-printer": "^5.6.0"
+    "electron-log": "^5.3.0",
+    "electron-squirrel-startup": "^1.0.1"
   }
 }
