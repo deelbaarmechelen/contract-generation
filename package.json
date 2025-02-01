@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "carbone": "^3.5.6",
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "pdf-to-printer": "^5.6.0"
   }
 }

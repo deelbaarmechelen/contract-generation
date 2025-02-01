@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <title>Digitale contracten</title>
-  </head>
-  <body>
-    <h1>Genereer een contract!</h1>
-    <p>👋</p>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com" />
+  <title>Digitale contracten</title>
+</head>
+
+<body>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.90/pdf.js"></script>
+
+  <h1>Genereer een contract!</h1>
+  <p>👋</p>
   <p>
     <button id="btnSetPath" type="button">Selecteer een map</button>
     Target path: <strong id="filePath"></strong>
   </p>
   <p>
-    ContractNummer: <input id="contractId"/><br/>
-    Klantnummer: <input id="clientId"/><br/>
-    Voornaam: <input id="firstname"/>
-    Naam: <input id="lastname"/><br/>
-    Adres: <input id="address"/><br/>
-    Postcode: <input id="zipCode"/>
-    Stad: <input id="city"/><br/>
-    Telefoon: <input id="phone"/><br/>
-    Email: <input id="email"/><br/>
-    UIT-pas: <input id="UITPas"/><br/>
-    Gestructureerde mededeling: <input id="structuredReference"/><br/>
+    ContractNummer: <input id="contractId" /><br />
+    Klantnummer: <input id="clientId" /><br />
+    Voornaam: <input id="firstname" />
+    Naam: <input id="lastname" /><br />
+    Adres: <input id="address" /><br />
+    Postcode: <input id="zipCode" />
+    Stad: <input id="city" /><br />
+    Telefoon: <input id="phone" /><br />
+    Email: <input id="email" /><br />
+    UIT-pas: <input id="UITPas" /><br />
+    Gestructureerde mededeling: <input id="structuredReference" /><br />
   </p>
-  <button id="btnGenerate" type="button">PDF genereren</button>
+  <button id="btnGenerate" type="button">PDF genereren</button><br />
   <p><strong id="message"></strong></p>
   <script src="./renderer.js"></script>
-  </body>
+
+  <div id="holder"></div>
+
+</body>
 </html>

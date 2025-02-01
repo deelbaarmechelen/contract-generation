@@ -25,7 +25,8 @@ generateButton.addEventListener('click', async () => {
   const firstname = firstnameInput.value
   var data = {
     generationInfo: {
-      path: filePathElement.innerText
+      path: filePathElement.innerText,
+      print: true
     },
     firstname : firstname,
     lastname: lastname,
@@ -46,7 +47,49 @@ generateButton.addEventListener('click', async () => {
       }
     ]
   };
-  const filePath = await window.carbone.generatePdf(data)
-  console.log('path: ' + filePath)
-  messageElement.innerText = 'Contract aangemaakt! (' + filePath + ')' 
+  try {
+    console.log('Generating PDF with data:', data);
+    const fileUrl = await window.carbone.generatePdf(data);
+    if (!fileUrl) {
+      throw new Error('File path is undefined');
+    }
+    console.log('url: ' + fileUrl);
+    messageElement.innerText = 'Contract aangemaakt! (' + fileUrl + ')';
+    window.open(fileUrl, '_blank', 'top=0,left=0,frame=true,toolbar=true,menubar=true,scrollbars=true,resizable=true');
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    messageElement.innerText = 'Er is een fout opgetreden bij het aanmaken van het contract.';
+  }
 })
+
+function renderPDF(url, canvasContainer, options) {
+  var options = options || { scale: 1 };
+      
+  function renderPage(page) {
+      var viewport = page.getViewport(options.scale);
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      var renderContext = {
+        canvasContext: ctx,
+        viewport: viewport
+      };
+      
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      canvasContainer.appendChild(canvas);
+      
+      page.render(renderContext);
+  }
+  
+  function renderPages(pdfDoc) {
+      for(var num = 1; num <= pdfDoc.numPages; num++)
+          pdfDoc.getPage(num).then(renderPage);
+  }
+  PDFJS.disableWorker = true;
+  PDFJS.getDocument(url).then(renderPages);
+}
+
+// generateButton.addEventListener('click', async () => {
+//  renderPDF('//cdn.mozilla.net/pdfjs/helloworld.pdf', document.getElementById('holder'));
+  //renderPDF('file://C:\\Users\\Bernard\\Downloads\\helloworld.pdf', document.getElementById('holder'));
+// })
