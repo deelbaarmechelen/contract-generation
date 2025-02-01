@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <title>Digitale contracten</title>
+  </head>
+  <body>
+    <h1>Genereer een contract!</h1>
+    <p>👋</p>
+  </body>
+  <p>
+    ContractNummer: <input id="contractId"/><br/>
+    Klantnummer: <input id="clientId"/><br/>
+    Voornaam: <input id="firstname"/>
+    Naam: <input id="lastname"/><br/>
+    Adres: <input id="address"/><br/>
+    Postcode: <input id="zipCode"/>
+    Stad: <input id="city"/><br/>
+    Telefoon: <input id="phone"/><br/>
+    Email: <input id="email"/><br/>
+    UIT-pas: <input id="UITPas"/><br/>
+    Gestructureerde mededeling: <input id="structuredReference"/><br/>
+  </p>
+  <button id="btn" type="button">PDF genereren</button>
+  <p><strong id="message"></strong></p>
+  <p>File path: <strong id="filePath"></strong></p>
+  <script src="./renderer.js"></script>
+  </body>
+</html>
