@@ -4,6 +4,8 @@ const carbone = require('carbone');
 const fs = require('fs');
 const util = require('util');
 const url = require('url');
+const converter = require('./node_modules/carbone/lib/converter');
+//const converter = require('carbone/converter');
 
 // run this as early in the main process as possible
 if (require('electron-squirrel-startup')) app.quit();
@@ -22,7 +24,7 @@ const createWindow = () => {
   win.loadFile('src/index.html')
 
   // Open the DevTools.
-  //win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 }
 
 async function handleFileOpen () {
@@ -73,5 +75,14 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   //process.exit(); // to kill automatically LibreOffice workers
 
-  if (process.platform !== 'darwin') app.quit()    
+  if (process.platform !== 'darwin') {
+    try {
+      converter.exit(() => {
+        console.log('Carbone converter exited')
+        app.quit()
+      })
+    } catch (err) {
+      console.error('Error closing Carbone:', err)
+    }
+  }
 })
