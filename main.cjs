@@ -5,6 +5,7 @@ const fs = require('fs');
 const util = require('util');
 const url = require('url');
 const converter = require('./node_modules/carbone/lib/converter');
+//const converter = require('./carbone-converter.cjs');
 const log = require ('electron-log');
 
 // Optional, initialize the logger for any renderer process
@@ -20,34 +21,34 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: true,
-        preload: path.join(__dirname, 'preload.js'),
-    }
-  })
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
 
-  win.loadFile('src/index.html')
+  win.loadFile('src/index.html');
 
   // Open the DevTools.
-  // win.webContents.openDevTools()
-}
+  // win.webContents.openDevTools();
+};
 
-async function handleFileOpen () {
-  const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory'] })
+async function handleFileOpen() {
+  const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory'] });
   if (!canceled) {
-    return filePaths[0]
+    return filePaths[0];
   }
 }
 const renderAsync = util.promisify(carbone.render);
 
-async function handleRenderPdf (event, data) {
+async function handleRenderPdf(event, data) {
   log.info('Rendering PDF with data:', data);
-  const extension = 'pdf'
+  const extension = 'pdf';
   // const extension = 'odt'
   var options = {
-    convertTo: extension
+    convertTo: extension,
   };
-  var templatePath = path.join(__dirname, 'resources', 'template-ontlening.odt')
+  var templatePath = path.join(__dirname, 'resources', 'template-ontlening.odt');
   // template file path input
   try {
     const result = await renderAsync(templatePath, data, options);
@@ -58,7 +59,7 @@ async function handleRenderPdf (event, data) {
     fs.writeFileSync(filePath, result);
     // FIXME: when converting to PDF, a 'busy' error is thrown at exit (probably from libreoffice?)
     // process.exit(); // to kill automatically LibreOffice workers
-    const fileUrl = url.pathToFileURL(filePath)
+    const fileUrl = url.pathToFileURL(filePath);
     log.info('path: ' + url.fileURLToPath(fileUrl));
     return fileUrl.href;
   } catch (err) {
@@ -68,16 +69,16 @@ async function handleRenderPdf (event, data) {
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('dialog:openFile', handleFileOpen)
+  ipcMain.handle('dialog:openFile', handleFileOpen);
   //ipcMain.on('generateDoc', renderDoc)
-  ipcMain.handle('generatePdf', handleRenderPdf)
-  createWindow()
+  ipcMain.handle('generatePdf', handleRenderPdf);
+  createWindow();
 
   app.on('activate', () => {
-    log.info('activate event triggered')
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
+    log.info('activate event triggered');
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
 
 app.on('window-all-closed', () => {
   //process.exit(); // to kill automatically LibreOffice workers
@@ -85,12 +86,12 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     try {
       converter.exit(() => {
-        log.info('Carbone converter exited')
+        log.info('Carbone converter exited');
         log.info('Quitting contract generator');
-        app.quit()
-      })
+        app.quit();
+      });
     } catch (err) {
-      log.error('Error closing Carbone:', err)
+      log.error('Error closing Carbone:', err);
     }
   }
-})
+});

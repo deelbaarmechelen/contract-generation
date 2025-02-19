@@ -2,11 +2,11 @@
   "name": "contract-generator",
   "version": "1.0.0",
   "description": "Contract generator",
-  "main": "main.js",
+  "main": "main.cjs",
   "scripts": {
     "start": "electron-forge start",
     "start-debug": "set DEBUG=* && electron-forge start",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "electron-mocha test/main.test.js",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
@@ -21,9 +21,11 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.6.1",
     "@electron-forge/plugin-fuses": "^7.6.1",
     "@electron/fuses": "^1.8.0",
-    "electron": "^34.0.2",
+    "chai": "^5.2.0",
+    "electron": "^34.2.0",
     "electron-mocha": "^13.1.0",
-    "mocha": "^11.1.0"
+    "mocha": "^11.1.0",
+    "spectron": "^15.0.0"
   },
   "dependencies": {
     "carbone": "^3.5.6",
