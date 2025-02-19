@@ -11,6 +11,7 @@ const clientIdInput = document.getElementById('clientId')
 const contractIdInput = document.getElementById('contractId')
 const UITPasInput = document.getElementById('UITPas')
 const structuredReferenceInput = document.getElementById('structuredReference')
+const uitpasApplicableInput = document.getElementById('uitpasApplicable')
 const messageElement = document.getElementById('message')
 const filePathElement = document.getElementById('filePath')
 
@@ -24,28 +25,54 @@ generateButton.addEventListener('click', async () => {
   const lastname = lastnameInput.value
   const firstname = firstnameInput.value
   var data = {
-    generationInfo: {
-      path: filePathElement.innerText,
-      print: true
+    "generationInfo": {
+      "path": filePathElement.innerText,
+      "print": true
     },
-    firstname : firstname,
-    lastname: lastname,
-    address: addressInput.value,
-    zipCode: zipCodeInput.value,
-    city: cityInput.value,
-    phone: phoneInput.value,
-    email: emailInput.value,
-    clientId: clientIdInput.value,
-    contractId: contractIdInput.value,
-    UITPas: UITPasInput.value,
-    structuredReference: structuredReferenceInput.value,
-    items: [
-      {
-        assetTag : 'PC25000',
-        brand : 'Dell',
-        model : 'Latitude 1234',
+    "contractId": contractIdInput.value,
+    "client": {
+      "id": clientIdInput.value,
+      "name" : lastname + ' ' + firstname,
+      "address": addressInput.value + ', ' + zipCodeInput.value + ' ' + cityInput.value,
+      "phone": phoneInput.value,
+      "email": emailInput.value,
+    },
+    "subscription" : {
+      "paymentPeriod" : "monthly",
+      "structuredReference" : "000/0000/00000",
+      "amount" : "10",
+      "amountPaid" : "10",
+      "circleValue" : "50"
+    },
+    "uitpas" : {
+      "applicable" : uitpasApplicableInput.checked,
+      "number" : UITPasInput.value,
+      "aptitudeTest": true,
+      "courseEnrolment": true,
+      "courseDate" : "1 maart 2025"
+    },
+    "referer": {
+      "organisation" : true,
+      "orgName" : "",
+      "other" : true,
+      "otherName" : "kennis"
+    },
+    "structuredReference": structuredReferenceInput.value,
+    "item" : {
+      "laptop": true,
+      "brand": "Dell",
+      "model": "Latitude 5410",
+      "assetTag" : "PC25000",
+      "accessories" : {
+        "charger" : true,
+        "mouse": true,
+        "eIdReader": true
       }
-    ]
+    },
+    "contractDate" : "19/02/2025",
+    "startDate" : "19/02/2025",
+    "maintenanceDate" : "19/08/2025",
+    "endDate" : "19/02/2026"
   };
   try {
     console.log('Generating PDF with data:', data);

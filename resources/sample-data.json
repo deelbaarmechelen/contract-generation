@@ -1,0 +1,44 @@
+{
+    "contractNbr" : "C-25-NB-000",
+    "client": {
+      "id" : "123",
+      "name" : "ABC",
+      "address" : "Here",
+      "phone" : "015/000000",
+      "email" : "test@digibankmechelen.be"
+    },
+    "subscription" : {
+      "paymentPeriod" : "monthly",
+      "structuredReference" : "000/0000/00000",
+      "amount" : "25",
+      "circleValue" : "50"
+    },
+    "uitpas" : {
+      "applicable" : true,
+      "number" : "12345",
+      "aptitudeTest": true,
+      "courseEnrolment": true,
+      "courseDate" : "1 maart 2025"
+    },
+    "referer": {
+      "organisation" : false,
+      "orgName" : "",
+      "other" : true,
+      "otherName" : "kennis"
+    },
+    "item" : {
+      "laptop": true,
+      "brand": "Dell",
+      "model": "Latitude 5410",
+      "assetTag" : "PC25000",
+      "accessories" : {
+        "charger" : true,
+        "mouse": false,
+        "eIdReader": true
+      }
+    },
+    "contractDate" : "19/02/2025",
+    "startDate" : "19/02/2025",
+    "maintenanceDate" : "19/08/2025",
+    "endDate" : "19/02/2026"
+  }

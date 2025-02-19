@@ -47,7 +47,7 @@ async function handleRenderPdf (event, data) {
   var options = {
     convertTo: extension
   };
-  var templatePath = path.join(__dirname, 'resources', 'template.odt')
+  var templatePath = path.join(__dirname, 'resources', 'template-ontlening.odt')
   // template file path input
   try {
     const result = await renderAsync(templatePath, data, options);
