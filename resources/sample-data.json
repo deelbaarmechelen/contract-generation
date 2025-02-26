@@ -35,6 +35,13 @@
         "charger" : true,
         "mouse": false,
         "eIdReader": true
+      },
+      "specifications" : {
+        "processor" : "Intel Core i5",
+        "ram" : "8GB",
+        "storage" : "256GB SSD",
+        "screen" : "14 inch",
+        "os" : "Windows 10 Pro"
       }
     },
     "contractDate" : "19/02/2025",
