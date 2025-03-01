@@ -1,42 +1,197 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="nl-BE">
 <head>
   <meta charset="UTF-8" />
-  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <title>Uitleningsformulier Digibankatelier Mechelen</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com" />
-  <title>Digitale contracten</title>
+  <meta name="description" content="" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="icon" href="favicon.png">
 </head>
-
 <body>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.90/pdf.js"></script>
-
-  <h1>Genereer een contract!</h1>
-  <p>👋</p>
-  <p>
-    <button id="btnSetPath" type="button">Selecteer een map</button>
-    Target path: <strong id="filePath"></strong>
-  </p>
-  <p>
-    ContractNummer: <input id="contractId" /><br />
-    Klantnummer: <input id="clientId" /><br />
-    Voornaam: <input id="firstname" />
-    Naam: <input id="lastname" /><br />
-    Adres: <input id="address" /><br />
-    Postcode: <input id="zipCode" />
-    Stad: <input id="city" /><br />
-    Telefoon: <input id="phone" /><br />
-    Email: <input id="email" /><br />
-    <br><input type="checkbox" id="uitpasApplicable"/><label for="vehicle1"> Verhoogde tegemoetkoming</label><br />
-    UIT-pas: <input id="UITPas" /><br />
-    Gestructureerde mededeling: <input id="structuredReference" placeholder="+++000/0000/00000+++"/><br />
-  </p>
-  <button id="btnGenerate" type="button">PDF genereren</button><br />
-  <p><strong id="message"></strong></p>
-  <script src="./renderer.js"></script>
-
-  <div id="holder"></div>
-
+  <h1>Uitleningsformulier Digibankatelier Mechelen</h1>
+  <main><form action="#" autocomplete="off">
+    <fieldset id="">
+      <legend>Type contract</legend>
+      <div class="radio-option-list">
+        <div class="radio-option">
+          <label for="non-paying-contract">Niet-betalend contract</label>
+          <input id="non-paying-contract" type="radio" name="contract-type" required value="niet-betalend">
+        </div>
+        <div class="radio-option">
+          <label for="paying-contract">Betalend contract</label>
+          <input id="paying-contract" type="radio" name="contract-type" required value="betalend">
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class="non-paying-only hidden">
+      <legend>UiTpas</legend>
+      <div class="field-box non-paying-only">
+        <label for="uitpas-number">Uitpasnummer</label>
+        <input id="uitpas-number" type="text" name="uitpas-number" required minlength="13" maxlength="13">
+      </div>
+      <div class="checkbox-box non-paying-only">
+        <label for="uitpas-exception">Ik heb uitzonderlijke toestemming van het Sociaal Huis om zonder UiTpas te lenen.</label>
+        <input id="uitpas-exception" type="checkbox" name="uitpas-exception">
+      </div>
+    </fieldset>
+    <fieldset class="hidden">
+      <legend>Persoonsgegevens</legend>
+      <div class="field-box">
+        <label for="first-name">Voornaam</label>
+        <input id="first-name" type="text" name="first-name" required maxlength="40">
+      </div>
+      <div class="field-box">
+        <label for="last-name">Achternaam</label>
+        <input id="last-name" type="text" name="last-name" required maxlength="40">
+      </div>
+    </fieldset>
+    <fieldset class="hidden">
+      <legend>Adres</legend>
+      <div class="fieldsubset">
+        <div class="field-box">
+          <label for="street-name">Straatnaam</label>
+          <input id="street-name" type="text" name="street-name" required maxlength="40">
+        </div>
+        <div class="number-and-box-number">
+          <div class="field-box small">
+            <label for="house-number">Huisnummer</label>
+            <input id="house-number" type="text" name="house-number" required maxlength="10">
+          </div>
+          <div class="field-box small">
+            <label for="box-number">Bus</label>
+            <input id="box-number" type="text" name="box-number" maxlength="10">
+          </div>
+        </div>
+      </div>
+      <div class="fieldsubset">
+      <div class="field-box">
+        <label for="municipality">Gemeente</label>
+        <input id="municipality" type="text" name="municipality" required maxlength="40">
+      </div>
+      <div class="field-box small">
+        <label for="postal-code">Postcode</label>
+        <input id="postal-code" type="text" name="postal-code" required maxlength="40">
+      </div>
+      <div class="field-box">
+        <label for="country">Land</label>
+        <input id="country" type="text" name="country" value="België" required maxlength="40">
+      </div>
+      </div>
+    </fieldset>
+    <fieldset class="hidden">
+      <legend>Contactgegevens</legend>
+      <div class="field-box">
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" required maxlength="40">
+      </div>
+      <div class="field-box">
+        <label for="phone-number">Telefoonnummer</label>
+        <input id="phone-number" type="tel" name="phone-number" required maxlength="40">
+      </div>
+    </fieldset>
+    <div class="instruction-text hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
+    <fieldset class="hidden">
+      <legend>Contractgegevens</legend>
+      <div class="fieldsubset">
+        <div class="field-box">
+          <label for="signature-date">Datum tekening</label>
+          <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
+          <input id="signature-date" type="date" name="signature-date" required maxlength="40">
+        </div>
+        <div class="field-box">
+          <label for="start-date">Datum ingang</label>
+          <input type="button" id="auto-start-date" value="&#x1F50E;&#xFE0E;">
+          <input id="start-date" type="date" name="start-date" required maxlength="40">
+        </div>
+        <div class="field-box">
+          <label for="contract-">Contractnummer</label>
+          <input type="button" id="auto-contract-number" value="&#x1F50E;&#xFE0E;">
+          <input id="contract-number" type="text" name="contract-number" required maxlength="40">
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class="hidden">
+      <legend>Apparaat</legend>
+      <div class="field-box">
+        <label for="asset-tag">Assettag</label>
+        <input id="asset-tag" type="text" name="asset-tag" maxlength="40" required pattern="^[A-Z]*\d{6}$">
+      </div>
+      <div class="fieldsubset">
+        <div class="field-box">
+          <label for="device-brand">Merk</label>
+          <input type="button" id="auto-device-brand" value="&#x1F50E;&#xFE0E;">
+          <input id="device-brand" type="text" name="device-brand" required maxlength="40">
+        </div>
+        <div class="field-box">
+          <label for="device-model">Model</label>
+          <input type="button" id="auto-device-model" value="&#x1F50E;&#xFE0E;">
+          <input id="device-model" type="text" name="device-model" required maxlength="40">
+        </div>
+        <div class="field-box">
+          <label for="device-type">Type</label>
+          <input type="button" id="auto-device-type" value="&#x1F50E;&#xFE0E;">
+          <input id="device-type" type="text" name="device-type" required maxlength="40">
+        </div>
+      </div>
+      <div class="fieldsubset">
+        <div class="checkbox-box">
+          <label for="includes-charger">Inclusief lader</label>
+          <input id="includes-charger" type="checkbox" name="includes-charger" maxlength="40">
+        </div>
+        <div class="checkbox-box non-paying-only">
+          <label for="includes-mouse">Inclusief muis</label>
+          <input id="includes-mouse" type="checkbox" name="includes-mouse" maxlength="40">
+        </div>
+        <div class="checkbox-box non-paying-only">
+          <label for="includes-smart-card-reader">Inclusief eID-lezer</label>
+          <input id="includes-smart-card-reader" type="checkbox" name="includes-smart-card-reader" maxlength="40">
+        </div>
+      </div>
+      <div class="fieldsubset">
+        <div class="field-box">
+          <label for="device-out-date">Datum uit</label>
+          <input type="button" id="auto-device-out-date" value="&#x1F50E;&#xFE0E;">
+          <input id="device-out-date" type="date" name="device-out-date" required maxlength="40">
+        </div>
+        <div class="field-box">
+          <label for="device-checkup-date">Datum nazicht</label>
+          <input type="button" id="auto-device-checkup-date" value="&#x1F50E;&#xFE0E;">
+          <input id="device-checkup-date" type="date" name="device-checkup-date" required maxlength="40">
+        </div>
+        <div class="field-box">
+          <label for="device-in-date">Datum in</label>
+          <input type="button" id="auto-device-in-date" value="&#x1F50E;&#xFE0E;">
+          <input id="device-in-date" type="date" name="device-in-date" required maxlength="40">
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class="hidden paying-only">
+      <legend>Betaalgegevens</legend>
+      <div class="fieldsubset">
+        <div class="radio-option-list paying-only">
+          <div class="radio-option">
+            <label for="monthly-payment">Maandelijkse betaling</label>
+            <input id="monthly-payment" type="radio" name="betalingsperiode" required>
+          </div>
+          <div class="radio-option">
+            <label for="yearly-payment">Jaarlijkse betaling</label>
+            <input id="yearly-payment" type="radio" name="betalingsperiode" required>
+          </div>
+        </div>
+      </div>
+      <div class="field-box paying-only">
+        <label for="structured-communication">Gestructureerde mededeling</label>
+        <input type="button" id="auto-structured-communication" value="&#x1F50E;&#xFE0E;">
+        <input id="structured-communication" type="text" name="structured-communication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="40">
+      </div>
+    </fieldset>
+    <input id="submit" type="submit" value="Genereren" class="hidden">
+  </form></main>
+  <script src="apikey.js"></script>
+  <script src="renderer.js"></script>
 </body>
 </html>
