@@ -1,3 +1,6 @@
+# Api key
+src/apikey.js
+
 # Logs
 logs
 *.log
