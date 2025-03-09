@@ -31,6 +31,7 @@ const inputs = {
 	workshopDate: document.getElementById('workshop-date'),
 	workshopException: document.getElementById('workshop-exception'),
 
+	isExtension: document.getElementById('is-extension'),
 	signatureDate: document.getElementById('signature-date'),
 	startDate: document.getElementById('start-date'),
 	contractNumber: document.getElementById('contract-number'),
@@ -210,19 +211,22 @@ inputs.nonPayingContract.addEventListener("input", changeContractType);
 
 let uitpasNummer = "";
 
-function changeUitpasException(e) {
-	inputs.uitpasNumber.disabled = (e.target.checked === true);
+function toggleEnabledUitpasNumber(e) {
+	inputs.uitpasNumber.disabled = inputs.uitpasException.checked;
 }
 
-inputs.uitpasException.addEventListener("input", changeUitpasException);
+inputs.uitpasException.addEventListener("input", toggleEnabledUitpasNumber);
 
-// Workshop date field activation toggle
+// Workshop fields activation and requirement toggle
 
-function changeWorkshopException(e) {
-	inputs.workshopDate.disabled = (e.target.checked === true);
+function toggleEnabledWorkshopFields(e) {
+	inputs.workshopException.disabled = inputs.isExtension.checked;
+	inputs.workshopDate.disabled = inputs.workshopException.checked;
+	inputs.workshopDate.required = !(inputs.workshopException.checked || inputs.isExtension.checked);
 }
 
-inputs.workshopException.addEventListener("input", changeWorkshopException);
+inputs.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
+inputs.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 
 //// Input validation
 

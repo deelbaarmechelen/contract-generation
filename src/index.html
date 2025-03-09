@@ -101,19 +101,12 @@
       </div>
     </fieldset>
     <div class="instruction-text hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
-    <fieldset class="hidden non-paying-only">
-      <legend>Opleidingsmoment</legend>
-      <div class="field-box">
-          <label for="workshop-date">Datum opleidingsmoment</label>
-          <input id="workshop-date" type="date" name="workshop-date" required>
-      </div>
-      <div class="checkbox-box non-paying-only">
-        <label for="workshop-exception">Klant is vrijgesteld van opleidingsmoment door het voltooien van een vaardigheidstest.</label>
-        <input id="workshop-exception" type="checkbox" name="workshop-exception">
-      </div>
-    </fieldset>
     <fieldset class="hidden">
       <legend>Contractgegevens</legend>
+      <div class="checkbox-box">
+        <label for="is-extension">Dit contract is een verlenging.</label>
+        <input id="is-extension" type="checkbox" name="is-extension">
+      </div>
       <div class="fieldsubset">
         <div class="field-box">
           <label for="signature-date">Datum tekening</label>
@@ -130,6 +123,17 @@
           <input type="button" id="auto-contract-number" value="&#x1F50E;&#xFE0E;">
           <input id="contract-number" type="text" name="contract-number" required maxlength="40">
         </div>
+      </div>
+    </fieldset>
+    <fieldset class="hidden non-paying-only">
+      <legend>Opleidingsmoment</legend>
+      <div class="field-box">
+          <label for="workshop-date">Datum opleidingsmoment</label>
+          <input id="workshop-date" type="date" name="workshop-date" required>
+      </div>
+      <div class="checkbox-box non-paying-only">
+        <label for="workshop-exception">Klant is vrijgesteld van opleidingsmoment door het voltooien van een vaardigheidstest.</label>
+        <input id="workshop-exception" type="checkbox" name="workshop-exception">
       </div>
     </fieldset>
     <fieldset class="hidden">
