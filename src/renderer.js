@@ -4,6 +4,7 @@ const nonPayingOnlyElements = document.getElementsByClassName("non-paying-only")
 const payingOnlyElements = document.getElementsByClassName("paying-only");
 const fieldsets = document.getElementsByTagName("main")[0].getElementsByTagName("fieldset");
 const instructionTextElements = document.getElementsByTagName("main")[0].getElementsByClassName("instruction-text");
+const digibankForm = document.getElementById("digibank-form")
 
 const inputs = {
 	payingContract: document.getElementById('paying-contract'),
@@ -52,6 +53,40 @@ const buttons = {
 	autoDeviceInDate: document.getElementById("auto-device-in-date"),
 	autoStructuredCommunication: document.getElementById("auto-structured-communication"),
 }
+
+const deviceTypes = {
+	"laptop-win-11": {
+		"displayname-nl": "Laptop (Windows 11)",
+		"monthly-price": 15,
+		"yearly-price": 150,
+		"circle-value": 75,
+	}
+}
+
+
+// Helper function for manual testing
+function testFill() {
+	inputs.payingContract.checked = true;
+	inputs.firstName.value = "Pietje";
+	inputs.lastName.value = "De Laptopwiller";
+	inputs.streetName.value = "Ergensstraat";
+	inputs.houseNumber.value = "1337";
+	inputs.boxNumber.value = "69";
+	inputs.municipality.value = "Mechelen";
+	inputs.postalCode.value = "2800";
+	inputs.country.value = "Belgium";
+	inputs.email.value = "Pietje123@gmail.com";
+	inputs.phoneNumber.value = "0469123123";
+	inputs.contractNumber.value = "C-B-25-100000";
+	inputs.assetTag.value = "PC250200";
+	inputs.deviceBrand.value = "LapInc.";
+	inputs.deviceModel.value = "Thinkbook PP890";
+	inputs.deviceType.value = "Laptop";
+	inputs.includesCharger.checked = true;
+	inputs.monthlyPayment.checked = true;
+	changeContractType();
+}
+
 
 //// Form display
 
@@ -254,8 +289,13 @@ buttons.autoDeviceModel.addEventListener("click", async (e) => {
 });
 
 buttons.submit.addEventListener('click', async (e) => {
-	e.preventDefault();
+	if (digibankForm.checkValidity()) {
+		e.preventDefault();
+	} else {
+		return;
+	}
 	
+
 	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
 	const boxNumberText = inputs.boxNumber.value.length == 0 ? '' : ' bus ' + inputs.boxNumber.value;
 
@@ -272,8 +312,8 @@ buttons.submit.addEventListener('click', async (e) => {
 			"email": inputs.email.value,
 		},
 		"subscription" : {
-			"paymentPeriod" : "monthly",
-			"structuredReference" : "000/0000/00000",
+			"paymentPeriod" : inputs.monthlyPayment.checked ? "monthly" : "yearly",
+			"structuredReference" : inputs.structuredCommunication.value,
 			"amount" : "10",
 			"amountPaid" : "10",
 			"circleValue" : "50"
@@ -294,19 +334,19 @@ buttons.submit.addEventListener('click', async (e) => {
 		"structuredReference": inputs.structuredCommunication.value,
 		"item" : {
 			"laptop": true,
-			"laptop-brand": "Dell",
-			"laptop-model": "Latitude 5410",
-			"assetTag" : "PC25000",
+			"laptop-brand": inputs.deviceBrand.value,
+			"laptop-model": inputs.deviceModel.value,
+			"assetTag" : inputs.assetTag.value,
 			"accessories" : {
-				"charger" : true,
-				"mouse": true,
-				"eIdReader": true
+				"charger" : inputs.includesCharger.checked,
+				"mouse": inputs.includesMouse.checked,
+				"eIdReader": inputs.includesSmartCardReader.checked
 			}
 		},
-		"contractDate" : "19/02/2025",
-		"startDate" : "19/02/2025",
-		"maintenanceDate" : "19/08/2025",
-		"endDate" : "19/02/2026"
+		"contractDate" : inputs.signatureDate.valueAsDate.toLocaleDateString("NL-be"),
+		"startDate" : inputs.deviceOutDate.valueAsDate.toLocaleDateString("NL-be"),
+		"maintenanceDate" : inputs.deviceCheckupDate.valueAsDate.toLocaleDateString("NL-be"),
+		"endDate" : inputs.deviceInDate.valueAsDate.toLocaleDateString("NL-be")
 	};
 	try {
 		console.log('Generating PDF with data:', data);
