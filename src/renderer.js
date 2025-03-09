@@ -56,10 +56,12 @@ const buttons = {
 
 	autoSignatureDate: document.getElementById("auto-signature-date"),
 	autoStartDate: document.getElementById("auto-start-date"),
+
 	autoContractNumber: document.getElementById("auto-contract-number"),
 	autoDeviceBrand: document.getElementById("auto-device-brand"),
 	autoDeviceModel: document.getElementById("auto-device-model"),
 	autoDeviceType: document.getElementById("auto-device-tyoe"),
+
 	autoDeviceOutDate: document.getElementById("auto-device-out-date"),
 	autoDeviceCheckupDate: document.getElementById("auto-device-checkup-date"),
 	autoDeviceInDate: document.getElementById("auto-device-in-date"),
@@ -69,8 +71,10 @@ const buttons = {
 
 // Helper function for manual testing
 function testFill() {
-	inputs.payingContract.checked = true;
-	changeContractType();
+	if (!inputs.nonPayingContract.checked) {
+		inputs.payingContract.checked = true;
+		changeContractType();
+	}
 	
 	inputs.firstName.value = "Pietje";
 	inputs.lastName.value = "De Laptopwiller";
@@ -87,7 +91,7 @@ function testFill() {
 	
 	inputs.referrer.value = "zijn mama";
 	
-	// inputs.workshopDate.valueAsDate = new Date();
+	// 
 	
 	inputs.contractNumber.value = "C-B-25-100000";
 	inputs.assetTag.value = "PC250200";
@@ -95,7 +99,20 @@ function testFill() {
 	inputs.deviceModel.value = "Thinkbook PP890";
 	inputs.deviceType.value = "Laptop";
 	inputs.includesCharger.checked = true;
-	inputs.monthlyPayment.checked = true;
+
+	buttons.autoSignatureDate.click();
+	buttons.autoStartDate.click();
+	buttons.autoDeviceOutDate.click();
+	buttons.autoDeviceCheckupDate.click();
+	buttons.autoDeviceInDate.click();
+
+	if (inputs.nonPayingContract.checked) {
+		inputs.uitpasNumber.value = "1111111111111";
+		inputs.workshopDate.valueAsDate = new Date();
+	} else {
+		inputs.monthlyPayment.checked = true;
+		buttons.autoStructuredCommunication.click();
+	}
 }
 
 
