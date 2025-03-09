@@ -118,12 +118,12 @@
         <div class="field-box">
           <label for="signature-date">Datum tekening</label>
           <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
-          <input id="signature-date" type="date" name="signature-date" required maxlength="40">
+          <input id="signature-date" type="date" name="signature-date" required>
         </div>
         <div class="field-box">
           <label for="start-date">Datum ingang</label>
           <input type="button" id="auto-start-date" value="&#x1F50E;&#xFE0E;">
-          <input id="start-date" type="date" name="start-date" required maxlength="40">
+          <input id="start-date" type="date" name="start-date" required>
         </div>
         <div class="field-box">
           <label for="contract-">Contractnummer</label>
@@ -158,32 +158,32 @@
       <div class="fieldsubset">
         <div class="checkbox-box">
           <label for="includes-charger">Inclusief lader</label>
-          <input id="includes-charger" type="checkbox" name="includes-charger" maxlength="40">
+          <input id="includes-charger" type="checkbox" name="includes-charger">
         </div>
         <div class="checkbox-box non-paying-only">
           <label for="includes-mouse">Inclusief muis</label>
-          <input id="includes-mouse" type="checkbox" name="includes-mouse" maxlength="40">
+          <input id="includes-mouse" type="checkbox" name="includes-mouse">
         </div>
         <div class="checkbox-box non-paying-only">
           <label for="includes-smart-card-reader">Inclusief eID-lezer</label>
-          <input id="includes-smart-card-reader" type="checkbox" name="includes-smart-card-reader" maxlength="40">
+          <input id="includes-smart-card-reader" type="checkbox" name="includes-smart-card-reader">
         </div>
       </div>
       <div class="fieldsubset">
         <div class="field-box">
           <label for="device-out-date">Datum uit</label>
           <input type="button" id="auto-device-out-date" value="&#x1F50E;&#xFE0E;">
-          <input id="device-out-date" type="date" name="device-out-date" required maxlength="40">
+          <input id="device-out-date" type="date" name="device-out-date" required>
         </div>
         <div class="field-box">
           <label for="device-checkup-date">Datum nazicht</label>
           <input type="button" id="auto-device-checkup-date" value="&#x1F50E;&#xFE0E;">
-          <input id="device-checkup-date" type="date" name="device-checkup-date" required maxlength="40">
+          <input id="device-checkup-date" type="date" name="device-checkup-date" required>
         </div>
         <div class="field-box">
           <label for="device-in-date">Datum in</label>
           <input type="button" id="auto-device-in-date" value="&#x1F50E;&#xFE0E;">
-          <input id="device-in-date" type="date" name="device-in-date" required maxlength="40">
+          <input id="device-in-date" type="date" name="device-in-date" required>
         </div>
       </div>
     </fieldset>
@@ -204,7 +204,7 @@
       <div class="field-box paying-only">
         <label for="structured-communication">Gestructureerde mededeling</label>
         <input type="button" id="auto-structured-communication" value="&#x1F50E;&#xFE0E;">
-        <input id="structured-communication" type="text" name="structured-communication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="40">
+        <input id="structured-communication" type="text" name="structured-communication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="20">
       </div>
     </fieldset>
     <input id="submit" type="submit" value="Genereren" class="hidden">

@@ -89,9 +89,7 @@ function testFill() {
 	inputs.email.value = "Pietje123@gmail.com";
 	inputs.phoneNumber.value = "0469123123";
 	
-	inputs.referrer.value = "zijn mama";
-	
-	// 
+	inputs.referrer.value = "Zijn mama";
 	
 	inputs.contractNumber.value = "C-B-25-100000";
 	inputs.assetTag.value = "PC250200";
@@ -102,6 +100,7 @@ function testFill() {
 
 	buttons.autoSignatureDate.click();
 	buttons.autoStartDate.click();
+
 	buttons.autoDeviceOutDate.click();
 	buttons.autoDeviceCheckupDate.click();
 	buttons.autoDeviceInDate.click();
