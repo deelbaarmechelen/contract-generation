@@ -85,7 +85,7 @@ function testFill() {
 	inputs.boxNumber.value = "69";
 	inputs.municipality.value = "Mechelen";
 	inputs.postalCode.value = "2800";
-	inputs.country.value = "Belgium";
+	inputs.country.value = "België";
 	
 	inputs.email.value = "Pietje123@gmail.com";
 	inputs.phoneNumber.value = "0469123123";
@@ -339,6 +339,7 @@ buttons.submit.addEventListener('click', async (e) => {
 
 	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
 	const boxNumberText = inputs.boxNumber.value.length == 0 ? '' : ' bus ' + inputs.boxNumber.value;
+	const courseDate = inputs.workshopDate.valueAsDate;
 
 	var data = {
 		"generationInfo": {
@@ -364,7 +365,7 @@ buttons.submit.addEventListener('click', async (e) => {
 			"number" : inputs.uitpasNumber.value,
 			"aptitudeTest": inputs.workshopException.checked,
 			"courseEnrolment": !inputs.workshopException.checked,
-			"courseDate" : inputs.workshopDate.valueAsDate.toLocaleDateString("NL-be")
+			"courseDate" : courseDate ? courseDate.toLocaleDateString("nl-BE") : null
 		},
 		"referer": {
 			"organisation" : false,
@@ -384,10 +385,10 @@ buttons.submit.addEventListener('click', async (e) => {
 				"eIdReader": inputs.includesSmartCardReader.checked
 			}
 		},
-		"contractDate" : inputs.signatureDate.valueAsDate.toLocaleDateString("NL-be"),
-		"startDate" : inputs.deviceOutDate.valueAsDate.toLocaleDateString("NL-be"),
-		"maintenanceDate" : inputs.deviceCheckupDate.valueAsDate.toLocaleDateString("NL-be"),
-		"endDate" : inputs.deviceInDate.valueAsDate.toLocaleDateString("NL-be")
+		"contractDate" : inputs.signatureDate.valueAsDate.toLocaleDateString("nl-BE"),
+		"startDate" : inputs.deviceOutDate.valueAsDate.toLocaleDateString("nl-BE"),
+		"maintenanceDate" : inputs.deviceCheckupDate.valueAsDate.toLocaleDateString("nl-BE"),
+		"endDate" : inputs.deviceInDate.valueAsDate.toLocaleDateString("nl-BE")
 	};
 	try {
 		console.log('Generating PDF with data:', data);
