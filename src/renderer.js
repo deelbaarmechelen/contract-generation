@@ -21,6 +21,7 @@ const inputs = {
 	country: document.getElementById('country'),
 	email: document.getElementById('email'),
 	phoneNumber: document.getElementById('phone-number'),
+	referrer: document.getElementById('referrer'),
 	signatureDate: document.getElementById('signature-date'),
 	startDate: document.getElementById('start-date'),
 	contractNumber: document.getElementById('contract-number'),
@@ -326,10 +327,10 @@ buttons.submit.addEventListener('click', async (e) => {
 			"courseDate" : "1 maart 2025"
 		},
 		"referer": {
-			"organisation" : true,
+			"organisation" : false,
 			"orgName" : "",
 			"other" : true,
-			"otherName" : "kennis"
+			"otherName" : inputs.referrer.value
 		},
 		"structuredReference": inputs.structuredCommunication.value,
 		"item" : {
