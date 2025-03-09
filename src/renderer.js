@@ -122,33 +122,33 @@ function testFill() {
 // https://stackoverflow.com/questions/12578507/implement-an-input-with-a-mask
 // This code empowers all input tags having a placeholder and data-slots attribute
 document.addEventListener('DOMContentLoaded', () => {
-    for (const el of document.querySelectorAll("[placeholder][data-slots]")) {
-        const pattern = el.getAttribute("placeholder"),
-            slots = new Set(el.dataset.slots || "_"),
-            prev = (j => Array.from(pattern, (c,i) => slots.has(c)? j=i+1: j))(0),
-            first = [...pattern].findIndex(c => slots.has(c)),
-            accept = new RegExp(el.dataset.accept || "\\d", "g"),
-            clean = input => {
-                input = input.match(accept) || [];
-                return Array.from(pattern, c =>
-                    input[0] === c || slots.has(c) ? input.shift() || c : c
-                );
-            },
-            format = () => {
-                const [i, j] = [el.selectionStart, el.selectionEnd].map(i => {
-                    i = clean(el.value.slice(0, i)).findIndex(c => slots.has(c));
-                    return i<0? prev.at(-1) : back ? prev[i-1] || first : i;
-                });
-                el.value = clean(el.value).join("");
-                el.setSelectionRange(i, j);
-                back = false;
-            };
-        let back = false;
-        el.addEventListener("keydown", (e) => back = e.key === "Backspace");
-        el.addEventListener("input", format);
-        el.addEventListener("focus", format);
-        el.addEventListener("blur", () => el.value === pattern && (el.value=""));
-    }
+	for (const el of document.querySelectorAll("[placeholder][data-slots]")) {
+		const pattern = el.getAttribute("placeholder"),
+			slots = new Set(el.dataset.slots || "_"),
+			prev = (j => Array.from(pattern, (c,i) => slots.has(c)? j=i+1: j))(0),
+			first = [...pattern].findIndex(c => slots.has(c)),
+			accept = new RegExp(el.dataset.accept || "\\d", "g"),
+			clean = input => {
+				input = input.match(accept) || [];
+				return Array.from(pattern, c =>
+					input[0] === c || slots.has(c) ? input.shift() || c : c
+				);
+			},
+			format = () => {
+				const [i, j] = [el.selectionStart, el.selectionEnd].map(i => {
+					i = clean(el.value.slice(0, i)).findIndex(c => slots.has(c));
+					return i<0? prev.at(-1) : back ? prev[i-1] || first : i;
+				});
+				el.value = clean(el.value).join("");
+				el.setSelectionRange(i, j);
+				back = false;
+			};
+		let back = false;
+		el.addEventListener("keydown", (e) => back = e.key === "Backspace");
+		el.addEventListener("input", format);
+		el.addEventListener("focus", format);
+		el.addEventListener("blur", () => el.value === pattern && (el.value=""));
+	}
 });
 
 /** Verbergt of toont relevante velden na kiezen contracttype. */
@@ -405,32 +405,32 @@ buttons.submit.addEventListener('click', async (e) => {
 
 function renderPDF(url, canvasContainer, options) {
   var options = options || { scale: 1 };
-      
+	  
   function renderPage(page) {
-      var viewport = page.getViewport(options.scale);
-      var canvas = document.createElement('canvas');
-      var ctx = canvas.getContext('2d');
-      var renderContext = {
-        canvasContext: ctx,
-        viewport: viewport
-      };
-      
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-      canvasContainer.appendChild(canvas);
-      
-      page.render(renderContext);
+	  var viewport = page.getViewport(options.scale);
+	  var canvas = document.createElement('canvas');
+	  var ctx = canvas.getContext('2d');
+	  var renderContext = {
+		canvasContext: ctx,
+		viewport: viewport
+	  };
+	  
+	  canvas.height = viewport.height;
+	  canvas.width = viewport.width;
+	  canvasContainer.appendChild(canvas);
+	  
+	  page.render(renderContext);
   }
   
   function renderPages(pdfDoc) {
-      for(var num = 1; num <= pdfDoc.numPages; num++)
-          pdfDoc.getPage(num).then(renderPage);
+	  for(var num = 1; num <= pdfDoc.numPages; num++)
+		  pdfDoc.getPage(num).then(renderPage);
   }
   PDFJS.disableWorker = true;
   PDFJS.getDocument(url).then(renderPages);
 }
 
 // generateButton.addEventListener('click', async () => {
-//  renderPDF('//cdn.mozilla.net/pdfjs/helloworld.pdf', document.getElementById('holder'));
+//	renderPDF('//cdn.mozilla.net/pdfjs/helloworld.pdf', document.getElementById('holder'));
   //renderPDF('file://C:\\Users\\Bernard\\Downloads\\helloworld.pdf', document.getElementById('holder'));
 // })
