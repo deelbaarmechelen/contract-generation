@@ -9,22 +9,32 @@ const digibankForm = document.getElementById("digibank-form")
 const inputs = {
 	payingContract: document.getElementById('paying-contract'),
 	nonPayingContract: document.getElementById('non-paying-contract'),
+
 	uitpasNumber: document.getElementById('uitpas-number'),
 	uitpasException: document.getElementById('uitpas-exception'),
+
 	firstName: document.getElementById('first-name'),
 	lastName: document.getElementById('last-name'),
+
 	streetName: document.getElementById('street-name'),
 	houseNumber: document.getElementById('house-number'),
 	boxNumber: document.getElementById('box-number'),
 	municipality: document.getElementById('municipality'),
 	postalCode: document.getElementById('postal-code'),
 	country: document.getElementById('country'),
+
 	email: document.getElementById('email'),
 	phoneNumber: document.getElementById('phone-number'),
+
 	referrer: document.getElementById('referrer'),
+
+	workshopDate: document.getElementById('workshop-date'),
+	workshopException: document.getElementById('workshop-exception'),
+
 	signatureDate: document.getElementById('signature-date'),
 	startDate: document.getElementById('start-date'),
 	contractNumber: document.getElementById('contract-number'),
+
 	assetTag: document.getElementById('asset-tag'),
 	deviceBrand: document.getElementById('device-brand'),
 	deviceModel: document.getElementById('device-model'),
@@ -35,6 +45,7 @@ const inputs = {
 	deviceOutDate: document.getElementById('device-out-date'),
 	deviceCheckupDate: document.getElementById('device-checkup-date'),
 	deviceInDate: document.getElementById('device-in-date'),
+
 	monthlyPayment: document.getElementById('monthly-payment'),
 	yearlyPayment: document.getElementById('yearly-payment'),
 	structuredCommunication: document.getElementById('structured-communication'),
@@ -55,29 +66,29 @@ const buttons = {
 	autoStructuredCommunication: document.getElementById("auto-structured-communication"),
 }
 
-const deviceTypes = {
-	"laptop-win-11": {
-		"displayname-nl": "Laptop (Windows 11)",
-		"monthly-price": 15,
-		"yearly-price": 150,
-		"circle-value": 75,
-	}
-}
-
 
 // Helper function for manual testing
 function testFill() {
 	inputs.payingContract.checked = true;
+	changeContractType();
+	
 	inputs.firstName.value = "Pietje";
 	inputs.lastName.value = "De Laptopwiller";
+	
 	inputs.streetName.value = "Ergensstraat";
 	inputs.houseNumber.value = "1337";
 	inputs.boxNumber.value = "69";
 	inputs.municipality.value = "Mechelen";
 	inputs.postalCode.value = "2800";
 	inputs.country.value = "Belgium";
+	
 	inputs.email.value = "Pietje123@gmail.com";
 	inputs.phoneNumber.value = "0469123123";
+	
+	inputs.referrer.value = "zijn mama";
+	
+	// inputs.workshopDate.valueAsDate = new Date();
+	
 	inputs.contractNumber.value = "C-B-25-100000";
 	inputs.assetTag.value = "PC250200";
 	inputs.deviceBrand.value = "LapInc.";
@@ -85,7 +96,6 @@ function testFill() {
 	inputs.deviceType.value = "Laptop";
 	inputs.includesCharger.checked = true;
 	inputs.monthlyPayment.checked = true;
-	changeContractType();
 }
 
 
@@ -180,6 +190,8 @@ function changeContractType(e) {
 inputs.payingContract.addEventListener("input", changeContractType);
 inputs.nonPayingContract.addEventListener("input", changeContractType);
 
+// UiTpas code field activation toggle
+
 let uitpasNummer = "";
 
 function changeUitpasException(e) {
@@ -187,6 +199,14 @@ function changeUitpasException(e) {
 }
 
 inputs.uitpasException.addEventListener("input", changeUitpasException);
+
+// Workshop date field activation toggle
+
+function changeWorkshopException(e) {
+	inputs.workshopDate.disabled = (e.target.checked === true);
+}
+
+inputs.workshopException.addEventListener("input", changeWorkshopException);
 
 //// Input validation
 
@@ -322,9 +342,9 @@ buttons.submit.addEventListener('click', async (e) => {
 		"uitpas" : {
 			"applicable" : !inputs.uitpasException.checked,
 			"number" : inputs.uitpasNumber.value,
-			"aptitudeTest": true,
-			"courseEnrolment": true,
-			"courseDate" : "1 maart 2025"
+			"aptitudeTest": inputs.workshopException.checked,
+			"courseEnrolment": !inputs.workshopException.checked,
+			"courseDate" : inputs.workshopDate.valueAsDate.toLocaleDateString("NL-be")
 		},
 		"referer": {
 			"organisation" : false,

@@ -14,7 +14,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.90/pdf.js"></script>
   <h1>Uitleningsformulier Digibankatelier Mechelen</h1>
   <main><form id="digibank-form" action="#" autocomplete="off">
-    <fieldset id="">
+    <fieldset>
       <legend>Type contract</legend>
       <div class="radio-option-list">
         <div class="radio-option">
@@ -101,6 +101,17 @@
       </div>
     </fieldset>
     <div class="instruction-text hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
+    <fieldset class="hidden non-paying-only">
+      <legend>Opleidingsmoment</legend>
+      <div class="field-box">
+          <label for="workshop-date">Datum opleidingsmoment</label>
+          <input id="workshop-date" type="date" name="workshop-date" required>
+      </div>
+      <div class="checkbox-box non-paying-only">
+        <label for="workshop-exception">Klant is vrijgesteld van opleidingsmoment door het voltooien van een vaardigheidstest.</label>
+        <input id="workshop-exception" type="checkbox" name="workshop-exception">
+      </div>
+    </fieldset>
     <fieldset class="hidden">
       <legend>Contractgegevens</legend>
       <div class="fieldsubset">
