@@ -34,6 +34,7 @@ const inputs = {
 	isExtension: document.getElementById('is-extension'),
 	signatureDate: document.getElementById('signature-date'),
 	startDate: document.getElementById('start-date'),
+	clientNumber: document.getElementById('client-number'),
 	contractNumber: document.getElementById('contract-number'),
 
 	assetTag: document.getElementById('asset-tag'),
@@ -340,16 +341,28 @@ buttons.submit.addEventListener('click', async (e) => {
 	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
 	const boxNumberText = inputs.boxNumber.value.length == 0 ? '' : ' bus ' + inputs.boxNumber.value;
 	const courseDate = inputs.workshopDate.valueAsDate;
+	
+	var courseNotification = "";
+	
+	if (inputs.workshopException.checked) {
+		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen door het afleggen van een bekwaamheidstest.";
+	} else if (inputs.isExtension.checked) {
+		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen omdat dit contract een verlenging is.";
+	} else {
+		courseNotification = "De Ontlener is verplicht een gratis opleidingssessie bij te wonen om te verzekeren dat hij/zij met het toestel kan werken."
+	}
 
 	var data = {
 		"generationInfo": {
 			"path": await window.electronAPI.openFile(),
 			"print": true
 		},
-		"contractId": inputs.contractNumber.value,
+		"contractNumber": inputs.contractNumber.value,
+		"clientNumber": inputs.clientNumber.value,
+		"isExtension": inputs.isExtension.checked,
 		"client": {
 			"name" : inputs.firstName.value + ' ' + inputs.lastName.value,
-			"address": inputs.streetName.value + '' + inputs.houseNumber.value + boxNumberText + ', ' + inputs.postalCode.value + ' ' + inputs.municipality.value + ', ' + inputs.country.value, 
+			"address": inputs.streetName.value + ' ' + inputs.houseNumber.value + boxNumberText + ', ' + inputs.postalCode.value + ' ' + inputs.municipality.value + ', ' + inputs.country.value, 
 			"phone": inputs.phoneNumber.value,
 			"email": inputs.email.value,
 		},
@@ -365,7 +378,8 @@ buttons.submit.addEventListener('click', async (e) => {
 			"number" : inputs.uitpasNumber.value,
 			"aptitudeTest": inputs.workshopException.checked,
 			"courseEnrolment": !inputs.workshopException.checked,
-			"courseDate" : courseDate ? courseDate.toLocaleDateString("nl-BE") : null
+			"courseDate" : courseDate ? courseDate.toLocaleDateString("nl-BE") : null,
+			"courseNotification" : courseNotification
 		},
 		"referer": {
 			"organisation" : false,
@@ -375,9 +389,9 @@ buttons.submit.addEventListener('click', async (e) => {
 		},
 		"structuredReference": inputs.structuredCommunication.value,
 		"item" : {
-			"laptop": true,
-			"laptop-brand": inputs.deviceBrand.value,
-			"laptop-model": inputs.deviceModel.value,
+			"deviceType": inputs.deviceType.value,
+			"deviceBrand": inputs.deviceBrand.value,
+			"deviceModel": inputs.deviceModel.value,
 			"assetTag" : inputs.assetTag.value,
 			"accessories" : {
 				"charger" : inputs.includesCharger.checked,

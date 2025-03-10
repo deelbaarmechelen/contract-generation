@@ -27,8 +27,6 @@ const createWindow = () => {
 		},
 	});
 
-
-
 	win.loadFile('src/index.html');
 
 	// Open the DevTools.
@@ -55,7 +53,7 @@ async function handleRenderPdf(event, data) {
 	try {
 		const result = await renderAsync(templatePath, data, options);
 		const pathDirectory = data.generationInfo.path.trim().length === 0 ? '.' : data.generationInfo.path;
-		let fileName = data.contractId.trim().length === 0 ? 'contract' : data.contractId;
+		let fileName = data.contractNumber.trim().length === 0 ? 'contract' : data.contractNumber;
 		fileName += '.' + extension;
 		const filePath = path.join(pathDirectory, fileName);
 		fs.writeFileSync(filePath, result);
