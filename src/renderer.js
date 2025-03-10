@@ -366,6 +366,7 @@ buttons.submit.addEventListener('click', async (e) => {
 			"phone": inputs.phoneNumber.value,
 			"email": inputs.email.value,
 		},
+    "contract-type": inputs.payingContract.checked ? "paying" : "non-paying",
 		"subscription" : {
 			"paymentPeriod" : inputs.monthlyPayment.checked ? "monthly" : "yearly",
 			"structuredReference" : inputs.structuredCommunication.value,
