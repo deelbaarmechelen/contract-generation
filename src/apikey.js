@@ -1,0 +1,1 @@
+const SNIPEKEY = "nothing-here"
