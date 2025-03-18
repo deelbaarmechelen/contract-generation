@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "carbone": "^3.5.6",
+    "dotenv": "^16.4.7",
     "electron-log": "^5.3.0",
     "electron-squirrel-startup": "^1.0.1"
   }

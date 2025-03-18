@@ -319,15 +319,21 @@ buttons.autoStructuredCommunication.addEventListener("click", (e) => {
 });
 
 buttons.autoDeviceModel.addEventListener("click", async (e) => {
-	const response = await fetch("https://inventaris.digibankmechelen.be/api/v1/hardware/bytag/{asset_tag}", {
-		method: "POST",
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-			'Authorization': 'Raf ' + SNIPEKEY,
-		}
-	});
-	console.log(response);
+	window.inventoryAPI.getAssetDetails({ assetTag: inputs.assetTag.value })
+		.then((data) => {
+			console.log(data);
+			inputs.deviceBrand.value = data.asset.brand;
+			inputs.deviceModel.value = data.asset.model;
+		});
+	// const response = await fetch("https://inventaris.digibankmechelen.be/api/v1/hardware/bytag/{asset_tag}", {
+	// 	method: "POST",
+	// 	headers: {
+	// 		'Accept': 'application/json',
+	// 		'Content-Type': 'application/json',
+	// 		'Authorization': 'Raf ' + SNIPEKEY,
+	// 	}
+	// });
+	// console.log(response);
 });
 
 buttons.submit.addEventListener('click', async (e) => {

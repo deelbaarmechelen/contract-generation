@@ -9,3 +9,7 @@ contextBridge.exposeInMainWorld('carbone', {
 	// generateDoc: (data) => ipcRenderer.send('generateDoc', data),
 	generatePdf: (data) => ipcRenderer.invoke('generatePdf', data)
 })
+
+contextBridge.exposeInMainWorld('inventoryAPI', {
+	getAssetDetails: (data) => ipcRenderer.invoke('getAsset', data)
+})
