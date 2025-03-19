@@ -83,6 +83,13 @@ function formatDateYYYYMMDD(date) {
 
 async function handleGetAsset(event, data) {
   console.log('Fetching asset data for tag:', data.assetTag);
+  if (data.assetTag === undefined || data.assetTag === '') {
+    return {
+      success: false,
+      error: 'Asset tag is required'
+    }
+  }
+  
   return fetchInventoryData(data.assetTag)
   .then((data) => {
     console.log('Inventory data:', data);
@@ -130,6 +137,8 @@ function fetchInventoryData(assetTag) {
       res.on('end', () => {
         if (res.statusCode === 200) {
           resolve(JSON.parse(data));
+        } else if (res.statusCode === 404) {
+          reject(new Error('Asset not found'));
         } else {
           reject(new Error(`Request failed with status code ${res.statusCode}`));
         }
