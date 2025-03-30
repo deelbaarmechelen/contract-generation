@@ -7,10 +7,11 @@ Done:
 
 Current:
 
-- Add checkbox that contract is an extension
+- Remove necessity of valid inputs
 
 Necessary:
 
+- Remove checkbox that contract is an extention.
 - Make distinction 'organisatie' and 'other' in referrer
 - Add distinction between Windows 10 and Windows 11 contracts
 - Add postcode validation for UiTpas

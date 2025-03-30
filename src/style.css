@@ -18,6 +18,12 @@
   --outline-color-focus: grey;
   --outline-color-invalid: red;
   --outline-color-warning: orange;
+
+  --border-thickness: 2px;
+  --border-radius: 8px;
+
+  --max-width: 1000px;
+  --min-width: 400px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -50,10 +56,11 @@ body {
 	font-size: 14pt;
 	color: var(--font-color);
     line-height: 1.2;
+	min-width: var(--min-width);
 }
 
 main {
-	max-width: 1000px;
+	max-width: var(--max-width);
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -70,8 +77,8 @@ fieldset {
 	margin: 1em 0 1em 0;
 	padding: .5em 1em 1em 1em;
 
-	border: 2px;
-	border-radius: 10px;
+	border: var(--border-thickness);
+	border-radius: var(--border-radius);
 	border-style: solid;
 	border-color: var(--border-color);
 }
@@ -121,11 +128,11 @@ input:not([type="radio"], [type="checkbox"]) {
     line-height: inherit;
 	font-family: sans-serif;
 	font-size: 14pt;
-	
-	border: 2px;
+
+	border: var(--border-thickness);
+	border-radius: var(--border-radius);
 	border-style: solid;
-	border-radius: 4px;
-	border-color: var(--border-color-input);
+	border-color: var(--border-color);
 	
 	&:hover {
 		outline: solid;
@@ -133,13 +140,13 @@ input:not([type="radio"], [type="checkbox"]) {
 		outline-color: var(--outline-color-hover);
 	}
 	
-	&:focus-visible, .field-box &:focus-visible:hover {
+	&:focus, .field-box &:focus:hover {
 		outline: solid;
 		outline-width: 2px;
 		outline-color: var(--outline-color-focus);
 	}
 		
-	&:is(input):user-invalid:not(:focus-visible) {
+	&:is(input):user-invalid:not(:focus) {
 		outline: solid;
 		outline-width: 2px;
 		outline-color: var(--outline-color-invalid);
@@ -206,11 +213,11 @@ input:not([type="radio"], [type="checkbox"]) {
 	width: 100%;
 	bottom: 0;
 	left: 0;
-	
-	border: 2px;
+
+	border: var(--border-thickness);
+	border-radius: var(--border-radius);
 	border-style: solid;
-	border-radius: 4px;
-	border-color: var(--border-color-input);
+	border-color: var(--border-color);
 }
 
 .hidden {
@@ -228,4 +235,56 @@ input[type="button"], input[type="submit"]{
 	&:active {
 		background-color: var(--bg-color-button-active);
 	}
+}
+
+#warning-box {
+	background-color: var(--bg-color);
+
+	border: var(--border-thickness);
+	border-radius: var(--border-radius);
+	border-style: solid;
+	border-color: var(--border-color);
+
+	margin: 1em 0 1em 0;
+	padding: 1em 1em 1em 1em;
+
+	max-width: var(--max-width);
+
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -50%);
+}
+
+#warning-box-text {
+	margin: 0 0 .75em 0;
+}
+
+#warning-box-table {
+	margin: 0 auto 0 auto;
+}
+
+.warning-box-table-container {
+	max-height: 250px;
+	display: block;
+	overflow-y: auto;
+	margin: 0 0 .75em 0;
+	scrollbar-width: thin;
+}
+
+#warning-box-table td, #warning-box-table th {
+	padding: 2px 4px 2px 4px;
+}
+
+#warning-box-buttons {
+	width: 100%;
+}
+
+#warning-generate-anyway {
+	float: left;
+}
+
+#warning-go-back {
+	float: right;
 }

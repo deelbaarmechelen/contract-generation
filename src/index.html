@@ -218,6 +218,24 @@
     </fieldset>
     <input id="submit" type="submit" value="Genereren" class="hidden">
   </form></main>
+  <div id="warning-box" class="hidden">
+    <div id="warning-box-text">Een aantal velden zijn mogelijk verkeerd ingevuld:</div>
+    <div class="warning-box-table-container">
+      <table id="warning-box-table">
+        <thead>
+          <tr>
+            <th scope="col">Veldlabel</th>
+            <th scope="col">Validatiebericht</th>
+          </tr>
+        </thead> 
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="warning-box-buttons">
+      <input type="button" id="warning-generate-anyway" value="Genereer toch">
+      <input type="button" id="warning-go-back" value="Corrigeer">
+    </div>
+  </div>
   <script src="apikey.js"></script>
   <script src="renderer.js"></script>
 </body>

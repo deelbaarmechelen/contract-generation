@@ -2,9 +2,12 @@
 
 const nonPayingOnlyElements = document.getElementsByClassName("non-paying-only");
 const payingOnlyElements = document.getElementsByClassName("paying-only");
-const fieldsets = document.getElementsByTagName("main")[0].getElementsByTagName("fieldset");
-const instructionTextElements = document.getElementsByTagName("main")[0].getElementsByClassName("instruction-text");
-const digibankForm = document.getElementById("digibank-form")
+const main = document.getElementsByTagName("main")[0];
+const fieldsets = main.getElementsByTagName("fieldset");
+const instructionTextElements = main.getElementsByClassName("instruction-text");
+const digibankForm = document.getElementById("digibank-form");
+const warningBox = document.getElementById("warning-box");
+const warningBoxTable = document.getElementById("warning-box-table");
 
 const inputs = {
 	payingContract: document.getElementById('paying-contract'),
@@ -50,11 +53,14 @@ const inputs = {
 
 	monthlyPayment: document.getElementById('monthly-payment'),
 	yearlyPayment: document.getElementById('yearly-payment'),
-	structuredCommunication: document.getElementById('structured-communication'),
+	structuredCommunication: document.getElementById('structured-communication')
 }
 
 const buttons = {
 	submit: document.getElementById("submit"),
+
+	warningGenerateAnyway: document.getElementById("warning-generate-anyway"),
+	warningGoBack: document.getElementById("warning-go-back"),
 
 	autoSignatureDate: document.getElementById("auto-signature-date"),
 	autoStartDate: document.getElementById("auto-start-date"),
@@ -156,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function changeContractType(e) {
 	payingChecked = inputs.payingContract.checked;
 	nonPayingChecked = inputs.nonPayingContract.checked;
-
 	
 	if (payingChecked || nonPayingChecked) {
 		buttons.submit.classList.remove("hidden");
@@ -336,14 +341,74 @@ buttons.autoDeviceModel.addEventListener("click", async (e) => {
 	// console.log(response);
 });
 
+function genValidationReport(inputs) {
+	let output = [];
+	for (let [key, value] of Object.entries(inputs)) {
+		if (value.validity.valid || (value.closest('[disabled]')!=null)) {
+			continue
+		}
+
+		const labelElement = document.querySelector("label[for=" + value.id + "]");
+		labelText = labelElement.innerHTML;
+		output.push({label: labelElement.innerHTML, validationMessage: value.validationMessage});
+	}
+	return output
+}
+
+function fillWarningMessages(validationReport) {
+	const tableBody = warningBoxTable.getElementsByTagName("TBODY")[0];
+	tableBody.innerHTML = "";
+
+	for (let message of validationReport) {
+		const fullMessageTr = document.createElement("tr");
+
+		const labelTd = document.createElement("td");
+		const labelContent = document.createTextNode(message.label);
+		labelTd.appendChild(labelContent);
+
+		const validationMessageTd = document.createElement("td");
+		const validationContent = document.createTextNode(message.validationMessage);
+		validationMessageTd.appendChild(validationContent);
+		
+		fullMessageTr.appendChild(labelTd);
+		fullMessageTr.appendChild(validationMessageTd);
+		tableBody.appendChild(fullMessageTr);
+	}
+}
+
+async function showWarning() {
+	warningBox.classList.remove("hidden");
+	main.inert = true;
+	fillWarningMessages(genValidationReport(inputs));
+	buttons.warningGoBack.focus({focusVisible: true});
+}
+
+async function hideWarning() {
+	warningBox.classList.add("hidden");
+	main.inert = false;
+}
+
+buttons.warningGenerateAnyway.addEventListener('click', async (e) => {
+	generateContract();
+	hideWarning();
+})
+
+buttons.warningGoBack.addEventListener('click', async (e) => {
+	hideWarning();
+	digibankForm.reportValidity();
+})
+
 buttons.submit.addEventListener('click', async (e) => {
 	if (digibankForm.checkValidity()) {
 		e.preventDefault();
+		generateContract();
 	} else {
-		return;
+		e.preventDefault();
+		showWarning();
 	}
-	
+})
 
+async function generateContract() {
 	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
 	const boxNumberText = inputs.boxNumber.value.length == 0 ? '' : ' bus ' + inputs.boxNumber.value;
 	const courseDate = inputs.workshopDate.valueAsDate;
@@ -422,7 +487,7 @@ buttons.submit.addEventListener('click', async (e) => {
 	} catch (error) {
 		console.error('Error generating PDF:', error);
 	}
-})
+}
 
 function renderPDF(url, canvasContainer, options) {
   var options = options || { scale: 1 };
