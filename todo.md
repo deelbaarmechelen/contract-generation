@@ -4,10 +4,11 @@ Done:
 - Write test helper function
 - Add referral
 - Add aptitude test fields
+- Remove necessity of valid inputs
 
 Current:
 
-- Remove necessity of valid inputs
+
 
 Necessary:
 
