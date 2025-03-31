@@ -133,7 +133,7 @@ input:not([type="radio"], [type="checkbox"]), select {
 	border-style: solid;
 	border-color: var(--border-color);
 	
-	&:hover {
+	&:hover:not([disabled]) {
 		outline: solid;
 		outline-width: 2px;
 		outline-color: var(--outline-color-hover);
