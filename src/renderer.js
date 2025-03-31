@@ -1,15 +1,15 @@
 //// Element constants
 
+const main = document.getElementsByTagName("main")[0];
+const digibankForm = document.getElementById("digibank-form");
+const fieldsets = main.getElementsByTagName("fieldset");
 const nonPayingOnlyElements = document.getElementsByClassName("non-paying-only");
 const payingOnlyElements = document.getElementsByClassName("paying-only");
-const main = document.getElementsByTagName("main")[0];
-const fieldsets = main.getElementsByTagName("fieldset");
-const instructionTextElements = main.getElementsByClassName("instruction-text");
-const digibankForm = document.getElementById("digibank-form");
+const instructionTextElements = main.getElementsByClassName("instruction-text");  // Really just the text that the _Digibankmedewerker_ will take it from here.
 const warningBox = document.getElementById("warning-box");
 const warningBoxTable = document.getElementById("warning-box-table");
 
-const inputs = {
+const inputs = {  // Not necessarily all <input> tags.
 	payingContract: document.getElementById('paying-contract'),
 	nonPayingContract: document.getElementById('non-paying-contract'),
 
@@ -78,7 +78,8 @@ const buttons = {
 	autoStructuredCommunication: document.getElementById("auto-structured-communication"),
 }
 
-// Data constants
+
+//// Data constants
 
 const deviceTypes = {
 	"laptop-win-10": {
@@ -97,10 +98,16 @@ const deviceTypes = {
 
 const postalCodesMechelen = [2800, 2801, 2811, 2812];
 
+
 //// Testing
 
-// Helper function for manual testing
+/** Helper function for manual testing. */ 
 function testFill() {
+	// I know just putting this in renderer.js is testing like a cave person.
+	// I'm not figuring out node.js unit testing right now. 
+	// Ooga booga me use developer console.
+
+	// Works for both contract types.
 	if (!inputs.nonPayingContract.checked) {
 		inputs.payingContract.checked = true;
 		changeContractType();
@@ -119,13 +126,15 @@ function testFill() {
 	inputs.email.value = "Pietje123@gmail.com";
 	inputs.phoneNumber.value = "0469123123";
 	
-	inputs.referrer.value = "Zijn mama";
+	inputs.referrer.value = "Sinterklaas";
 	
 	inputs.contractNumber.value = "C-B-25-100000";
+	inputs.clientNumber.value = "1000001";
+
 	inputs.assetTag.value = "PC250200";
 	inputs.deviceBrand.value = "LapInc.";
 	inputs.deviceModel.value = "Thinkbook PP890";
-	inputs.deviceType.value = "laptop-win-10";
+	inputs.deviceType.value = "laptop-win-10";  // Miracle that this works like that.
 	inputs.includesCharger.checked = true;
 
 	buttons.autoSignatureDate.click();
@@ -140,8 +149,10 @@ function testFill() {
 		buttons.autoMonthlyPayment.click();
 		buttons.autoYearlyPayment.click();
 		buttons.autoCircleValue.click();
+		inputs.advancePayment.value = "€ 50";
 	}
 }
+
 
 //// General utility
 
@@ -155,17 +166,20 @@ function euroStrToNum(euroStr) {
 	return Number(cleanEuroStr);
 }
 
+
 /** Prettify euro amount. */
 function euroPrettify(euroAmount) {
 	const regularized = euroStrToNum(String(euroAmount));
 	return euroFormat.format(regularized);
 }
 
+
 //// Form display
 
-// Schaamteloos gestolen van trincot op StackExchange. CC BY-SA is toepasselijk. 
+// Shamelessly stolen from trincot on StackExchange. CC BY-SA is applicable. 
 // https://stackoverflow.com/questions/12578507/implement-an-input-with-a-mask
-// This code empowers all input tags having a placeholder and data-slots attribute
+// Keeps the structuredCommunication +'s and /'s in place by means of magic.
+// It's very elegant and nice and good and I love trincot for inventing it.
 document.addEventListener('DOMContentLoaded', () => {
 	for (const el of document.querySelectorAll("[placeholder][data-slots]")) {
 		const pattern = el.getAttribute("placeholder"),
@@ -196,7 +210,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 });
 
-/** Hides or shows fields depending on contract type. */
+
+/** Switched visible fields depending on contract type. */
 function changeContractType(e) {
 	payingChecked = inputs.payingContract.checked;
 	nonPayingChecked = inputs.nonPayingContract.checked;
@@ -251,18 +266,16 @@ function changeContractType(e) {
 inputs.payingContract.addEventListener("input", changeContractType);
 inputs.nonPayingContract.addEventListener("input", changeContractType);
 
-// UiTpas code field activation toggle
 
-let uitpasNummer = "";
-
+/** Disable uitpasNumber field when the user is excepted from it. */
 function toggleEnabledUitpasNumber(e) {
 	inputs.uitpasNumber.disabled = inputs.uitpasException.checked;
 }
 
 inputs.uitpasException.addEventListener("input", toggleEnabledUitpasNumber);
 
-// Workshop fields activation and requirement toggle
 
+/** Do not require workshop if excepted because of skill test or extension. */
 function toggleEnabledWorkshopFields(e) {
 	inputs.workshopException.disabled = inputs.isExtension.checked;
 	inputs.workshopDate.disabled = inputs.workshopException.checked;
@@ -272,14 +285,18 @@ function toggleEnabledWorkshopFields(e) {
 inputs.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
 inputs.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 
-// Adds changed class to input elements after they've been changed.
 
+// Adds .changed class to input elements after they've been changed.
+// The .changed class makes it so invalid inputs are marked in red.
+// You don't want users to be scolded for invalid inputs they didn't even touch.
 for (const [key, el] of Object.entries(inputs)) {
 	el.addEventListener("input", (e) => el.classList.add("changed"))
 }
 
+
 //// Input validation
 
+/** Only Mechelaars can get a non-paying contract, unless they have an exception. */
 function validatePostalCode(e) {
 	if (inputs.nonPayingContract.checked 
 		&& !inputs.uitpasException.checked 
@@ -290,8 +307,11 @@ function validatePostalCode(e) {
 	}
 }
 
+// Important principle: If validation depends on a previous field, you need
+// to redo validation once that field changes as well!
 inputs.postalCode.addEventListener("input", validatePostalCode)
 inputs.uitpasException.addEventListener("input", validatePostalCode)
+
 
 inputs.assetTag.addEventListener("input", (e) => {
 	if (inputs.assetTag.validity.patternMismatch) {
@@ -301,6 +321,8 @@ inputs.assetTag.addEventListener("input", (e) => {
 	}	
 })
 
+
+/** Warns user if the monthly payment is different from expected for device type. */
 function validateMonthlyPayment(e) {
 	if (!inputs.deviceType.value) {
 		inputs.monthlyPayment.setCustomValidity("");
@@ -321,6 +343,8 @@ function validateMonthlyPayment(e) {
 inputs.monthlyPayment.addEventListener("input", validateMonthlyPayment);
 inputs.deviceType.addEventListener("input", validateMonthlyPayment);
 
+
+/** Warns user if the yearly payment is different from expected for device type. */
 function validateYearlyPayment(e) {
 	if (!inputs.deviceType.value) {
 		inputs.yearlyPayment.setCustomValidity("");
@@ -341,6 +365,8 @@ function validateYearlyPayment(e) {
 inputs.yearlyPayment.addEventListener("input", validateYearlyPayment);
 inputs.deviceType.addEventListener("input", validateYearlyPayment);
 
+
+/** Warns user if the circle value is different from expected for device type. */
 function validateCircleValue(e) {
 	if (!inputs.deviceType.value) {
 		inputs.circleValue.setCustomValidity("");
@@ -361,6 +387,8 @@ function validateCircleValue(e) {
 inputs.circleValue.addEventListener("input", validateCircleValue);
 inputs.deviceType.addEventListener("input", validateCircleValue);
 
+
+// Makes sure structured communication is valid.
 inputs.structuredCommunication.addEventListener("input", (e) => {
 	digits = inputs.structuredCommunication.value.replace(/\D/g, "");
 	incompleteDigits = parseInt(digits.slice(0, 10));
@@ -373,15 +401,18 @@ inputs.structuredCommunication.addEventListener("input", (e) => {
 	}	
 })
 
-//// Autofill buttons
+////// Autofill
 
-// Autofill calculations
+//// Autofill calculations
 
 function calcSignatureDate() {
 	return new Date();
 }
 
 function calcStartDate() {
+	// I'm making these date calculation functions cascade upwards. 
+	// So that later date fields depend on previous fields,
+	// but they also don't all need to be filled in to generate useful results.
 	return inputs.signatureDate.valueAsDate || calcSignatureDate();
 }
 
@@ -389,6 +420,7 @@ function calcEndDate() {
 	const date = inputs.startDate.valueAsDate || calcStartDate();
 	return new Date(date.getUTCFullYear() + 1, date.getMonth(), date.getDate());
 }
+
 
 function calcStructuredCommunication() {
 	const signatureDate = inputs.signatureDate.valueAsDate || new Date();
@@ -404,13 +436,17 @@ function calcStructuredCommunication() {
 	return unfinishedMessage + checksum;
 }
 
-// Autofill click events
+
+//// Autofill click events
 
 buttons.autoSignatureDate.addEventListener("click", (e) => {
 	inputs.signatureDate.valueAsDate = calcSignatureDate();
 
+	// Emulate a user changing the field, which is important for correct display
+	// of invalid inputs.
 	inputs.signatureDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
+
 
 buttons.autoStartDate.addEventListener("click", (e) => {
 	inputs.startDate.valueAsDate = calcStartDate();
@@ -418,17 +454,20 @@ buttons.autoStartDate.addEventListener("click", (e) => {
 	inputs.startDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
+
 buttons.autoEndDate.addEventListener("click", (e) => {
 	inputs.endDate.valueAsDate = calcEndDate();
 
 	inputs.endDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
+
 buttons.autoStructuredCommunication.addEventListener("click", (e) => {
 	inputs.structuredCommunication.value = calcStructuredCommunication();
 
 	inputs.structuredCommunication.dispatchEvent(new Event("input"), { bubbles: true });
 });
+
 
 async function autoDeviceBrandAndModel(e) {
 	window.inventoryAPI.getAssetDetails({ assetTag: inputs.assetTag.value })
@@ -445,6 +484,7 @@ async function autoDeviceBrandAndModel(e) {
 buttons.autoDeviceBrand.addEventListener("click", autoDeviceBrandAndModel);
 buttons.autoDeviceModel.addEventListener("click", autoDeviceBrandAndModel);
 
+
 buttons.autoMonthlyPayment.addEventListener("click", (e) => {
 	if (!inputs.deviceType.value) {
 		return
@@ -454,6 +494,7 @@ buttons.autoMonthlyPayment.addEventListener("click", (e) => {
 
 	inputs.monthlyPayment.dispatchEvent(new Event("input"), { bubbles: true });
 });
+
 
 buttons.autoYearlyPayment.addEventListener("click", (e) => {
 	if (!inputs.deviceType.value) {
@@ -465,6 +506,7 @@ buttons.autoYearlyPayment.addEventListener("click", (e) => {
 	inputs.yearlyPayment.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
+
 buttons.autoCircleValue.addEventListener("click", (e) => {
 	if (!inputs.deviceType.value) {
 		return
@@ -475,9 +517,11 @@ buttons.autoCircleValue.addEventListener("click", (e) => {
 	inputs.circleValue.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
-//// Warning prompt
 
-function genValidationReport(inputs) {
+////// Invalid fields prompt after submit
+
+/** Generates an array with the labels and validation messages of invalid inputs. */
+function genWarningBoxTableContent(inputs) {
 	let output = [];
 	for (let [key, value] of Object.entries(inputs)) {
 		if (value.validity.valid || (value.closest('[disabled]')!=null)) {
@@ -491,7 +535,8 @@ function genValidationReport(inputs) {
 	return output
 }
 
-function fillWarningMessages(validationReport) {
+/** Takes an array as outputted by genWarningBoxTableContent and puts contents in warningBoxTable. */
+function fillWarningBoxTable(validationReport) {
 	const tableBody = warningBoxTable.getElementsByTagName("TBODY")[0];
 	tableBody.innerHTML = "";
 
@@ -512,20 +557,24 @@ function fillWarningMessages(validationReport) {
 	}
 }
 
-async function showWarning() {
+/** Opens the invalid inputs warning prompt. */
+function showWarning() {
 	warningBox.classList.remove("hidden");
-	main.inert = true;
-	fillWarningMessages(genValidationReport(inputs));
+	main.inert = true; 
+	fillWarningBoxTable(genWarningBoxTableContent(inputs)); 
+
+	// Preferably, we want the user to go back and fix invalid inputs.
 	buttons.warningGoBack.focus({focusVisible: true});
 }
 
-async function hideWarning() {
+/** Closes the invalid inputs warning prompt. */
+function hideWarning() {
 	warningBox.classList.add("hidden");
 	main.inert = false;
 
-	digibankForm.reportValidity();
+	digibankForm.reportValidity(); // Focuses first invalid input in form.
 
-	// At this point just show all invalid fields.
+	// Untouched fields also should be red at this point.
 	for (const [key, el] of Object.entries(inputs)) {
 		el.classList.add("changed");
 	}
@@ -549,6 +598,8 @@ buttons.submit.addEventListener('click', async (e) => {
 		showWarning();
 	}
 })
+
+////// Contract generation (Kind of a mess.) 
 
 async function generateContract() {
 	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
@@ -575,7 +626,9 @@ async function generateContract() {
 		"isExtension": inputs.isExtension.checked,
 		"client": {
 			"name" : inputs.firstName.value + ' ' + inputs.lastName.value,
-			"address": inputs.streetName.value + ' ' + inputs.houseNumber.value + boxNumberText + ', ' + inputs.postalCode.value + ' ' + inputs.municipality.value + ', ' + inputs.country.value, 
+			"address": inputs.streetName.value + ' ' + inputs.houseNumber.value 
+			         + boxNumberText + ', ' + inputs.postalCode.value + ' ' 
+					 + inputs.municipality.value + ', ' + inputs.country.value, 
 			"phone": inputs.phoneNumber.value,
 			"email": inputs.email.value,
 		},
@@ -598,7 +651,7 @@ async function generateContract() {
 		"referer": inputs.referrer.value,
 		"structuredReference": inputs.structuredCommunication.value,
 		"item" : {
-			"deviceType": inputs.deviceType.value,
+			"deviceType": inputs.deviceType.value ? deviceTypes[inputs.deviceType.value].fullName : "",
 			"deviceBrand": inputs.deviceBrand.value,
 			"deviceModel": inputs.deviceModel.value,
 			"assetTag" : inputs.assetTag.value,
