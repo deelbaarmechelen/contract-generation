@@ -117,7 +117,7 @@ fieldset {
 	flex-grow: 0;
 }
 
-input:not([type="radio"], [type="checkbox"]) {
+input:not([type="radio"], [type="checkbox"]), select {
 	width: 125px;
 	padding: .25em;
 	flex-grow: 1;
@@ -195,6 +195,10 @@ input:not([type="radio"], [type="checkbox"]) {
 .radio-option input {
 	height: 1em;
 	width: 1em;
+}
+
+.select-empty-option {
+	color: var(--font-color-disabled);
 }
 
 .checkbox-box {

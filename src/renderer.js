@@ -68,7 +68,6 @@ const buttons = {
 	autoContractNumber: document.getElementById("auto-contract-number"),
 	autoDeviceBrand: document.getElementById("auto-device-brand"),
 	autoDeviceModel: document.getElementById("auto-device-model"),
-	autoDeviceType: document.getElementById("auto-device-tyoe"),
 
 	autoDeviceOutDate: document.getElementById("auto-device-out-date"),
 	autoDeviceCheckupDate: document.getElementById("auto-device-checkup-date"),
