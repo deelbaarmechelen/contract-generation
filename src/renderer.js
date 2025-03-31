@@ -125,7 +125,7 @@ function testFill() {
 	inputs.assetTag.value = "PC250200";
 	inputs.deviceBrand.value = "LapInc.";
 	inputs.deviceModel.value = "Thinkbook PP890";
-	inputs.deviceType.value = "Laptop";
+	inputs.deviceType.value = "laptop-win-10";
 	inputs.includesCharger.checked = true;
 
 	buttons.autoSignatureDate.click();
@@ -137,6 +137,9 @@ function testFill() {
 		inputs.workshopDate.valueAsDate = new Date();
 	} else {
 		buttons.autoStructuredCommunication.click();
+		buttons.autoMonthlyPayment.click();
+		buttons.autoYearlyPayment.click();
+		buttons.autoCircleValue.click();
 	}
 }
 
@@ -579,9 +582,10 @@ async function generateContract() {
     "contract-type": inputs.payingContract.checked ? "paying" : "non-paying",
 		"subscription" : {
 			"structuredReference" : inputs.structuredCommunication.value,
-			"amount" : "10",
-			"amountPaid" : "10",
-			"circleValue" : "50"
+			"monthlyPayment" : inputs.monthlyPayment.value ? euroPrettify(inputs.monthlyPayment.value) : "",
+			"yearlyPayment" : inputs.yearlyPayment.value ? euroPrettify(inputs.yearlyPayment.value) : "",
+			"amountPaid" : inputs.advancePayment.value ? euroPrettify(inputs.advancePayment.value) : "",
+			"circleValue" : inputs.circleValue.value ? euroPrettify(inputs.circleValue.value) : ""
 		},
 		"uitpas" : {
 			"applicable" : !inputs.uitpasException.checked,
@@ -591,12 +595,7 @@ async function generateContract() {
 			"courseDate" : courseDate ? courseDate.toLocaleDateString("nl-BE") : null,
 			"courseNotification" : courseNotification
 		},
-		"referer": {
-			"organisation" : false,
-			"orgName" : "",
-			"other" : true,
-			"otherName" : inputs.referrer.value
-		},
+		"referer": inputs.referrer.value,
 		"structuredReference": inputs.structuredCommunication.value,
 		"item" : {
 			"deviceType": inputs.deviceType.value,
@@ -610,9 +609,8 @@ async function generateContract() {
 			}
 		},
 		"contractDate" : inputs.signatureDate.valueAsDate.toLocaleDateString("nl-BE"),
-		"startDate" : inputs.deviceOutDate.valueAsDate.toLocaleDateString("nl-BE"),
-		"maintenanceDate" : inputs.deviceCheckupDate.valueAsDate.toLocaleDateString("nl-BE"),
-		"endDate" : inputs.deviceInDate.valueAsDate.toLocaleDateString("nl-BE")
+		"startDate" : inputs.startDate.valueAsDate.toLocaleDateString("nl-BE"),
+		"endDate" : inputs.endDate.valueAsDate.toLocaleDateString("nl-BE")
 	};
 	try {
 		console.log('Generating PDF with data:', data);
