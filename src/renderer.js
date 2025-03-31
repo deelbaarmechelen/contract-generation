@@ -136,6 +136,23 @@ function testFill() {
 	}
 }
 
+//// General utility
+
+const euroFormat = Intl.NumberFormat("nl-BE", { style: "currency", currency: "EUR" })
+
+/** Make euro amount numeric. */
+function euroStrToNum(euroStr) {
+	const cleanEuroStr = euroStr
+	 .replace(/[^\d,.]/g, "")
+	 .replace(",", ".");
+	return Number(cleanEuroStr);
+}
+
+/** Prettify euro amount. */
+function euroPrettify(euroAmount) {
+	const regularized = euroStrToNum(String(euroAmount));
+	return euroFormat.format(regularized);
+}
 
 //// Form display
 
@@ -172,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 });
 
-/** Verbergt of toont relevante velden na kiezen contracttype. */
+/** Hides or shows fields depending on contract type. */
 function changeContractType(e) {
 	payingChecked = inputs.payingContract.checked;
 	nonPayingChecked = inputs.nonPayingContract.checked;
@@ -269,6 +286,66 @@ inputs.structuredCommunication.addEventListener("input", (e) => {
 		inputs.structuredCommunication.setCustomValidity("");
 	}	
 })
+
+function validateMonthlyPayment(e) {
+	if (!inputs.deviceType.value) {
+		inputs.monthlyPayment.setCustomValidity("");
+		return
+	}
+
+	const value = inputs.monthlyPayment.value;
+	const euroNum = euroStrToNum(value);
+	const euroNumExpected = deviceTypes[inputs.deviceType.value].monthlyPayment;
+	
+	if (!(euroNum == euroNumExpected)) {
+		inputs.monthlyPayment.setCustomValidity("Onverwacht bedrag voor dit apparaattype.");
+	} else {
+		inputs.monthlyPayment.setCustomValidity("");
+	}
+}
+
+inputs.monthlyPayment.addEventListener("input", validateMonthlyPayment);
+inputs.deviceType.addEventListener("input", validateMonthlyPayment);
+
+function validateYearlyPayment(e) {
+	if (!inputs.deviceType.value) {
+		inputs.yearlyPayment.setCustomValidity("");
+		return
+	}
+
+	const value = inputs.yearlyPayment.value;
+	const euroNum = euroStrToNum(value);
+	const euroNumExpected = deviceTypes[inputs.deviceType.value].yearlyPayment;
+	
+	if (!(euroNum == euroNumExpected)) {
+		inputs.yearlyPayment.setCustomValidity("Onverwacht bedrag voor dit apparaattype.");
+	} else {
+		inputs.yearlyPayment.setCustomValidity("");
+	}
+}
+
+inputs.yearlyPayment.addEventListener("input", validateYearlyPayment);
+inputs.deviceType.addEventListener("input", validateYearlyPayment);
+
+function validateCircleValue(e) {
+	if (!inputs.deviceType.value) {
+		inputs.circleValue.setCustomValidity("");
+		return
+	}
+
+	const value = inputs.circleValue.value;
+	const euroNum = euroStrToNum(value);
+	const euroNumExpected = deviceTypes[inputs.deviceType.value].circleValue;
+	
+	if (!(euroNum == euroNumExpected)) {
+		inputs.circleValue.setCustomValidity("Onverwacht bedrag voor dit apparaattype.");
+	} else {
+		inputs.circleValue.setCustomValidity("");
+	}
+}
+
+inputs.circleValue.addEventListener("input", validateCircleValue);
+inputs.deviceType.addEventListener("input", validateCircleValue);
 
 //// Autofill buttons
 
