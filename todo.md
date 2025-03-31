@@ -9,10 +9,9 @@ Done:
 
 Current:
 
-
+- Add date validation
 
 Necessary:
-- Add date validation
 - Add required previous field validation to autocomplete buttons
 - Add declaration that client is 18 years of age
 - Fix document

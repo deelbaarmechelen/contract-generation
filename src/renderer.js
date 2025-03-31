@@ -35,8 +35,11 @@ const inputs = {
 	workshopException: document.getElementById('workshop-exception'),
 
 	isExtension: document.getElementById('is-extension'),
+
 	signatureDate: document.getElementById('signature-date'),
 	startDate: document.getElementById('start-date'),
+	endDate: document.getElementById('end-date'),
+
 	clientNumber: document.getElementById('client-number'),
 	contractNumber: document.getElementById('contract-number'),
 
@@ -47,9 +50,6 @@ const inputs = {
 	includesCharger: document.getElementById('includes-charger'),
 	includesMouse: document.getElementById('includes-mouse'),
 	includesSmartCardReader: document.getElementById('includes-smart-card-reader'),
-	deviceOutDate: document.getElementById('device-out-date'),
-	deviceCheckupDate: document.getElementById('device-checkup-date'),
-	deviceInDate: document.getElementById('device-in-date'),
 
 	monthlyPayment: document.getElementById('monthly-payment'),
 	yearlyPayment: document.getElementById('yearly-payment'),
@@ -66,14 +66,11 @@ const buttons = {
 
 	autoSignatureDate: document.getElementById("auto-signature-date"),
 	autoStartDate: document.getElementById("auto-start-date"),
+	autoEndDate: document.getElementById("auto-end-date"),
 
 	autoContractNumber: document.getElementById("auto-contract-number"),
 	autoDeviceBrand: document.getElementById("auto-device-brand"),
 	autoDeviceModel: document.getElementById("auto-device-model"),
-
-	autoDeviceOutDate: document.getElementById("auto-device-out-date"),
-	autoDeviceCheckupDate: document.getElementById("auto-device-checkup-date"),
-	autoDeviceInDate: document.getElementById("auto-device-in-date"),
 
 	autoMonthlyPayment: document.getElementById("auto-monthly-payment"),
 	autoYearlyPayment: document.getElementById("auto-yearly-payment"),
@@ -133,10 +130,7 @@ function testFill() {
 
 	buttons.autoSignatureDate.click();
 	buttons.autoStartDate.click();
-
-	buttons.autoDeviceOutDate.click();
-	buttons.autoDeviceCheckupDate.click();
-	buttons.autoDeviceInDate.click();
+	buttons.autoEndDate.click();
 
 	if (inputs.nonPayingContract.checked) {
 		inputs.uitpasNumber.value = "1111111111111";
@@ -278,7 +272,6 @@ inputs.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 // Adds changed class to input elements after they've been changed.
 
 for (const [key, el] of Object.entries(inputs)) {
-	console.log(el);
 	el.addEventListener("input", (e) => el.classList.add("changed"))
 }
 
@@ -302,18 +295,6 @@ inputs.assetTag.addEventListener("input", (e) => {
 		inputs.assetTag.setCustomValidity("Een assettag hoort zes cijfers te hebben met eventueel een combinatie hoofdletters ervoor. (bv. 'PC250200')");
 	} else {
 		inputs.assetTag.setCustomValidity("");
-	}	
-})
-
-inputs.structuredCommunication.addEventListener("input", (e) => {
-	digits = inputs.structuredCommunication.value.replace(/\D/g, "");
-	incompleteDigits = parseInt(digits.slice(0, 10));
-	checksumProvided = parseInt(digits.slice(10, 12));
-	
-	if (!(incompleteDigits % 97 === checksumProvided)) {
-		inputs.structuredCommunication.setCustomValidity("Deze gestructureerde mededeling is niet geldig.");
-	} else {
-		inputs.structuredCommunication.setCustomValidity("");
 	}	
 })
 
@@ -377,6 +358,18 @@ function validateCircleValue(e) {
 inputs.circleValue.addEventListener("input", validateCircleValue);
 inputs.deviceType.addEventListener("input", validateCircleValue);
 
+inputs.structuredCommunication.addEventListener("input", (e) => {
+	digits = inputs.structuredCommunication.value.replace(/\D/g, "");
+	incompleteDigits = parseInt(digits.slice(0, 10));
+	checksumProvided = parseInt(digits.slice(10, 12));
+	
+	if (!(incompleteDigits % 97 === checksumProvided)) {
+		inputs.structuredCommunication.setCustomValidity("Deze gestructureerde mededeling is niet geldig.");
+	} else {
+		inputs.structuredCommunication.setCustomValidity("");
+	}	
+})
+
 //// Autofill buttons
 
 // Autofill calculations
@@ -389,17 +382,8 @@ function calcStartDate() {
 	return inputs.signatureDate.valueAsDate || calcSignatureDate();
 }
 
-function calcDeviceOutDate() {
-	return inputs.startDate.valueAsDate || calcStartDate();
-}
-
-function calcDeviceCheckupDate() {
-	const date = inputs.deviceOutDate.valueAsDate || calcDeviceOutDate();
-	return new Date(date.getUTCFullYear(), date.getMonth() + 6, date.getDate());
-}
-
-function calcDeviceInDate() {
-	const date = inputs.deviceOutDate.valueAsDate || calcDeviceOutDate();
+function calcEndDate() {
+	const date = inputs.startDate.valueAsDate || calcStartDate();
 	return new Date(date.getUTCFullYear() + 1, date.getMonth(), date.getDate());
 }
 
@@ -431,26 +415,15 @@ buttons.autoStartDate.addEventListener("click", (e) => {
 	inputs.startDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
-buttons.autoDeviceOutDate.addEventListener("click", (e) => {
-	inputs.deviceOutDate.valueAsDate = calcDeviceOutDate();
+buttons.autoEndDate.addEventListener("click", (e) => {
+	inputs.endDate.valueAsDate = calcEndDate();
 
-	inputs.deviceOutDate.dispatchEvent(new Event("input"), { bubbles: true });
-});
-
-buttons.autoDeviceCheckupDate.addEventListener("click", (e) => {
-	inputs.deviceCheckupDate.valueAsDate = calcDeviceCheckupDate();
-
-	inputs.deviceCheckupDate.dispatchEvent(new Event("input"), { bubbles: true });
-});
-
-buttons.autoDeviceInDate.addEventListener("click", (e) => {
-	inputs.deviceInDate.valueAsDate = calcDeviceInDate();
-
-	inputs.deviceInDate.dispatchEvent(new Event("input"), { bubbles: true });
+	inputs.endDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
 buttons.autoStructuredCommunication.addEventListener("click", (e) => {
 	inputs.structuredCommunication.value = calcStructuredCommunication();
+
 	inputs.structuredCommunication.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
