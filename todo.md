@@ -5,16 +5,13 @@ Done:
 - Add referral
 - Add aptitude test fields
 - Remove necessity of valid inputs
+- Add postcode validation for UiTpas
 
 Current:
 
 
 
 Necessary:
-
-- Make distinction 'organisatie' and 'other' in referrer
-- Add distinction between Windows 10 and Windows 11 contracts
-- Add postcode validation for UiTpas
 - Add date validation
 - Add required previous field validation to autocomplete buttons
 - Add declaration that client is 18 years of age

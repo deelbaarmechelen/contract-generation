@@ -81,6 +81,8 @@ const buttons = {
 	autoStructuredCommunication: document.getElementById("auto-structured-communication"),
 }
 
+// Data constants
+
 const deviceTypes = {
 	"laptop-win-10": {
 		fullName: "Laptop (Windows 10)",
@@ -95,6 +97,10 @@ const deviceTypes = {
 		circleValue: 75
 	}
 }
+
+const postalCodesMechelen = [2800, 2801, 2811, 2812];
+
+//// Testing
 
 // Helper function for manual testing
 function testFill() {
@@ -277,6 +283,19 @@ for (const [key, el] of Object.entries(inputs)) {
 }
 
 //// Input validation
+
+function validatePostalCode(e) {
+	if (inputs.nonPayingContract.checked 
+		&& !inputs.uitpasException.checked 
+		&& !postalCodesMechelen.includes(Number(inputs.postalCode.value))) {
+		inputs.postalCode.setCustomValidity("Dit is geen postcode uit de gemeente Mechelen.");
+	} else {
+		inputs.postalCode.setCustomValidity("");
+	}
+}
+
+inputs.postalCode.addEventListener("input", validatePostalCode)
+inputs.uitpasException.addEventListener("input", validatePostalCode)
 
 inputs.assetTag.addEventListener("input", (e) => {
 	if (inputs.assetTag.validity.patternMismatch) {
