@@ -74,6 +74,10 @@ const buttons = {
 	autoDeviceOutDate: document.getElementById("auto-device-out-date"),
 	autoDeviceCheckupDate: document.getElementById("auto-device-checkup-date"),
 	autoDeviceInDate: document.getElementById("auto-device-in-date"),
+
+	autoMonthlyPayment: document.getElementById("auto-monthly-payment"),
+	autoYearlyPayment: document.getElementById("auto-yearly-payment"),
+	autoCircleValue: document.getElementById("auto-circle-value"),
 	autoStructuredCommunication: document.getElementById("auto-structured-communication"),
 }
 
@@ -265,6 +269,13 @@ function toggleEnabledWorkshopFields(e) {
 inputs.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
 inputs.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 
+// Adds changed class to input elements after they've been changed.
+
+for (const [key, el] of Object.entries(inputs)) {
+	console.log(el);
+	el.addEventListener("input", (e) => el.classList.add("changed"))
+}
+
 //// Input validation
 
 inputs.assetTag.addEventListener("input", (e) => {
@@ -336,7 +347,7 @@ function validateCircleValue(e) {
 	const value = inputs.circleValue.value;
 	const euroNum = euroStrToNum(value);
 	const euroNumExpected = deviceTypes[inputs.deviceType.value].circleValue;
-	
+
 	if (!(euroNum == euroNumExpected)) {
 		inputs.circleValue.setCustomValidity("Onverwacht bedrag voor dit apparaattype.");
 	} else {
@@ -391,46 +402,85 @@ function calcStructuredCommunication() {
 
 buttons.autoSignatureDate.addEventListener("click", (e) => {
 	inputs.signatureDate.valueAsDate = calcSignatureDate();
+
+	inputs.signatureDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
 buttons.autoStartDate.addEventListener("click", (e) => {
 	inputs.startDate.valueAsDate = calcStartDate();
+
+	inputs.startDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
 buttons.autoDeviceOutDate.addEventListener("click", (e) => {
 	inputs.deviceOutDate.valueAsDate = calcDeviceOutDate();
+
+	inputs.deviceOutDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
 buttons.autoDeviceCheckupDate.addEventListener("click", (e) => {
 	inputs.deviceCheckupDate.valueAsDate = calcDeviceCheckupDate();
+
+	inputs.deviceCheckupDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
 buttons.autoDeviceInDate.addEventListener("click", (e) => {
 	inputs.deviceInDate.valueAsDate = calcDeviceInDate();
+
+	inputs.deviceInDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
 buttons.autoStructuredCommunication.addEventListener("click", (e) => {
 	inputs.structuredCommunication.value = calcStructuredCommunication();
-	inputs.structuredCommunication.dispatchEvent(new Event("input"));
+	inputs.structuredCommunication.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
-buttons.autoDeviceModel.addEventListener("click", async (e) => {
+async function autoDeviceBrandAndModel(e) {
 	window.inventoryAPI.getAssetDetails({ assetTag: inputs.assetTag.value })
 		.then((data) => {
 			console.log(data);
 			inputs.deviceBrand.value = data.asset.brand;
 			inputs.deviceModel.value = data.asset.model;
 		});
-	// const response = await fetch("https://inventaris.digibankmechelen.be/api/v1/hardware/bytag/{asset_tag}", {
-	// 	method: "POST",
-	// 	headers: {
-	// 		'Accept': 'application/json',
-	// 		'Content-Type': 'application/json',
-	// 		'Authorization': 'Raf ' + SNIPEKEY,
-	// 	}
-	// });
-	// console.log(response);
+
+	inputs.deviceBrand.dispatchEvent(new Event("input"), { bubbles: true });
+	inputs.deviceModel.dispatchEvent(new Event("input"), { bubbles: true });
+}
+
+buttons.autoDeviceBrand.addEventListener("click", autoDeviceBrandAndModel);
+buttons.autoDeviceModel.addEventListener("click", autoDeviceBrandAndModel);
+
+buttons.autoMonthlyPayment.addEventListener("click", (e) => {
+	if (!inputs.deviceType.value) {
+		return
+	}
+
+	inputs.monthlyPayment.value = euroPrettify(deviceTypes[inputs.deviceType.value].monthlyPayment);
+
+	inputs.monthlyPayment.dispatchEvent(new Event("input"), { bubbles: true });
 });
+
+buttons.autoYearlyPayment.addEventListener("click", (e) => {
+	if (!inputs.deviceType.value) {
+		return
+	}
+
+	inputs.yearlyPayment.value = euroPrettify(deviceTypes[inputs.deviceType.value].yearlyPayment);
+
+	inputs.yearlyPayment.dispatchEvent(new Event("input"), { bubbles: true });
+});
+
+buttons.autoCircleValue.addEventListener("click", (e) => {
+	if (!inputs.deviceType.value) {
+		return
+	}
+
+	inputs.circleValue.value = euroPrettify(deviceTypes[inputs.deviceType.value].circleValue);
+
+	inputs.circleValue.dispatchEvent(new Event("input"), { bubbles: true });
+});
+
+//// Warning prompt
 
 function genValidationReport(inputs) {
 	let output = [];
@@ -477,6 +527,13 @@ async function showWarning() {
 async function hideWarning() {
 	warningBox.classList.add("hidden");
 	main.inert = false;
+
+	digibankForm.reportValidity();
+
+	// At this point just show all invalid fields.
+	for (const [key, el] of Object.entries(inputs)) {
+		el.classList.add("changed");
+	}
 }
 
 buttons.warningGenerateAnyway.addEventListener('click', async (e) => {
@@ -486,7 +543,6 @@ buttons.warningGenerateAnyway.addEventListener('click', async (e) => {
 
 buttons.warningGoBack.addEventListener('click', async (e) => {
 	hideWarning();
-	digibankForm.reportValidity();
 })
 
 buttons.submit.addEventListener('click', async (e) => {

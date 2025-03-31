@@ -16,8 +16,7 @@
 
   --outline-color-hover: lightgrey;
   --outline-color-focus: grey;
-  --outline-color-invalid: red;
-  --outline-color-warning: orange;
+  --outline-color-invalid: orangered;
 
   --border-thickness: 2px;
   --border-radius: 8px;
@@ -146,7 +145,7 @@ input:not([type="radio"], [type="checkbox"]), select {
 		outline-color: var(--outline-color-focus);
 	}
 		
-	&:is(input):user-invalid:not(:focus) {
+	&.changed:is(input, select):invalid:not(:focus) {
 		outline: solid;
 		outline-width: 2px;
 		outline-color: var(--outline-color-invalid);
