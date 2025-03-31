@@ -202,15 +202,24 @@
     <fieldset class="hidden paying-only">
       <legend>Betaalgegevens</legend>
       <div class="fieldsubset">
-        <div class="radio-option-list paying-only">
-          <div class="radio-option">
-            <label for="monthly-payment">Maandelijkse betaling</label>
-            <input id="monthly-payment" type="radio" name="betalingsperiode" required>
-          </div>
-          <div class="radio-option">
-            <label for="yearly-payment">Jaarlijkse betaling</label>
-            <input id="yearly-payment" type="radio" name="betalingsperiode" required>
-          </div>
+        <div class="field-box payment-field">
+          <label for="monthly-payment">Maandprijs</label>
+          <input type="button" id="auto-monthly-payment" value="&#x1F50E;&#xFE0E;">
+          <input id="monthly-payment" type="text" name="monthly-payment" maxlength="40" required>
+        </div>
+        <div class="field-box payment-field">
+          <label for="yearly-payment">Jaarprijs</label>
+          <input type="button" id="auto-yearly-payment" value="&#x1F50E;&#xFE0E;">
+          <input id="yearly-payment" type="text" name="yearly-payment" maxlength="40" required>
+        </div>
+        <div class="field-box payment-field">
+          <label for="circle-value">Cirkelwaarde</label>
+          <input type="button" id="auto-circle-value" value="&#x1F50E;&#xFE0E;">
+          <input id="circle-value" type="text" name="circle-value" maxlength="40" required>
+        </div>
+        <div class="field-box payment-field">
+          <label for="advance-payment">Voorschot</label>
+          <input id="advance-payment" type="text" name="advance-payment" maxlength="40" required>
         </div>
       </div>
       <div class="field-box paying-only">

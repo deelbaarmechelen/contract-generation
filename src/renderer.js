@@ -53,6 +53,8 @@ const inputs = {
 
 	monthlyPayment: document.getElementById('monthly-payment'),
 	yearlyPayment: document.getElementById('yearly-payment'),
+	circleValue: document.getElementById('circle-value'),
+	advancePayment: document.getElementById('advance-payment'),
 	structuredCommunication: document.getElementById('structured-communication')
 }
 
@@ -116,7 +118,6 @@ function testFill() {
 		inputs.uitpasNumber.value = "1111111111111";
 		inputs.workshopDate.valueAsDate = new Date();
 	} else {
-		inputs.monthlyPayment.checked = true;
 		buttons.autoStructuredCommunication.click();
 	}
 }
@@ -438,7 +439,6 @@ async function generateContract() {
 		},
     "contract-type": inputs.payingContract.checked ? "paying" : "non-paying",
 		"subscription" : {
-			"paymentPeriod" : inputs.monthlyPayment.checked ? "monthly" : "yearly",
 			"structuredReference" : inputs.structuredCommunication.value,
 			"amount" : "10",
 			"amountPaid" : "10",
