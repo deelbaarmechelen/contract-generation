@@ -77,6 +77,20 @@ const buttons = {
 	autoStructuredCommunication: document.getElementById("auto-structured-communication"),
 }
 
+const deviceTypes = {
+	"laptop-win-10": {
+		fullName: "Laptop (Windows 10)",
+		monthlyPayment: 10,
+		yearlyPayment: 100,
+		circleValue: 50
+	},
+	"laptop-win-11": {
+		fullName: "Laptop (Windows 11)",
+		monthlyPayment: 15,
+		yearlyPayment: 150,
+		circleValue: 75
+	}
+}
 
 // Helper function for manual testing
 function testFill() {
