@@ -4,10 +4,12 @@ Done:
 - Write test helper function
 - Add referral
 - Add aptitude test fields
+- Remove necessity of valid inputs
+- Add postcode validation for UiTpas
 
 Current:
 
-- Add checkbox that contract is an extension
+- Add date validation
 
 Necessary:
 
@@ -20,11 +22,9 @@ Necessary:
 - Add required previous field validation to autocomplete buttons
 - Add declaration that client is 18 years of age
 - Fix document
-	- Show all passed information
-	- Show if contract is extension
-	- Make pretty
+	- Make correspond to manual contract version
 
 Luxuries:
 
-- Add retrieval laptop information from Snipe-IT inventory
-- Add retrieval contractnumber from SharePoint
+- Add addendums for extension and replacement.
+- Add retrieval of contractnumber from SharePoint
