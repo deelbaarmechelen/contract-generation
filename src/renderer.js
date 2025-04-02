@@ -650,7 +650,7 @@ async function generateContract() {
 			"number" : inputs.uitpasNumber.value,
 			"aptitudeTest": inputs.workshopException.checked,
 			"courseEnrolment": !inputs.workshopException.checked,
-			"courseDate" : courseDate ? courseDate.toLocaleDateString("nl-BE") : null,
+			"courseDate" : courseDate ? courseDate.toLocaleDateString("nl-BE") : "",
 			"courseNotification" : courseNotification
 		},
 		"referer": inputs.referrer.value,
@@ -666,9 +666,9 @@ async function generateContract() {
 				"eIdReader": inputs.includesSmartCardReader.checked
 			}
 		},
-		"contractDate" : inputs.signatureDate.valueAsDate.toLocaleDateString("nl-BE"),
-		"startDate" : inputs.startDate.valueAsDate.toLocaleDateString("nl-BE"),
-		"endDate" : inputs.endDate.valueAsDate.toLocaleDateString("nl-BE")
+		"contractDate" : inputs.signatureDate.valueAsDate ? inputs.signatureDate.valueAsDate.toLocaleDateString("nl-BE") : "",
+		"startDate" : inputs.startDate.valueAsDate ? inputs.startDate.valueAsDate.toLocaleDateString("nl-BE") : "",
+		"endDate" : inputs.endDate.valueAsDate ? inputs.endDate.valueAsDate.toLocaleDateString("nl-BE") : ""
 	};
 	try {
 		console.log('Generating PDF with data:', data);
