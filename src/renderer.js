@@ -151,6 +151,8 @@ function testFill() {
 		buttons.autoCircleValue.click();
 		inputs.advancePayment.value = "€ 50";
 	}
+
+	allFieldsHadInput();
 }
 
 
@@ -285,12 +287,18 @@ function toggleEnabledWorkshopFields(e) {
 inputs.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
 inputs.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 
-
 // Adds .changed class to input elements after they've been changed.
 // The .changed class makes it so invalid inputs are marked in red.
 // You don't want users to be scolded for invalid inputs they didn't even touch.
 for (const [key, el] of Object.entries(inputs)) {
 	el.addEventListener("input", (e) => el.classList.add("changed"))
+}
+
+/** Trigger/untrigger all validation and make it visible. */
+function allFieldsHadInput() {
+	for (const [key, el] of Object.entries(inputs)) {
+		el.dispatchEvent(new Event("input"), { bubbles: true });
+	}
 }
 
 
@@ -574,10 +582,7 @@ function hideWarning() {
 
 	digibankForm.reportValidity(); // Focuses first invalid input in form.
 
-	// Untouched fields also should be red at this point.
-	for (const [key, el] of Object.entries(inputs)) {
-		el.classList.add("changed");
-	}
+	allFieldsHadInput();
 }
 
 buttons.warningGenerateAnyway.addEventListener('click', async (e) => {
