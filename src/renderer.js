@@ -176,6 +176,32 @@ function euroPrettify(euroAmount) {
 }
 
 
+/** Generates an address as a string. */
+function addressStr(streetName, houseNumber, boxNumber, postalCode, 
+					municipality, country) {
+	let streetLine = '';
+	streetLine += streetName;
+	streetLine += (streetLine.length == 0 || houseNumber.length == 0) ? '' : ' ';
+	streetLine += houseNumber;
+	streetLine += (streetLine.length == 0 || boxNumber.length == 0) ? '' : ' ';
+	streetLine += (boxNumber.length == 0) ? '' : 'bus '
+	streetLine += boxNumber;
+	
+	let municipalityLine = '';
+	municipalityLine += postalCode;
+	municipalityLine += (municipalityLine.length == 0 || municipality.length == 0) ? '' : ' ';
+	municipalityLine += municipality;
+
+	let address = '';
+	address += streetLine;
+	address += (address.length == 0 || municipalityLine.length == 0) ? '' : ', ';
+	address += municipalityLine;
+	address += (address.length == 0 || country.length == 0) ? '' : ', ';
+	address += country;
+	
+	return address;
+}
+
 //// Form display
 
 // Shamelessly stolen from trincot on StackExchange. CC BY-SA is applicable. 
@@ -642,9 +668,9 @@ async function generateContract() {
 		"isExtension": inputs.isExtension.checked,
 		"client": {
 			"name" : inputs.firstName.value + ' ' + inputs.lastName.value,
-			"address": inputs.streetName.value + ' ' + inputs.houseNumber.value 
-			         + boxNumberText + ', ' + inputs.postalCode.value + ' ' 
-					 + inputs.municipality.value + ', ' + inputs.country.value, 
+			"address": addressStr(inputs.streetName.value, inputs.houseNumber.value, 
+								  inputs.boxNumber.value, inputs.postalCode.value, 
+							 	  inputs.municipality.value, inputs.country.value),
 			"phone": await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value)),
 			"email": inputs.email.value,
 		},
