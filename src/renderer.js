@@ -472,8 +472,8 @@ function calcStructuredCommunication() {
 	const assetTag = inputs.assetTag.value;
 
 	const monthDigits = ('0' + (signatureDate.getMonth() + 1).toString()).slice(-2);
-	const yearDigit = signatureDate.getFullYear().toString().slice(-1);
-	const assetTagDigits = ((assetTag.replace(/\D/g, "")).slice(-6) + "0000000").slice(0, 7);
+	const yearDigit = signatureDate.getFullYear().toString().slice(-2);
+	const assetTagDigits = ((assetTag.replace(/\D/g, "")).slice(-6) + "000000").slice(0, 6);
 	
 	const unfinishedMessage = monthDigits + yearDigit + assetTagDigits
 	const checksum = ("00" + (parseInt(unfinishedMessage) % 97).toString()).slice(-2);
