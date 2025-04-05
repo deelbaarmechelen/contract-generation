@@ -321,6 +321,17 @@ inputs.postalCode.addEventListener("input", validatePostalCode)
 inputs.uitpasException.addEventListener("input", validatePostalCode)
 
 
+inputs.phoneNumber.addEventListener("input", async (e) => {
+	formattedNumber = await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value));
+
+	if (formattedNumber) {
+		inputs.phoneNumber.setCustomValidity("");
+	} else {
+		inputs.phoneNumber.setCustomValidity("Geen geldig telefoonnummber.");
+	}	
+})
+
+
 inputs.assetTag.addEventListener("input", (e) => {
 	if (inputs.assetTag.validity.patternMismatch) {
 		inputs.assetTag.setCustomValidity("Een assettag hoort zes cijfers te hebben met eventueel een combinatie hoofdletters ervoor. (bv. 'PC250200')");
@@ -634,7 +645,7 @@ async function generateContract() {
 			"address": inputs.streetName.value + ' ' + inputs.houseNumber.value 
 			         + boxNumberText + ', ' + inputs.postalCode.value + ' ' 
 					 + inputs.municipality.value + ', ' + inputs.country.value, 
-			"phone": inputs.phoneNumber.value,
+			"phone": await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value)),
 			"email": inputs.email.value,
 		},
     "contract-type": inputs.payingContract.checked ? "paying" : "non-paying",

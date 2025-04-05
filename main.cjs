@@ -8,6 +8,12 @@ const url = require('url');
 const converter = require('./node_modules/carbone/lib/converter');
 //const converter = require('./carbone-converter.cjs');
 const log = require ('electron-log');
+
+// Require `PhoneNumberFormat`.
+const PNF = require('google-libphonenumber').PhoneNumberFormat;
+// Get an instance of `PhoneNumberUtil`.
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+
 require('dotenv').config();
 
 // Optional, initialize the logger for any renderer process
@@ -79,6 +85,28 @@ function formatDateYYYYMMDD(date) {
   const month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed
   const day = ('0' + date.getDate()).slice(-2); // Add leading zero if needed
   return `${year}${month}${day}`;
+}
+
+/** Validates and formats phone numbers, according to standard Belgian formatting.
+ * If invalid, returns empty string. If valid, returns formatted phone number.*/
+function formatPhoneNumber(e, rawPhoneNumber) {
+  let phoneNumber;
+
+  try {
+    phoneNumber = phoneUtil.parse(rawPhoneNumber, 'BE');
+  } catch (error) {
+    return ""
+  }
+
+  if (!phoneUtil.isValidNumber(phoneNumber)) {
+    return ""
+  }
+
+  if (phoneUtil.isValidNumberForRegion(phoneNumber, "BE")) {
+    return phoneUtil.format(phoneNumber, PNF.NATIONAL)
+  } else {
+    return phoneUtil.format(phoneNumber, PNF.INTERNATIONAL)
+  }
 }
 
 async function handleGetAsset(event, data) {
@@ -157,6 +185,7 @@ app.whenReady().then(() => {
   ipcMain.handle('dialog:openFile', handleFileOpen);
   ipcMain.handle('generatePdf', handleRenderPdf);
   ipcMain.handle('getAsset', handleGetAsset)
+  ipcMain.handle('formatPhoneNumber', formatPhoneNumber);
   createWindow();
 
   app.on('activate', () => {

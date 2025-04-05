@@ -13,3 +13,7 @@ contextBridge.exposeInMainWorld('carbone', {
 contextBridge.exposeInMainWorld('inventoryAPI', {
 	getAssetDetails: (data) => ipcRenderer.invoke('getAsset', data)
 })
+
+contextBridge.exposeInMainWorld('libphonenumber', {
+	formatPhoneNumber: (data) => ipcRenderer.invoke('formatPhoneNumber', data)
+})
