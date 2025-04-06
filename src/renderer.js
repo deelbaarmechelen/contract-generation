@@ -219,6 +219,13 @@ function getAge(birthDate) {
 }
 
 
+function isSameDay(a, b) {
+	return a.getFullYear() == b.getFullYear()
+		&& a.getMonth() == b.getMonth()
+		&& a.getDate() == b.getDate();
+}
+
+
 //// Form display
 
 // Shamelessly stolen from trincot on StackExchange. CC BY-SA is applicable. 
@@ -384,8 +391,23 @@ inputs.phoneNumber.addEventListener("input", async (e) => {
 	} else {
 		inputs.phoneNumber.setCustomValidity("Geen geldig telefoonnummber.");
 	}	
+});
+
+inputs.signatureDate.addEventListener("input", (e) => {
+	if (isSameDay(inputs.signatureDate.valueAsDate, new Date())) {
+		inputs.signatureDate.setCustomValidity("");
+	} else {
+		inputs.signatureDate.setCustomValidity("Handtekeningdatum hoort vandaag te zijn.");
+	}
 })
 
+inputs.endDate.addEventListener("input", (e) => {
+	if (inputs.startDate.valueAsDate < inputs.endDate.valueAsDate) {
+		inputs.endDate.setCustomValidity("");
+	} else {
+		inputs.endDate.setCustomValidity("Startdatum hoort voor einddatum te komen.");
+	}
+})
 
 inputs.assetTag.addEventListener("input", (e) => {
 	if (inputs.assetTag.validity.patternMismatch) {
@@ -393,7 +415,7 @@ inputs.assetTag.addEventListener("input", (e) => {
 	} else {
 		inputs.assetTag.setCustomValidity("");
 	}	
-})
+});
 
 
 /** Warns user if the monthly payment is different from expected for device type. */
