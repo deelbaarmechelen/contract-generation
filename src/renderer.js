@@ -18,6 +18,7 @@ const inputs = {  // Not necessarily all <input> tags.
 
 	firstName: document.getElementById('first-name'),
 	lastName: document.getElementById('last-name'),
+	birthDate: document.getElementById('birth-date'),
 
 	streetName: document.getElementById('street-name'),
 	houseNumber: document.getElementById('house-number'),
@@ -202,6 +203,22 @@ function addressStr(streetName, houseNumber, boxNumber, postalCode,
 	return address;
 }
 
+
+/** Calculates a person's age according to their birth date. 
+ * Shamelessly stolen from codeandcloud on StackExchange.
+ * https://stackoverflow.com/a/7091965/15709119
+ * CC BY-SA 3.0 applicable */
+function getAge(birthDate) {
+    var today = new Date();
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+
 //// Form display
 
 // Shamelessly stolen from trincot on StackExchange. CC BY-SA is applicable. 
@@ -329,6 +346,18 @@ function allFieldsHadInput() {
 
 
 //// Input validation
+
+/** Validates that customer is at least 18 years of age. */
+function validateBirthDate(e) {
+	if (getAge(inputs.birthDate.valueAsDate) < 18) {
+		inputs.birthDate.setCustomValidity("Je moet minstens 18 jaar zijn om een apparaat te lenen.");
+	} else {
+		inputs.birthDate.setCustomValidity("");
+	}
+}
+
+inputs.birthDate.addEventListener("input", validateBirthDate)
+
 
 /** Only Mechelaars can get a non-paying contract, unless they have an exception. */
 function validatePostalCode(e) {
@@ -686,6 +715,7 @@ async function generateContract() {
 		"isExtension": inputs.isExtension.checked,
 		"client": {
 			"name" : inputs.firstName.value + ' ' + inputs.lastName.value,
+			"birthDate" : inputs.birthDate.valueAsDate ? inputs.birthDate.valueAsDate.toLocaleDateString("nl-BE") : "",
 			"address": addressStr(inputs.streetName.value, inputs.houseNumber.value, 
 								  inputs.boxNumber.value, inputs.postalCode.value, 
 							 	  inputs.municipality.value, inputs.country.value),
