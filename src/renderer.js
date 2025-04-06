@@ -448,27 +448,26 @@ inputs.structuredCommunication.addEventListener("input", (e) => {
 
 ////// Autofill
 
+
+function fieldsValid(...prerequisiteFields) {
+	let fieldsValid = true;
+	for (const field of prerequisiteFields) {
+		if (!field.validity.valid) {
+			if (fieldsValid) {
+				fieldsValid = false;
+				field.reportValidity();
+			}
+
+			field.dispatchEvent(new Event("input"), { bubbles: true });
+		}
+	}
+	return fieldsValid
+}
+
 //// Autofill calculations
 
-function calcSignatureDate() {
-	return new Date();
-}
-
-function calcStartDate() {
-	// I'm making these date calculation functions cascade upwards. 
-	// So that later date fields depend on previous fields,
-	// but they also don't all need to be filled in to generate useful results.
-	return inputs.signatureDate.valueAsDate || calcSignatureDate();
-}
-
-function calcEndDate() {
-	const date = inputs.startDate.valueAsDate || calcStartDate();
-	return new Date(date.getUTCFullYear() + 1, date.getMonth(), date.getDate());
-}
-
-
 function calcStructuredCommunication() {
-	const signatureDate = inputs.signatureDate.valueAsDate || new Date();
+	const signatureDate = inputs.signatureDate.valueAsDate;
 	const assetTag = inputs.assetTag.value;
 
 	const monthDigits = ('0' + (signatureDate.getMonth() + 1).toString()).slice(-2);
@@ -485,7 +484,7 @@ function calcStructuredCommunication() {
 //// Autofill click events
 
 buttons.autoSignatureDate.addEventListener("click", (e) => {
-	inputs.signatureDate.valueAsDate = calcSignatureDate();
+	inputs.signatureDate.valueAsDate = new Date();
 
 	// Emulate a user changing the field, which is important for correct display
 	// of invalid inputs.
@@ -494,20 +493,35 @@ buttons.autoSignatureDate.addEventListener("click", (e) => {
 
 
 buttons.autoStartDate.addEventListener("click", (e) => {
-	inputs.startDate.valueAsDate = calcStartDate();
+	if (!fieldsValid(inputs.signatureDate)) {
+		return
+	}
+
+	inputs.startDate.valueAsDate = inputs.signatureDate.valueAsDate;
 
 	inputs.startDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
 
 buttons.autoEndDate.addEventListener("click", (e) => {
-	inputs.endDate.valueAsDate = calcEndDate();
+	if (!fieldsValid(inputs.startDate)) {
+		return
+	}
+
+	const date = inputs.startDate.valueAsDate;
+	inputs.endDate.valueAsDate = new Date(date.getUTCFullYear() + 1, 
+										  date.getMonth(), 
+										  date.getDate());
 
 	inputs.endDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
 
 
 buttons.autoStructuredCommunication.addEventListener("click", (e) => {
+	if (!fieldsValid(inputs.signatureDate, inputs.assetTag)) {
+		return
+	}
+
 	inputs.structuredCommunication.value = calcStructuredCommunication();
 
 	inputs.structuredCommunication.dispatchEvent(new Event("input"), { bubbles: true });
@@ -515,6 +529,10 @@ buttons.autoStructuredCommunication.addEventListener("click", (e) => {
 
 
 async function autoDeviceBrandAndModel(e) {
+	if (!fieldsValid(inputs.assetTag)) {
+		return
+	}
+
 	window.inventoryAPI.getAssetDetails({ assetTag: inputs.assetTag.value })
 		.then((data) => {
 			console.log(data);
@@ -531,7 +549,7 @@ buttons.autoDeviceModel.addEventListener("click", autoDeviceBrandAndModel);
 
 
 buttons.autoMonthlyPayment.addEventListener("click", (e) => {
-	if (!inputs.deviceType.value) {
+	if (!fieldsValid(inputs.deviceType)) {
 		return
 	}
 
@@ -542,7 +560,7 @@ buttons.autoMonthlyPayment.addEventListener("click", (e) => {
 
 
 buttons.autoYearlyPayment.addEventListener("click", (e) => {
-	if (!inputs.deviceType.value) {
+	if (!fieldsValid(inputs.deviceType)) {
 		return
 	}
 
@@ -553,7 +571,7 @@ buttons.autoYearlyPayment.addEventListener("click", (e) => {
 
 
 buttons.autoCircleValue.addEventListener("click", (e) => {
-	if (!inputs.deviceType.value) {
+	if (!fieldsValid(inputs.deviceType)) {
 		return
 	}
 
