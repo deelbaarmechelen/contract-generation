@@ -116,7 +116,8 @@ function testFill() {
 	
 	inputs.firstName.value = "Pietje";
 	inputs.lastName.value = "De Laptopwiller";
-	
+	inputs.workshopDate.valueAsDate = new Date("1995-12-17T03:24:00");
+
 	inputs.streetName.value = "Ergensstraat";
 	inputs.houseNumber.value = "1337";
 	inputs.boxNumber.value = "69";
@@ -356,10 +357,11 @@ function allFieldsHadInput() {
 
 /** Validates that customer is at least 18 years of age. */
 function validateBirthDate(e) {
-	if (getAge(inputs.birthDate.valueAsDate) < 18) {
-		inputs.birthDate.setCustomValidity("Je moet minstens 18 jaar zijn om een apparaat te lenen.");
-	} else {
+	const birthDate = inputs.birthDate.valueAsDate;
+	if (birthDate === null || getAge(inputs.birthDate.valueAsDate) >= 18) { // If `birthDate === null` we want to let normal input validation handle it.
 		inputs.birthDate.setCustomValidity("");
+	} else {
+		inputs.birthDate.setCustomValidity("Je moet minstens 18 jaar zijn om een apparaat te lenen.");
 	}
 }
 
@@ -394,7 +396,7 @@ inputs.phoneNumber.addEventListener("input", async (e) => {
 });
 
 inputs.signatureDate.addEventListener("input", (e) => {
-	if (isSameDay(inputs.signatureDate.valueAsDate, new Date())) {
+	if (inputs.signatureDate.valueAsDate === null || isSameDay(inputs.signatureDate.valueAsDate, new Date())) {
 		inputs.signatureDate.setCustomValidity("");
 	} else {
 		inputs.signatureDate.setCustomValidity("Handtekeningdatum hoort vandaag te zijn.");
@@ -402,7 +404,9 @@ inputs.signatureDate.addEventListener("input", (e) => {
 })
 
 inputs.endDate.addEventListener("input", (e) => {
-	if (inputs.startDate.valueAsDate < inputs.endDate.valueAsDate) {
+	if (inputs.startDate.valueAsDate === null 
+	 || inputs.endDate.valueAsDate === null
+	 || inputs.startDate.valueAsDate < inputs.endDate.valueAsDate) {
 		inputs.endDate.setCustomValidity("");
 	} else {
 		inputs.endDate.setCustomValidity("Startdatum hoort voor einddatum te komen.");
