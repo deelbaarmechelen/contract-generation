@@ -8,6 +8,8 @@ const payingOnlyElements = document.getElementsByClassName("paying-only");
 const instructionTextElements = main.getElementsByClassName("instruction-text");  // Really just the text that the _Digibankmedewerker_ will take it from here.
 const warningBox = document.getElementById("warning-box");
 const warningBoxTable = document.getElementById("warning-box-table");
+const progressBox = document.getElementById("progress-box");
+const progressBoxText = document.getElementById("progress-box-text")
 
 const inputs = {  // Not necessarily all <input> tags.
 	payingContract: document.getElementById('paying-contract'),
@@ -64,6 +66,8 @@ const buttons = {
 
 	warningGenerateAnyway: document.getElementById("warning-generate-anyway"),
 	warningGoBack: document.getElementById("warning-go-back"),
+
+	progressGoBack: document.getElementById("progress-go-back"),
 
 	autoSignatureDate: document.getElementById("auto-signature-date"),
 	autoStartDate: document.getElementById("auto-start-date"),
@@ -693,6 +697,22 @@ function hideWarning() {
 	allFieldsHadInput();
 }
 
+/** Opens the contract generation progress prompt with given text and activated/deactivated close button. */
+function showProgressBox(promptText = "", isCloseable = false) {
+	progressBoxText.innerText = promptText;
+	buttons.progressGoBack.disabled = !isCloseable; 
+	buttons.progressGoBack.focus({focusVisible: true});
+
+	progressBox.classList.remove("hidden");
+	main.inert = true; 
+}
+
+/** Closes the contract generation progress prompt. */
+function hideProgressBox() {
+	progressBox.classList.add("hidden");
+	main.inert = false;
+}
+
 buttons.warningGenerateAnyway.addEventListener('click', async (e) => {
 	hideWarning();
 	generateContract();
@@ -701,6 +721,10 @@ buttons.warningGenerateAnyway.addEventListener('click', async (e) => {
 buttons.warningGoBack.addEventListener('click', async (e) => {
 	hideWarning();
 	digibankForm.reportValidity(); // Focuses first invalid input in form.
+})
+
+buttons.progressGoBack.addEventListener('click', async (e) => {
+	hideProgressBox();
 })
 
 buttons.submit.addEventListener('click', async (e) => {
@@ -716,7 +740,22 @@ buttons.submit.addEventListener('click', async (e) => {
 ////// Contract generation (Kind of a mess.) 
 
 async function generateContract() {
+	showProgressBox("Kies een locatie voor het PDF bestand.", false);
 
+	let pdfPath = "";
+
+	try {
+		pdfPath = await window.electronAPI.openFile();
+		if (!pdfPath) {
+			throw new Error("No PDF path received from user.");
+		}
+	} catch (error) {
+		showProgressBox("Er is iets mis gegaan in het bepalen van de PDF locatie. Probeer het opnieuw.", true);
+		throw error;
+		return
+	}
+
+	showProgressBox("Gegevens uit contract aan het ophalen.", false);
 
 	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
 	const boxNumberText = inputs.boxNumber.value.length == 0 ? '' : ' bus ' + inputs.boxNumber.value;
@@ -734,7 +773,7 @@ async function generateContract() {
 
 	var data = {
 		"generationInfo": {
-			"path": await window.electronAPI.openFile(),
+			"path": pdfPath,
 			"print": true
 		},
 		"contractNumber": inputs.contractNumber.value,
@@ -782,6 +821,9 @@ async function generateContract() {
 		"startDate" : inputs.startDate.valueAsDate ? inputs.startDate.valueAsDate.toLocaleDateString("nl-BE") : "",
 		"endDate" : inputs.endDate.valueAsDate ? inputs.endDate.valueAsDate.toLocaleDateString("nl-BE") : ""
 	};
+
+	showProgressBox("PDF aan het genereren.", false);
+
 	try {
 		console.log('Generating PDF with data:', data);
 		const fileUrl = await window.carbone.generatePdf(data);
@@ -789,8 +831,14 @@ async function generateContract() {
 			throw new Error('File path is undefined');
 		}
 		console.log('url: ' + fileUrl);
+
+		showProgressBox("PDF aan het openen.", false);
+
 		window.open(fileUrl, '_blank', 'top=0,left=0,frame=true,toolbar=true,menubar=true,scrollbars=true,resizable=true');
+
+		showProgressBox("Klaar.", true);
 	} catch (error) {
+		showProgressBox("Er ging iets mis tijdens het genereren van de PDF. Probeer het opnieuw.", true);
 		console.error('Error generating PDF:', error);
 	}
 }
