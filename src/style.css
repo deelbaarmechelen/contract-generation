@@ -302,6 +302,8 @@ input[type="button"], input[type="submit"]{
 	top: -.5em;
 	position: absolute;
 	pointer-events: none;
+	text-align: right;
+	max-width: 35%;
 	font-size: 80%;
 	opacity: .75;
 }
