@@ -284,10 +284,10 @@ input[type="button"], input[type="submit"]{
 	width: 100%;
 }
 
-#warning-generate-anyway {
+.float-left {
 	float: left;
 }
 
-#warning-go-back {
+.float-right {
 	float: right;
 }
