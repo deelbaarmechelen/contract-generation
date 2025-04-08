@@ -848,7 +848,7 @@ async function generateContract() {
 
 		window.open(fileUrl, '_blank', 'top=0,left=0,frame=true,toolbar=true,menubar=true,scrollbars=true,resizable=true');
 
-		showProgressBox("Klaar.", true);
+		showProgressBox("Klaar met genereren van PDF.", true);
 	} catch (error) {
 		showProgressBox("Er ging iets mis tijdens het genereren van de PDF. Probeer het opnieuw.", true);
 		console.error('Error generating PDF:', error);
