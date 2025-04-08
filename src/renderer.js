@@ -6,6 +6,8 @@ const fieldsets = main.getElementsByTagName("fieldset");
 const nonPayingOnlyElements = document.getElementsByClassName("non-paying-only");
 const payingOnlyElements = document.getElementsByClassName("paying-only");
 const instructionTextElements = main.getElementsByClassName("instruction-text");  // Really just the text that the _Digibankmedewerker_ will take it from here.
+const resetInstruction = document.getElementById("reset-instruction");
+
 const warningBox = document.getElementById("warning-box");
 const warningBoxTable = document.getElementById("warning-box-table");
 const progressBox = document.getElementById("progress-box");
@@ -278,8 +280,10 @@ function changeContractType(e) {
 	
 	if (payingChecked || nonPayingChecked) {
 		buttons.submit.classList.remove("hidden");
+		resetInstruction.classList.remove("hidden");
 	} else {
 		buttons.submit.classList.add("hidden");
+		resetInstruction.classList.add("hidden");
 	}
 	
 	for (const el of fieldsets) {

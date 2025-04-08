@@ -220,7 +220,10 @@
         <input id="structured-communication" type="text" name="structured-communication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="21">
       </div>
     </fieldset>
-    <input id="submit" type="submit" value="Genereren" class="hidden">
+    <div id="final-form-controls">
+      <div id="reset-instruction" class="hidden">Druk Ctrl + R om contract te legen.</div>
+      <input id="submit" type="submit" value="Genereren" class="hidden">
+    </div>
   </form></main>
   <div id="warning-box" class="pop-up-box hidden">
     <p id="warning-box-text">Een aantal velden zijn mogelijk verkeerd ingevuld:</p>

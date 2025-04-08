@@ -291,3 +291,17 @@ input[type="button"], input[type="submit"]{
 .float-right {
 	float: right;
 }
+
+#final-form-controls {
+	width: 100%;
+	position: relative;
+}
+
+#reset-instruction {
+	right: max(var(--border-radius), var(--border-thickness));
+	top: -.5em;
+	position: absolute;
+	pointer-events: none;
+	font-size: 80%;
+	opacity: .75;
+}

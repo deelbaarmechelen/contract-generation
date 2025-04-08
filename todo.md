@@ -10,16 +10,12 @@ Done:
 - Fix document
 	- Make correspond to manual contract version
 - Add required previous field validation to autocomplete buttons
-
-Current:
-
 - Add declaration that client is 18 years of age
+- Add date validation
+- Add a reset button to clear all contract information before entering a new one
 
 Necessary:
-
-- Add date validation
 - Validate API key is available in distributable
-- Add a reset button to clear all contract information before entering a new one
 
 Luxuries:
 
