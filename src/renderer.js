@@ -749,18 +749,14 @@ function formatDate(date) {
 
 /** Does final pre-processing of form data, and collects it into object. */
 async function collectFormData(pdfPath) {
-	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
-	const boxNumberText = inputs.boxNumber.value.length == 0 ? '' : ' bus ' + inputs.boxNumber.value;
-	const courseDate = inputs.workshopDate.valueAsDate;
-	
-	var courseNotification = "";
+	let courseNotification = "";
 	
 	if (inputs.workshopException.checked) {
 		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen door het afleggen van een bekwaamheidstest.";
 	} else if (inputs.isExtension.checked) {
-		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen omdat dit contract een verlenging is.";
+		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen omdat deze een eerdere klant is.";
 	} else {
-		courseNotification = "De Ontlener is verplicht een gratis opleidingssessie bij te wonen om te verzekeren dat hij/zij met het toestel kan werken."
+		courseNotification = "De Ontlener is verplicht een gratis opleidingssessie bij te wonen om te verzekeren dat deze met het toestel kan werken."
 	}
 
 	return {
@@ -793,7 +789,7 @@ async function collectFormData(pdfPath) {
 			"number" : inputs.uitpasNumber.value,
 			"aptitudeTest": inputs.workshopException.checked,
 			"courseEnrolment": !inputs.workshopException.checked,
-			"courseDate" : formatDate(courseDate),
+			"courseDate" : formatDate(inputs.workshopDate.valueAsDate),
 			"courseNotification" : courseNotification
 		},
 		"referer": inputs.referrer.value,
