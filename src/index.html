@@ -28,13 +28,13 @@
       </div>
     </fieldset>
     <fieldset class="non-paying-only hidden">
-      <legend>UiTpas</legend>
+      <legend>UiTPAS</legend>
       <div class="field-box non-paying-only">
-        <label for="uitpas-number">Uitpasnummer</label>
+        <label for="uitpas-number">UiTPAS-nummer</label>
         <input id="uitpas-number" type="text" name="uitpas-number" required minlength="13" maxlength="13">
       </div>
       <div class="checkbox-box non-paying-only">
-        <label for="uitpas-exception">Ik heb uitzonderlijke toestemming van het Sociaal Huis om zonder UiTpas te lenen.</label>
+        <label for="uitpas-exception">Ik heb uitzonderlijke toestemming van het Sociaal Huis om zonder UiTPAS te lenen.</label>
         <input id="uitpas-exception" type="checkbox" name="uitpas-exception">
       </div>
     </fieldset>
@@ -47,6 +47,10 @@
       <div class="field-box">
         <label for="last-name">Achternaam</label>
         <input id="last-name" type="text" name="last-name" required maxlength="40">
+      </div>
+      <div class="field-box">
+        <label for="birth-date">Geboortedatum</label>
+        <input id="birth-date" type="date" name="birth-date" required>
       </div>
     </fieldset>
     <fieldset class="hidden">
@@ -109,14 +113,19 @@
       </div>
       <div class="fieldsubset">
         <div class="field-box">
-          <label for="signature-date">Datum tekening</label>
+          <label for="signature-date">Tekendatum</label>
           <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
           <input id="signature-date" type="date" name="signature-date" required>
         </div>
         <div class="field-box">
-          <label for="start-date">Datum ingang</label>
+          <label for="start-date">Startdatum</label>
           <input type="button" id="auto-start-date" value="&#x1F50E;&#xFE0E;">
           <input id="start-date" type="date" name="start-date" required>
+        </div>
+        <div class="field-box">
+          <label for="end-date">Einddatum</label>
+          <input type="button" id="auto-end-date" value="&#x1F50E;&#xFE0E;">
+          <input id="end-date" type="date" name="start-date" required>
         </div>
       </div>
       <div class="fieldsubset">
@@ -160,14 +169,17 @@
         </div>
         <div class="field-box">
           <label for="device-type">Type</label>
-          <input type="button" id="auto-device-type" value="&#x1F50E;&#xFE0E;">
-          <input id="device-type" type="text" name="device-type" required maxlength="40">
+          <select id="device-type" name="device-type" required>
+            <option value="" selected class="select-empty-option">Kies type</option>
+            <option value="laptop-win-10">Laptop (Win 10)</option>
+            <option value="laptop-win-11">Laptop (Win 11)</option>
+          </select>
         </div>
       </div>
       <div class="fieldsubset">
         <div class="checkbox-box">
           <label for="includes-charger">Inclusief lader</label>
-          <input id="includes-charger" type="checkbox" name="includes-charger">
+          <input id="includes-charger" type="checkbox" name="includes-charger" checked>
         </div>
         <div class="checkbox-box non-paying-only">
           <label for="includes-mouse">Inclusief muis</label>
@@ -178,46 +190,56 @@
           <input id="includes-smart-card-reader" type="checkbox" name="includes-smart-card-reader">
         </div>
       </div>
-      <div class="fieldsubset">
-        <div class="field-box">
-          <label for="device-out-date">Datum uit</label>
-          <input type="button" id="auto-device-out-date" value="&#x1F50E;&#xFE0E;">
-          <input id="device-out-date" type="date" name="device-out-date" required>
-        </div>
-        <div class="field-box">
-          <label for="device-checkup-date">Datum nazicht</label>
-          <input type="button" id="auto-device-checkup-date" value="&#x1F50E;&#xFE0E;">
-          <input id="device-checkup-date" type="date" name="device-checkup-date" required>
-        </div>
-        <div class="field-box">
-          <label for="device-in-date">Datum in</label>
-          <input type="button" id="auto-device-in-date" value="&#x1F50E;&#xFE0E;">
-          <input id="device-in-date" type="date" name="device-in-date" required>
-        </div>
-      </div>
     </fieldset>
     <fieldset class="hidden paying-only">
       <legend>Betaalgegevens</legend>
       <div class="fieldsubset">
-        <div class="radio-option-list paying-only">
-          <div class="radio-option">
-            <label for="monthly-payment">Maandelijkse betaling</label>
-            <input id="monthly-payment" type="radio" name="betalingsperiode" required>
-          </div>
-          <div class="radio-option">
-            <label for="yearly-payment">Jaarlijkse betaling</label>
-            <input id="yearly-payment" type="radio" name="betalingsperiode" required>
-          </div>
+        <div class="field-box payment-field">
+          <label for="monthly-payment">Maandprijs</label>
+          <input type="button" id="auto-monthly-payment" value="&#x1F50E;&#xFE0E;">
+          <input id="monthly-payment" type="text" name="monthly-payment" maxlength="40" required>
+        </div>
+        <div class="field-box payment-field">
+          <label for="yearly-payment">Jaarprijs</label>
+          <input type="button" id="auto-yearly-payment" value="&#x1F50E;&#xFE0E;">
+          <input id="yearly-payment" type="text" name="yearly-payment" maxlength="40" required>
+        </div>
+        <div class="field-box payment-field">
+          <label for="circle-value">Cirkelwaarde</label>
+          <input type="button" id="auto-circle-value" value="&#x1F50E;&#xFE0E;">
+          <input id="circle-value" type="text" name="circle-value" maxlength="40" required>
+        </div>
+        <div class="field-box payment-field">
+          <label for="advance-payment">Voorschot</label>
+          <input id="advance-payment" type="text" name="advance-payment" maxlength="40" required>
         </div>
       </div>
       <div class="field-box paying-only">
         <label for="structured-communication">Gestructureerde mededeling</label>
         <input type="button" id="auto-structured-communication" value="&#x1F50E;&#xFE0E;">
-        <input id="structured-communication" type="text" name="structured-communication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="20">
+        <input id="structured-communication" type="text" name="structured-communication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="21">
       </div>
     </fieldset>
     <input id="submit" type="submit" value="Genereren" class="hidden">
   </form></main>
+  <div id="warning-box" class="hidden">
+    <div id="warning-box-text">Een aantal velden zijn mogelijk verkeerd ingevuld:</div>
+    <div class="warning-box-table-container">
+      <table id="warning-box-table">
+        <thead>
+          <tr>
+            <th scope="col">Veldlabel</th>
+            <th scope="col">Validatiebericht</th>
+          </tr>
+        </thead> 
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="warning-box-buttons">
+      <input type="button" id="warning-generate-anyway" value="Genereer toch">
+      <input type="button" id="warning-go-back" value="Corrigeer">
+    </div>
+  </div>
   <script src="apikey.js"></script>
   <script src="renderer.js"></script>
 </body>
