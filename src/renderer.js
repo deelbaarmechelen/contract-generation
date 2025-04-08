@@ -120,7 +120,7 @@ function testFill() {
 	
 	inputs.firstName.value = "Pietje";
 	inputs.lastName.value = "De Laptopwiller";
-	inputs.workshopDate.valueAsDate = new Date("1995-12-17T03:24:00");
+	inputs.birthDate.valueAsDate = new Date("1995-12-17T03:24:00");
 
 	inputs.streetName.value = "Ergensstraat";
 	inputs.houseNumber.value = "1337";
@@ -176,7 +176,10 @@ function euroStrToNum(euroStr) {
 
 
 /** Prettify euro amount. */
-function euroPrettify(euroAmount) {
+function formatEuro(euroAmount) {
+	if (euroAmount == null || euroAmount == "") {
+		return ""
+	}
 	const regularized = euroStrToNum(String(euroAmount));
 	return euroFormat.format(regularized);
 }
@@ -612,7 +615,7 @@ buttons.autoMonthlyPayment.addEventListener("click", (e) => {
 		return
 	}
 
-	inputs.monthlyPayment.value = euroPrettify(deviceTypes[inputs.deviceType.value].monthlyPayment);
+	inputs.monthlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].monthlyPayment);
 
 	inputs.monthlyPayment.dispatchEvent(new Event("input"), { bubbles: true });
 });
@@ -623,7 +626,7 @@ buttons.autoYearlyPayment.addEventListener("click", (e) => {
 		return
 	}
 
-	inputs.yearlyPayment.value = euroPrettify(deviceTypes[inputs.deviceType.value].yearlyPayment);
+	inputs.yearlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].yearlyPayment);
 
 	inputs.yearlyPayment.dispatchEvent(new Event("input"), { bubbles: true });
 });
@@ -634,7 +637,7 @@ buttons.autoCircleValue.addEventListener("click", (e) => {
 		return
 	}
 
-	inputs.circleValue.value = euroPrettify(deviceTypes[inputs.deviceType.value].circleValue);
+	inputs.circleValue.value = formatEuro(deviceTypes[inputs.deviceType.value].circleValue);
 
 	inputs.circleValue.dispatchEvent(new Event("input"), { bubbles: true });
 });
@@ -739,6 +742,80 @@ buttons.submit.addEventListener('click', async (e) => {
 
 ////// Contract generation (Kind of a mess.) 
 
+/** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string. */
+function formatDate(date) {
+	return date ? date.toLocaleDateString("nl-BE") : "";
+}
+
+/** Does final pre-processing of form data, and collects it into object. */
+async function collectFormData(pdfPath) {
+	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
+	const boxNumberText = inputs.boxNumber.value.length == 0 ? '' : ' bus ' + inputs.boxNumber.value;
+	const courseDate = inputs.workshopDate.valueAsDate;
+	
+	var courseNotification = "";
+	
+	if (inputs.workshopException.checked) {
+		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen door het afleggen van een bekwaamheidstest.";
+	} else if (inputs.isExtension.checked) {
+		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen omdat dit contract een verlenging is.";
+	} else {
+		courseNotification = "De Ontlener is verplicht een gratis opleidingssessie bij te wonen om te verzekeren dat hij/zij met het toestel kan werken."
+	}
+
+	return {
+		"generationInfo": {
+			"path": pdfPath,
+			"print": true
+		},
+		"contractNumber": inputs.contractNumber.value,
+		"clientNumber": inputs.clientNumber.value,
+		"isExtension": inputs.isExtension.checked,
+		"client": {
+			"name": inputs.firstName.value + ' ' + inputs.lastName.value,
+			"birthDate": formatDate(inputs.birthDate.valueAsDate),
+			"address": addressStr(inputs.streetName.value, inputs.houseNumber.value, 
+								  inputs.boxNumber.value, inputs.postalCode.value, 
+							 	  inputs.municipality.value, inputs.country.value),
+			"phone": await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value)),
+			"email": inputs.email.value,
+		},
+    "contract-type": inputs.payingContract.checked ? "paying" : "non-paying",
+		"subscription" : {
+			"structuredReference" : inputs.structuredCommunication.value,
+			"monthlyPayment" : formatEuro(inputs.monthlyPayment.value),
+			"yearlyPayment" : formatEuro(inputs.yearlyPayment.value),
+			"amountPaid" : formatEuro(inputs.advancePayment.value),
+			"circleValue" : formatEuro(inputs.circleValue.value)
+		},
+		"uitpas" : {
+			"applicable" : !inputs.uitpasException.checked,
+			"number" : inputs.uitpasNumber.value,
+			"aptitudeTest": inputs.workshopException.checked,
+			"courseEnrolment": !inputs.workshopException.checked,
+			"courseDate" : formatDate(courseDate),
+			"courseNotification" : courseNotification
+		},
+		"referer": inputs.referrer.value,
+		"structuredReference": inputs.structuredCommunication.value,
+		"item" : {
+			"deviceType": inputs.deviceType.value ? deviceTypes[inputs.deviceType.value].fullName : "",
+			"deviceBrand": inputs.deviceBrand.value,
+			"deviceModel": inputs.deviceModel.value,
+			"assetTag" : inputs.assetTag.value,
+			"accessories" : {
+				"charger" : inputs.includesCharger.checked,
+				"mouse": inputs.includesMouse.checked,
+				"eIdReader": inputs.includesSmartCardReader.checked
+			}
+		},
+		"contractDate" : formatDate(inputs.signatureDate.valueAsDate),
+		"startDate" : formatDate(inputs.startDate.valueAsDate),
+		"endDate" : formatDate(inputs.endDate.valueAsDate)
+	};
+}
+
+/** Performs final steps of contract generation while showing feedback. */
 async function generateContract() {
 	showProgressBox("Kies een locatie voor het PDF bestand.", false);
 
@@ -757,79 +834,18 @@ async function generateContract() {
 
 	showProgressBox("Gegevens uit contract aan het ophalen.", false);
 
-	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
-	const boxNumberText = inputs.boxNumber.value.length == 0 ? '' : ' bus ' + inputs.boxNumber.value;
-	const courseDate = inputs.workshopDate.valueAsDate;
-	
-	var courseNotification = "";
-	
-	if (inputs.workshopException.checked) {
-		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen door het afleggen van een bekwaamheidstest.";
-	} else if (inputs.isExtension.checked) {
-		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen omdat dit contract een verlenging is.";
-	} else {
-		courseNotification = "De Ontlener is verplicht een gratis opleidingssessie bij te wonen om te verzekeren dat hij/zij met het toestel kan werken."
-	}
-
-	var data = {
-		"generationInfo": {
-			"path": pdfPath,
-			"print": true
-		},
-		"contractNumber": inputs.contractNumber.value,
-		"clientNumber": inputs.clientNumber.value,
-		"isExtension": inputs.isExtension.checked,
-		"client": {
-			"name" : inputs.firstName.value + ' ' + inputs.lastName.value,
-			"birthDate" : inputs.birthDate.valueAsDate ? inputs.birthDate.valueAsDate.toLocaleDateString("nl-BE") : "",
-			"address": addressStr(inputs.streetName.value, inputs.houseNumber.value, 
-								  inputs.boxNumber.value, inputs.postalCode.value, 
-							 	  inputs.municipality.value, inputs.country.value),
-			"phone": await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value)),
-			"email": inputs.email.value,
-		},
-    "contract-type": inputs.payingContract.checked ? "paying" : "non-paying",
-		"subscription" : {
-			"structuredReference" : inputs.structuredCommunication.value,
-			"monthlyPayment" : inputs.monthlyPayment.value ? euroPrettify(inputs.monthlyPayment.value) : "",
-			"yearlyPayment" : inputs.yearlyPayment.value ? euroPrettify(inputs.yearlyPayment.value) : "",
-			"amountPaid" : inputs.advancePayment.value ? euroPrettify(inputs.advancePayment.value) : "",
-			"circleValue" : inputs.circleValue.value ? euroPrettify(inputs.circleValue.value) : ""
-		},
-		"uitpas" : {
-			"applicable" : !inputs.uitpasException.checked,
-			"number" : inputs.uitpasNumber.value,
-			"aptitudeTest": inputs.workshopException.checked,
-			"courseEnrolment": !inputs.workshopException.checked,
-			"courseDate" : courseDate ? courseDate.toLocaleDateString("nl-BE") : "",
-			"courseNotification" : courseNotification
-		},
-		"referer": inputs.referrer.value,
-		"structuredReference": inputs.structuredCommunication.value,
-		"item" : {
-			"deviceType": inputs.deviceType.value ? deviceTypes[inputs.deviceType.value].fullName : "",
-			"deviceBrand": inputs.deviceBrand.value,
-			"deviceModel": inputs.deviceModel.value,
-			"assetTag" : inputs.assetTag.value,
-			"accessories" : {
-				"charger" : inputs.includesCharger.checked,
-				"mouse": inputs.includesMouse.checked,
-				"eIdReader": inputs.includesSmartCardReader.checked
-			}
-		},
-		"contractDate" : inputs.signatureDate.valueAsDate ? inputs.signatureDate.valueAsDate.toLocaleDateString("nl-BE") : "",
-		"startDate" : inputs.startDate.valueAsDate ? inputs.startDate.valueAsDate.toLocaleDateString("nl-BE") : "",
-		"endDate" : inputs.endDate.valueAsDate ? inputs.endDate.valueAsDate.toLocaleDateString("nl-BE") : ""
-	};
+	let data = await collectFormData(pdfPath); 
 
 	showProgressBox("PDF aan het genereren.", false);
 
 	try {
 		console.log('Generating PDF with data:', data);
 		const fileUrl = await window.carbone.generatePdf(data);
+
 		if (!fileUrl) {
 			throw new Error('File path is undefined');
 		}
+
 		console.log('url: ' + fileUrl);
 
 		showProgressBox("PDF aan het openen.", false);
