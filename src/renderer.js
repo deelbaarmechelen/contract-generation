@@ -501,14 +501,17 @@ inputs.deviceType.addEventListener("input", validateCircleValue);
 
 // Makes sure structured communication is valid.
 inputs.structuredCommunication.addEventListener("input", (e) => {
-	digits = inputs.structuredCommunication.value.replace(/\D/g, "");
-	incompleteDigits = parseInt(digits.slice(0, 10));
-	checksumProvided = parseInt(digits.slice(10, 12));
+	const digits = inputs.structuredCommunication.value.replace(/\D/g, "");
+	const incompleteDigits = parseInt(digits.slice(0, 10));
+	const checksumProvided = parseInt(digits.slice(10, 12));
+
+	const remainder = incompleteDigits % 97;
+	const validChecksum = remainder == 0 ? 97 : remainder;
 	
-	if (!(incompleteDigits % 97 === checksumProvided)) {
-		inputs.structuredCommunication.setCustomValidity("Deze gestructureerde mededeling is niet geldig.");
-	} else {
+	if (validChecksum === checksumProvided) {
 		inputs.structuredCommunication.setCustomValidity("");
+	} else {
+		inputs.structuredCommunication.setCustomValidity("Deze gestructureerde mededeling is niet geldig.");
 	}	
 })
 
@@ -541,9 +544,13 @@ function calcStructuredCommunication() {
 	const assetTagDigits = ((assetTag.replace(/\D/g, "")).slice(-6) + "000000").slice(0, 6);
 	
 	const unfinishedMessage = monthDigits + yearDigit + assetTagDigits
-	const checksum = ("00" + (parseInt(unfinishedMessage) % 97).toString()).slice(-2);
 
-	return unfinishedMessage + checksum;
+	const remainder = parseInt(unfinishedMessage) % 97;
+	const checksum = remainder === 0 ? 97 : remainder;
+
+	const checksumString = ("00" + checksum.toString()).slice(-2);
+
+	return unfinishedMessage + checksumString;
 }
 
 
