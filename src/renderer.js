@@ -690,18 +690,17 @@ function hideWarning() {
 	warningBox.classList.add("hidden");
 	main.inert = false;
 
-	digibankForm.reportValidity(); // Focuses first invalid input in form.
-
 	allFieldsHadInput();
 }
 
 buttons.warningGenerateAnyway.addEventListener('click', async (e) => {
-	generateContract();
 	hideWarning();
+	generateContract();
 })
 
 buttons.warningGoBack.addEventListener('click', async (e) => {
 	hideWarning();
+	digibankForm.reportValidity(); // Focuses first invalid input in form.
 })
 
 buttons.submit.addEventListener('click', async (e) => {
@@ -717,6 +716,8 @@ buttons.submit.addEventListener('click', async (e) => {
 ////// Contract generation (Kind of a mess.) 
 
 async function generateContract() {
+
+
 	const fullName = inputs.firstName.value + ' ' + inputs.lastName.value;
 	const boxNumberText = inputs.boxNumber.value.length == 0 ? '' : ' bus ' + inputs.boxNumber.value;
 	const courseDate = inputs.workshopDate.valueAsDate;
@@ -793,35 +794,3 @@ async function generateContract() {
 		console.error('Error generating PDF:', error);
 	}
 }
-
-function renderPDF(url, canvasContainer, options) {
-  var options = options || { scale: 1 };
-	  
-  function renderPage(page) {
-	  var viewport = page.getViewport(options.scale);
-	  var canvas = document.createElement('canvas');
-	  var ctx = canvas.getContext('2d');
-	  var renderContext = {
-		canvasContext: ctx,
-		viewport: viewport
-	  };
-	  
-	  canvas.height = viewport.height;
-	  canvas.width = viewport.width;
-	  canvasContainer.appendChild(canvas);
-	  
-	  page.render(renderContext);
-  }
-  
-  function renderPages(pdfDoc) {
-	  for(var num = 1; num <= pdfDoc.numPages; num++)
-		  pdfDoc.getPage(num).then(renderPage);
-  }
-  PDFJS.disableWorker = true;
-  PDFJS.getDocument(url).then(renderPages);
-}
-
-// generateButton.addEventListener('click', async () => {
-//	renderPDF('//cdn.mozilla.net/pdfjs/helloworld.pdf', document.getElementById('holder'));
-  //renderPDF('file://C:\\Users\\Bernard\\Downloads\\helloworld.pdf', document.getElementById('holder'));
-// })
