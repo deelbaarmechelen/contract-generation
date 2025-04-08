@@ -366,14 +366,26 @@ function allFieldsHadInput() {
 
 //// Input validation
 
+/** Applies custom validity message to field if condition fails. */
+function customValidate(field, condition, invalidMessage) {
+	if (condition) {
+		field.setCustomValidity("");
+		field.setAttribute("title", "");
+	} else {
+		field.setCustomValidity(invalidMessage);
+		field.setAttribute("title", invalidMessage);
+	}
+}
+
 /** Validates that customer is at least 18 years of age. */
 function validateBirthDate(e) {
 	const birthDate = inputs.birthDate.valueAsDate;
-	if (birthDate === null || getAge(inputs.birthDate.valueAsDate) >= 18) { // If `birthDate === null` we want to let normal input validation handle it.
-		inputs.birthDate.setCustomValidity("");
-	} else {
-		inputs.birthDate.setCustomValidity("Je moet minstens 18 jaar zijn om een apparaat te lenen.");
-	}
+	const condition = birthDate === null || getAge(birthDate) >= 18; // If `birthDate === null` we want to let normal input validation handle it.
+
+	customValidate(
+		inputs.birthDate, condition,
+		"Klant is onder 18."
+	);
 }
 
 inputs.birthDate.addEventListener("input", validateBirthDate)
@@ -381,13 +393,14 @@ inputs.birthDate.addEventListener("input", validateBirthDate)
 
 /** Only Mechelaars can get a non-paying contract, unless they have an exception. */
 function validatePostalCode(e) {
-	if (inputs.nonPayingContract.checked 
-		&& !inputs.uitpasException.checked 
-		&& !postalCodesMechelen.includes(Number(inputs.postalCode.value))) {
-		inputs.postalCode.setCustomValidity("Dit is geen postcode uit de gemeente Mechelen.");
-	} else {
-		inputs.postalCode.setCustomValidity("");
-	}
+	const condition = !inputs.nonPayingContract.checked 
+					  || inputs.uitpasException.checked
+					  || postalCodesMechelen.includes(Number(inputs.postalCode.value));
+
+	customValidate(
+		inputs.nonPayingContract, condition,
+		"Dit is geen postcode uit de gemeente Mechelen."
+	);
 }
 
 // Important principle: If validation depends on a previous field, you need
@@ -397,58 +410,59 @@ inputs.uitpasException.addEventListener("input", validatePostalCode)
 
 
 inputs.phoneNumber.addEventListener("input", async (e) => {
-	formattedNumber = await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value));
+	// Easiest way to do this is to just try to format it, if it fails, it's a bad number.
+	const formattedNumber = await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value));
 
-	if (formattedNumber) {
-		inputs.phoneNumber.setCustomValidity("");
-	} else {
-		inputs.phoneNumber.setCustomValidity("Geen geldig telefoonnummber.");
-	}	
+	customValidate(
+		inputs.phoneNumber, formattedNumber,
+		"Ongeldig telefoonnummber."
+	);
 });
 
 inputs.signatureDate.addEventListener("input", (e) => {
-	if (inputs.signatureDate.valueAsDate === null || isSameDay(inputs.signatureDate.valueAsDate, new Date())) {
-		inputs.signatureDate.setCustomValidity("");
-	} else {
-		inputs.signatureDate.setCustomValidity("Handtekeningdatum hoort vandaag te zijn.");
-	}
+	const signatureDate = inputs.signatureDate.valueAsDate;
+	const condition = signatureDate === null || isSameDay(signatureDate, new Date());
+
+	customValidate(
+		inputs.signatureDate, condition,
+		"Handtekeningdatum hoort vandaag te zijn."
+	);
 })
 
 inputs.endDate.addEventListener("input", (e) => {
-	if (inputs.startDate.valueAsDate === null 
-	 || inputs.endDate.valueAsDate === null
-	 || inputs.startDate.valueAsDate < inputs.endDate.valueAsDate) {
-		inputs.endDate.setCustomValidity("");
-	} else {
-		inputs.endDate.setCustomValidity("Startdatum hoort voor einddatum te komen.");
-	}
+	const condition = inputs.startDate.valueAsDate === null 
+					  || inputs.endDate.valueAsDate === null
+					  || inputs.startDate.valueAsDate < inputs.endDate.valueAsDate;
+
+	customValidate(
+		inputs.endDate, condition,
+		"Einddatum komt voor startdatum."
+	);
 })
 
 inputs.assetTag.addEventListener("input", (e) => {
-	if (inputs.assetTag.validity.patternMismatch) {
-		inputs.assetTag.setCustomValidity("Een assettag hoort zes cijfers te hebben met eventueel een combinatie hoofdletters ervoor. (bv. 'PC250200')");
-	} else {
-		inputs.assetTag.setCustomValidity("");
-	}	
+	customValidate(
+		inputs.assetTag, !inputs.assetTag.validity.patternMismatch,
+		"Een assettag heeft gewoonlijk zes cijfers met eventueel een combinatie hoofdletters ervoor. (bv. 'PC250200')."
+	);
 });
 
 
 /** Warns user if the monthly payment is different from expected for device type. */
 function validateMonthlyPayment(e) {
-	if (!inputs.deviceType.value) {
-		inputs.monthlyPayment.setCustomValidity("");
-		return
-	}
+	let condition = false;
 
-	const value = inputs.monthlyPayment.value;
-	const euroNum = euroStrToNum(value);
-	const euroNumExpected = deviceTypes[inputs.deviceType.value].monthlyPayment;
-	
-	if (!(euroNum == euroNumExpected)) {
-		inputs.monthlyPayment.setCustomValidity("Onverwacht bedrag voor dit apparaattype.");
-	} else {
-		inputs.monthlyPayment.setCustomValidity("");
+	if (inputs.deviceType.value) {
+		const value = inputs.monthlyPayment.value;
+		const euroNum = euroStrToNum(value);
+		const euroNumExpected = deviceTypes[inputs.deviceType.value].monthlyPayment;
+		condition = euroNum == euroNumExpected;
 	}
+	
+	customValidate(
+		inputs.monthlyPayment, condition,
+		"Onverwacht bedrag voor apparaattype."
+	);
 }
 
 inputs.monthlyPayment.addEventListener("input", validateMonthlyPayment);
@@ -457,20 +471,19 @@ inputs.deviceType.addEventListener("input", validateMonthlyPayment);
 
 /** Warns user if the yearly payment is different from expected for device type. */
 function validateYearlyPayment(e) {
-	if (!inputs.deviceType.value) {
-		inputs.yearlyPayment.setCustomValidity("");
-		return
-	}
+	let condition = false;
 
-	const value = inputs.yearlyPayment.value;
-	const euroNum = euroStrToNum(value);
-	const euroNumExpected = deviceTypes[inputs.deviceType.value].yearlyPayment;
-	
-	if (!(euroNum == euroNumExpected)) {
-		inputs.yearlyPayment.setCustomValidity("Onverwacht bedrag voor dit apparaattype.");
-	} else {
-		inputs.yearlyPayment.setCustomValidity("");
+	if (inputs.deviceType.value) {
+		const value = inputs.yearlyPayment.value;
+		const euroNum = euroStrToNum(value);
+		const euroNumExpected = deviceTypes[inputs.deviceType.value].yearlyPayment;
+		condition = euroNum == euroNumExpected;
 	}
+	
+	customValidate(
+		inputs.yearlyPayment, condition,
+		"Onverwacht bedrag voor apparaattype."
+	);
 }
 
 inputs.yearlyPayment.addEventListener("input", validateYearlyPayment);
@@ -479,20 +492,19 @@ inputs.deviceType.addEventListener("input", validateYearlyPayment);
 
 /** Warns user if the circle value is different from expected for device type. */
 function validateCircleValue(e) {
-	if (!inputs.deviceType.value) {
-		inputs.circleValue.setCustomValidity("");
-		return
-	}
+	let condition = false;
 
-	const value = inputs.circleValue.value;
-	const euroNum = euroStrToNum(value);
-	const euroNumExpected = deviceTypes[inputs.deviceType.value].circleValue;
-
-	if (!(euroNum == euroNumExpected)) {
-		inputs.circleValue.setCustomValidity("Onverwacht bedrag voor dit apparaattype.");
-	} else {
-		inputs.circleValue.setCustomValidity("");
+	if (inputs.deviceType.value) {
+		const value = inputs.circleValue.value;
+		const euroNum = euroStrToNum(value);
+		const euroNumExpected = deviceTypes[inputs.deviceType.value].circleValue;
+		condition = euroNum == euroNumExpected;
 	}
+	
+	customValidate(
+		inputs.circleValue, condition,
+		"Onverwacht bedrag voor apparaattype."
+	);
 }
 
 inputs.circleValue.addEventListener("input", validateCircleValue);
@@ -508,11 +520,10 @@ inputs.structuredCommunication.addEventListener("input", (e) => {
 	const remainder = incompleteDigits % 97;
 	const validChecksum = remainder == 0 ? 97 : remainder;
 	
-	if (validChecksum === checksumProvided) {
-		inputs.structuredCommunication.setCustomValidity("");
-	} else {
-		inputs.structuredCommunication.setCustomValidity("Deze gestructureerde mededeling is niet geldig.");
-	}	
+	customValidate(
+		inputs.circleValue, validChecksum === checksumProvided,
+		"Deze gestructureerde mededeling is niet geldig."
+	);
 })
 
 ////// Autofill
