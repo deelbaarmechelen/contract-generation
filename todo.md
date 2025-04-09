@@ -14,14 +14,15 @@ Done:
 - Add date validation
 - Add a reset button to clear all contract information before entering a new one
 - Separate input verification logic from input events
+- End date of paid contract is not necessarily after a year, should not autofill to be after a year.
 
 Necessary:
 - Validate API key is available in distributable
 - Show birthDate on contract
 - Detect if structured communication is empty, give different message
-- End date of paid contract is not necessarily after a year, should not autofill to be after a year.
 - Better validity message display. (Display some kind of element at 'blur' event?)
 - Find better way to deal with repeat customers. (may involve light company policy change)
+- Clarify meaning of advance payment to user
 
 Luxuries:
 
