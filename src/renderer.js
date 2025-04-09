@@ -108,7 +108,7 @@ const postalCodesMechelen = [2800, 2801, 2811, 2812];
 
 //// Testing
 
-/** Helper function for manual testing. */ 
+/** Helper function for manual testing. */
 function testFill() {
 	// I know just putting this in renderer.js is testing like a cave person.
 	// I'm not figuring out node.js unit testing right now. 
@@ -119,7 +119,7 @@ function testFill() {
 		inputs.payingContract.checked = true;
 		changeContractType();
 	}
-	
+
 	inputs.firstName.value = "Pietje";
 	inputs.lastName.value = "De Laptopwiller";
 	inputs.birthDate.valueAsDate = new Date("1995-12-17T03:24:00");
@@ -130,12 +130,12 @@ function testFill() {
 	inputs.municipality.value = "Mechelen";
 	inputs.postalCode.value = "2800";
 	inputs.country.value = "België";
-	
+
 	inputs.email.value = "Pietje123@gmail.com";
 	inputs.phoneNumber.value = "0469123123";
-	
+
 	inputs.referrer.value = "Sinterklaas";
-	
+
 	inputs.contractNumber.value = "C-B-25-100000";
 	inputs.clientNumber.value = "1000001";
 
@@ -171,8 +171,8 @@ const euroFormat = Intl.NumberFormat("nl-BE", { style: "currency", currency: "EU
 /** Make euro amount numeric. */
 function euroStrToNum(euroStr) {
 	const cleanEuroStr = euroStr
-	 .replace(/[^\d,.]/g, "")
-	 .replace(",", ".");
+		.replace(/[^\d,.]/g, "")
+		.replace(",", ".");
 	return Number(cleanEuroStr);
 }
 
@@ -188,8 +188,8 @@ function formatEuro(euroAmount) {
 
 
 /** Generates an address as a string. */
-function formatAddress(streetName, houseNumber, boxNumber, postalCode, 
-					municipality, country) {
+function formatAddress(streetName, houseNumber, boxNumber, postalCode,
+	municipality, country) {
 	let streetLine = '';
 	streetLine += streetName;
 	streetLine += (streetLine.length == 0 || houseNumber.length == 0) ? '' : ' ';
@@ -197,7 +197,7 @@ function formatAddress(streetName, houseNumber, boxNumber, postalCode,
 	streetLine += (streetLine.length == 0 || boxNumber.length == 0) ? '' : ' ';
 	streetLine += (boxNumber.length == 0) ? '' : 'bus '
 	streetLine += boxNumber;
-	
+
 	let municipalityLine = '';
 	municipalityLine += postalCode;
 	municipalityLine += (municipalityLine.length == 0 || municipality.length == 0) ? '' : ' ';
@@ -209,7 +209,7 @@ function formatAddress(streetName, houseNumber, boxNumber, postalCode,
 	address += municipalityLine;
 	address += (address.length == 0 || country.length == 0) ? '' : ', ';
 	address += country;
-	
+
 	return address;
 }
 
@@ -228,13 +228,13 @@ function formatDate(date) {
  * https://stackoverflow.com/a/7091965/15709119
  * CC BY-SA 3.0 applicable */
 function getAge(birthDate) {
-    var today = new Date();
-    var age = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    return age;
+	var today = new Date();
+	var age = today.getFullYear() - birthDate.getFullYear();
+	var m = today.getMonth() - birthDate.getMonth();
+	if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+		age--;
+	}
+	return age;
 }
 
 
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	for (const el of document.querySelectorAll("[placeholder][data-slots]")) {
 		const pattern = el.getAttribute("placeholder"),
 			slots = new Set(el.dataset.slots || "_"),
-			prev = (j => Array.from(pattern, (c,i) => slots.has(c)? j=i+1: j))(0),
+			prev = (j => Array.from(pattern, (c, i) => slots.has(c) ? j = i + 1 : j))(0),
 			first = [...pattern].findIndex(c => slots.has(c)),
 			accept = new RegExp(el.dataset.accept || "\\d", "g"),
 			clean = input => {
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			format = () => {
 				const [i, j] = [el.selectionStart, el.selectionEnd].map(i => {
 					i = clean(el.value.slice(0, i)).findIndex(c => slots.has(c));
-					return i<0? prev.at(-1) : back ? prev[i-1] || first : i;
+					return i < 0 ? prev.at(-1) : back ? prev[i - 1] || first : i;
 				});
 				el.value = clean(el.value).join("");
 				el.setSelectionRange(i, j);
@@ -277,19 +277,19 @@ document.addEventListener('DOMContentLoaded', () => {
 		el.addEventListener("keydown", (e) => back = e.key === "Backspace");
 		el.addEventListener("input", format);
 		el.addEventListener("focus", format);
-		el.addEventListener("blur", () => el.value === pattern && (el.value=""));
+		el.addEventListener("blur", () => el.value === pattern && (el.value = ""));
 	}
 });
 
 
-/** Hides HTMLElement. */ 
+/** Hides HTMLElement. */
 function hideElement(el) {
 	el.classList.add("hidden");
 	el.disabled = true;
 }
 
 
-/** Shows HTMLElement. */ 
+/** Shows HTMLElement. */
 function showElement(el) {
 	el.classList.remove("hidden");
 	el.disabled = false;
@@ -315,13 +315,13 @@ function changeContractType(e) {
 	const payingChecked = inputs.payingContract.checked;
 	const nonPayingChecked = inputs.nonPayingContract.checked;
 	const anyChecked = payingChecked || nonPayingChecked;
-	
+
 	showSwitch(anyChecked, buttons.submit, resetInstruction, ...fieldsets, ...instructionTextElements);
 	showSwitch(nonPayingChecked, ...nonPayingOnlyElements);
 	showSwitch(payingChecked, ...payingOnlyElements);
 
 	validateAll();
-} 
+}
 
 inputs.payingContract.addEventListener("input", changeContractType);
 inputs.nonPayingContract.addEventListener("input", changeContractType);
@@ -360,7 +360,7 @@ for (const [key, el] of Object.entries(inputs)) {
 function customValidate(field, condition, invalidMessage) {
 	if (condition) {
 		field.setCustomValidity("");
-		field.setAttribute("title", "");
+		field.removeAttribute("title");
 	} else {
 		field.setCustomValidity(invalidMessage);
 		field.setAttribute("title", invalidMessage);
@@ -382,9 +382,9 @@ const validate = {
 
 	/** Validates postal code. Only Mechelaars can get a non-paying contract, unless they have an exception. */
 	postalCode: (e) => {
-		const condition = !inputs.nonPayingContract.checked 
-						  || inputs.uitpasException.checked
-						  || postalCodesMechelen.includes(Number(inputs.postalCode.value));
+		const condition = !inputs.nonPayingContract.checked
+			|| inputs.uitpasException.checked
+			|| postalCodesMechelen.includes(Number(inputs.postalCode.value));
 
 		customValidate(
 			inputs.postalCode, condition,
@@ -405,7 +405,7 @@ const validate = {
 	signatureDate: (e) => {
 		const signatureDate = inputs.signatureDate.valueAsDate;
 		const condition = signatureDate === null || isSameDay(signatureDate, new Date());
-	
+
 		customValidate(
 			inputs.signatureDate, condition,
 			"Handtekeningdatum hoort vandaag te zijn."
@@ -414,10 +414,10 @@ const validate = {
 
 	/** Validates end date. End date should always be after start date. */
 	endDate: (e) => {
-		const condition = inputs.startDate.valueAsDate === null 
-						  || inputs.endDate.valueAsDate === null
-						  || inputs.startDate.valueAsDate < inputs.endDate.valueAsDate;
-	
+		const condition = inputs.startDate.valueAsDate === null
+			|| inputs.endDate.valueAsDate === null
+			|| inputs.startDate.valueAsDate < inputs.endDate.valueAsDate;
+
 		customValidate(
 			inputs.endDate, condition,
 			"Einddatum hoort na startdatum te zijn."
@@ -442,7 +442,7 @@ const validate = {
 			const euroNumExpected = deviceTypes[inputs.deviceType.value].monthlyPayment;
 			condition = euroNum == euroNumExpected;
 		}
-		
+
 		customValidate(
 			inputs.monthlyPayment, condition,
 			"Onverwacht bedrag voor apparaattype."
@@ -452,14 +452,14 @@ const validate = {
 	/** Warns user if the yearly payment is different from expected for device type. */
 	yearlyPayment: (e) => {
 		let condition = false;
-	
+
 		if (inputs.deviceType.value) {
 			const value = inputs.yearlyPayment.value;
 			const euroNum = euroStrToNum(value);
 			const euroNumExpected = deviceTypes[inputs.deviceType.value].yearlyPayment;
 			condition = euroNum == euroNumExpected;
 		}
-		
+
 		customValidate(
 			inputs.yearlyPayment, condition,
 			"Onverwacht bedrag voor apparaattype."
@@ -469,14 +469,14 @@ const validate = {
 	/** Warns user if the circle value is different from expected for device type. */
 	circleValue: (e) => {
 		let condition = false;
-	
+
 		if (inputs.deviceType.value) {
 			const value = inputs.circleValue.value;
 			const euroNum = euroStrToNum(value);
 			const euroNumExpected = deviceTypes[inputs.deviceType.value].circleValue;
 			condition = euroNum == euroNumExpected;
 		}
-		
+
 		customValidate(
 			inputs.circleValue, condition,
 			"Onverwacht bedrag voor apparaattype."
@@ -488,12 +488,12 @@ const validate = {
 		const digits = inputs.structuredCommunication.value.replace(/\D/g, "");
 		const incompleteDigits = parseInt(digits.slice(0, 10));
 		const checksumProvided = parseInt(digits.slice(10, 12));
-	
+
 		const remainder = incompleteDigits % 97;
 		const validChecksum = remainder == 0 ? 97 : remainder;
-		
+
 		customValidate(
-			inputs.circleValue, validChecksum === checksumProvided,
+			inputs.structuredCommunication, digits.length < 12 || validChecksum === checksumProvided,
 			"Deze gestructureerde mededeling is niet geldig."
 		);
 	}
@@ -565,7 +565,7 @@ function calcStructuredCommunication() {
 	const monthDigits = ('0' + (signatureDate.getMonth() + 1).toString()).slice(-2);
 	const yearDigit = signatureDate.getFullYear().toString().slice(-2);
 	const assetTagDigits = ((assetTag.replace(/\D/g, "")).slice(-6) + "000000").slice(0, 6);
-	
+
 	const unfinishedMessage = monthDigits + yearDigit + assetTagDigits
 
 	const remainder = parseInt(unfinishedMessage) % 97;
@@ -605,9 +605,9 @@ buttons.autoEndDate.addEventListener("click", (e) => {
 	}
 
 	const date = inputs.startDate.valueAsDate;
-	inputs.endDate.valueAsDate = new Date(date.getUTCFullYear() + 1, 
-										  date.getMonth(), 
-										  date.getDate());
+	inputs.endDate.valueAsDate = new Date(date.getUTCFullYear() + 1,
+		date.getMonth(),
+		date.getDate());
 
 	inputs.endDate.dispatchEvent(new Event("input"), { bubbles: true });
 });
@@ -683,13 +683,13 @@ buttons.autoCircleValue.addEventListener("click", (e) => {
 function genWarningBoxTableContent(inputs) {
 	let output = [];
 	for (let [key, value] of Object.entries(inputs)) {
-		if (value.validity.valid || (value.closest('[disabled]')!=null)) {
+		if (value.validity.valid || (value.closest('[disabled]') != null)) {
 			continue
 		}
 
 		const labelElement = document.querySelector("label[for=" + value.id + "]");
 		labelText = labelElement.innerHTML;
-		output.push({label: labelElement.innerHTML, validationMessage: value.validationMessage});
+		output.push({ label: labelElement.innerHTML, validationMessage: value.validationMessage });
 	}
 	return output
 }
@@ -709,7 +709,7 @@ function fillWarningBoxTable(validationReport) {
 		const validationMessageTd = document.createElement("td");
 		const validationContent = document.createTextNode(message.validationMessage);
 		validationMessageTd.appendChild(validationContent);
-		
+
 		fullMessageTr.appendChild(labelTd);
 		fullMessageTr.appendChild(validationMessageTd);
 		tableBody.appendChild(fullMessageTr);
@@ -719,11 +719,11 @@ function fillWarningBoxTable(validationReport) {
 /** Opens the invalid inputs warning prompt. */
 function showWarning() {
 	showElement(warningBox);
-	main.inert = true; 
-	fillWarningBoxTable(genWarningBoxTableContent(inputs)); 
+	main.inert = true;
+	fillWarningBoxTable(genWarningBoxTableContent(inputs));
 
 	// Preferably, we want the user to go back and fix invalid inputs.
-	buttons.warningGoBack.focus({focusVisible: true});
+	buttons.warningGoBack.focus({ focusVisible: true });
 }
 
 /** Closes the invalid inputs warning prompt. */
@@ -737,8 +737,8 @@ function hideWarning() {
 /** Opens the contract generation progress prompt with given text and activated/deactivated close button. */
 function showProgressBox(promptText = "", isCloseable = false) {
 	progressBoxText.innerText = promptText;
-	buttons.progressGoBack.disabled = !isCloseable; 
-	buttons.progressGoBack.focus({focusVisible: true});
+	buttons.progressGoBack.disabled = !isCloseable;
+	buttons.progressGoBack.focus({ focusVisible: true });
 
 	showElement(progressBox);
 	main.inert = true;
@@ -779,7 +779,7 @@ buttons.submit.addEventListener('click', async (e) => {
 /** Does final pre-processing of form data, and collects it into object. */
 async function collectFormData(pdfPath) {
 	let courseNotification = "";
-	
+
 	if (inputs.workshopException.checked) {
 		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen door het afleggen van een bekwaamheidstest.";
 	} else if (inputs.isExtension.checked) {
@@ -799,44 +799,44 @@ async function collectFormData(pdfPath) {
 		"client": {
 			"name": inputs.firstName.value + ' ' + inputs.lastName.value,
 			"birthDate": formatDate(inputs.birthDate.valueAsDate),
-			"address": formatAddress(inputs.streetName.value, inputs.houseNumber.value, 
-								  inputs.boxNumber.value, inputs.postalCode.value, 
-							 	  inputs.municipality.value, inputs.country.value),
+			"address": formatAddress(inputs.streetName.value, inputs.houseNumber.value,
+				inputs.boxNumber.value, inputs.postalCode.value,
+				inputs.municipality.value, inputs.country.value),
 			"phone": await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value)),
 			"email": inputs.email.value,
 		},
-    "contract-type": inputs.payingContract.checked ? "paying" : "non-paying",
-		"subscription" : {
-			"structuredReference" : inputs.structuredCommunication.value,
-			"monthlyPayment" : formatEuro(inputs.monthlyPayment.value),
-			"yearlyPayment" : formatEuro(inputs.yearlyPayment.value),
-			"amountPaid" : formatEuro(inputs.advancePayment.value),
-			"circleValue" : formatEuro(inputs.circleValue.value)
+		"contract-type": inputs.payingContract.checked ? "paying" : "non-paying",
+		"subscription": {
+			"structuredReference": inputs.structuredCommunication.value,
+			"monthlyPayment": formatEuro(inputs.monthlyPayment.value),
+			"yearlyPayment": formatEuro(inputs.yearlyPayment.value),
+			"amountPaid": formatEuro(inputs.advancePayment.value),
+			"circleValue": formatEuro(inputs.circleValue.value)
 		},
-		"uitpas" : {
-			"applicable" : !inputs.uitpasException.checked,
-			"number" : inputs.uitpasNumber.value,
+		"uitpas": {
+			"applicable": !inputs.uitpasException.checked,
+			"number": inputs.uitpasNumber.value,
 			"aptitudeTest": inputs.workshopException.checked,
 			"courseEnrolment": !inputs.workshopException.checked,
-			"courseDate" : formatDate(inputs.workshopDate.valueAsDate),
-			"courseNotification" : courseNotification
+			"courseDate": formatDate(inputs.workshopDate.valueAsDate),
+			"courseNotification": courseNotification
 		},
 		"referer": inputs.referrer.value,
 		"structuredReference": inputs.structuredCommunication.value,
-		"item" : {
+		"item": {
 			"deviceType": inputs.deviceType.value ? deviceTypes[inputs.deviceType.value].fullName : "",
 			"deviceBrand": inputs.deviceBrand.value,
 			"deviceModel": inputs.deviceModel.value,
-			"assetTag" : inputs.assetTag.value,
-			"accessories" : {
-				"charger" : inputs.includesCharger.checked,
+			"assetTag": inputs.assetTag.value,
+			"accessories": {
+				"charger": inputs.includesCharger.checked,
 				"mouse": inputs.includesMouse.checked,
 				"eIdReader": inputs.includesSmartCardReader.checked
 			}
 		},
-		"contractDate" : formatDate(inputs.signatureDate.valueAsDate),
-		"startDate" : formatDate(inputs.startDate.valueAsDate),
-		"endDate" : formatDate(inputs.endDate.valueAsDate)
+		"contractDate": formatDate(inputs.signatureDate.valueAsDate),
+		"startDate": formatDate(inputs.startDate.valueAsDate),
+		"endDate": formatDate(inputs.endDate.valueAsDate)
 	};
 }
 
@@ -859,7 +859,7 @@ async function generateContract() {
 
 	showProgressBox("Gegevens uit contract aan het ophalen.", false);
 
-	let data = await collectFormData(pdfPath); 
+	let data = await collectFormData(pdfPath);
 
 	showProgressBox("PDF aan het genereren.", false);
 
