@@ -188,7 +188,7 @@ function formatEuro(euroAmount) {
 
 
 /** Generates an address as a string. */
-function addressStr(streetName, houseNumber, boxNumber, postalCode, 
+function formatAddress(streetName, houseNumber, boxNumber, postalCode, 
 					municipality, country) {
 	let streetLine = '';
 	streetLine += streetName;
@@ -213,6 +213,15 @@ function addressStr(streetName, houseNumber, boxNumber, postalCode,
 	return address;
 }
 
+/** Formats a phone number. */
+async function formatPhoneNumber(phoneNumber) {
+	return await window.libphonenumber.formatPhoneNumber(String(phoneNumber));
+}
+
+/** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string. */
+function formatDate(date) {
+	return date ? date.toLocaleDateString("nl-BE") : "";
+}
 
 /** Calculates a person's age according to their birth date. 
  * Shamelessly stolen from codeandcloud on StackExchange.
@@ -273,12 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+/** Hides HTMLElement. */ 
 function hideElement(el) {
 	el.classList.add("hidden");
 	el.disabled = true;
 }
 
 
+/** Shows HTMLElement. */ 
 function showElement(el) {
 	el.classList.remove("hidden");
 	el.disabled = false;
@@ -306,9 +317,7 @@ function changeContractType(e) {
 	const anyChecked = payingChecked || nonPayingChecked;
 	
 	showSwitch(anyChecked, buttons.submit, resetInstruction, ...fieldsets, ...instructionTextElements);
-	
 	showSwitch(nonPayingChecked, ...nonPayingOnlyElements);
-	
 	showSwitch(payingChecked, ...payingOnlyElements);
 } 
 
@@ -334,12 +343,14 @@ function toggleEnabledWorkshopFields(e) {
 inputs.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
 inputs.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 
+
 // Adds .changed class to input elements after they've been changed.
 // The .changed class makes it so invalid inputs are marked in red.
 // You don't want users to be scolded for invalid inputs they didn't even touch.
 for (const [key, el] of Object.entries(inputs)) {
 	el.addEventListener("input", (e) => el.classList.add("changed"))
 }
+
 
 /** Trigger/untrigger all validation and make it visible. */
 function allFieldsHadInput() {
@@ -396,10 +407,8 @@ inputs.uitpasException.addEventListener("input", validatePostalCode)
 
 inputs.phoneNumber.addEventListener("input", async (e) => {
 	// Easiest way to do this is to just try to format it, if it fails, it's a bad number.
-	const formattedNumber = await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value));
-
 	customValidate(
-		inputs.phoneNumber, formattedNumber,
+		inputs.phoneNumber, await formatPhoneNumber(inputs.phoneNumber.value),
 		"Ongeldig telefoonnummber."
 	);
 });
@@ -749,11 +758,6 @@ buttons.submit.addEventListener('click', async (e) => {
 
 ////// Contract generation (Kind of a mess.) 
 
-/** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string. */
-function formatDate(date) {
-	return date ? date.toLocaleDateString("nl-BE") : "";
-}
-
 /** Does final pre-processing of form data, and collects it into object. */
 async function collectFormData(pdfPath) {
 	let courseNotification = "";
@@ -777,7 +781,7 @@ async function collectFormData(pdfPath) {
 		"client": {
 			"name": inputs.firstName.value + ' ' + inputs.lastName.value,
 			"birthDate": formatDate(inputs.birthDate.valueAsDate),
-			"address": addressStr(inputs.streetName.value, inputs.houseNumber.value, 
+			"address": formatAddress(inputs.streetName.value, inputs.houseNumber.value, 
 								  inputs.boxNumber.value, inputs.postalCode.value, 
 							 	  inputs.municipality.value, inputs.country.value),
 			"phone": await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value)),
