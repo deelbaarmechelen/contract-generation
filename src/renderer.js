@@ -273,58 +273,43 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-/** Switched visible fields depending on contract type. */
-function changeContractType(e) {
-	payingChecked = inputs.payingContract.checked;
-	nonPayingChecked = inputs.nonPayingContract.checked;
-	
-	if (payingChecked || nonPayingChecked) {
-		buttons.submit.classList.remove("hidden");
-		resetInstruction.classList.remove("hidden");
-	} else {
-		buttons.submit.classList.add("hidden");
-		resetInstruction.classList.add("hidden");
-	}
-	
-	for (const el of fieldsets) {
-		if (payingChecked || nonPayingChecked) {
-			el.classList.remove("hidden");
-			el.disabled = false;
-		} else {
-			el.classList.add("hidden");
-			el.disabled = true;
-		}
-	}
-	
-	for (const el of instructionTextElements) {
-		if (payingChecked || nonPayingChecked) {
-			el.classList.remove("hidden");
-			el.disabled = false;
-		} else {
-			el.classList.add("hidden");
-			el.disabled = true;
-		}
-	}
-	
-	for (const el of nonPayingOnlyElements) {
-		if (nonPayingChecked) {
-			el.classList.remove("hidden");
-			el.disabled = false;
-		} else {
-			el.classList.add("hidden");
-			el.disabled = true;
-		}
-	}
+function hideElement(el) {
+	el.classList.add("hidden");
+	el.disabled = true;
+}
 
-	for (const el of payingOnlyElements) {
-		if (payingChecked) {
-			el.classList.remove("hidden");
-			el.disabled = false;
-		} else {
-			el.classList.add("hidden");
-			el.disabled = true;
+
+function showElement(el) {
+	el.classList.remove("hidden");
+	el.disabled = false;
+}
+
+
+/** Checks condition and shows elements only if true. */
+function showSwitch(condition, ...elements) {
+	if (condition) {
+		for (const el of elements) {
+			showElement(el);
+		}
+	} else {
+		for (const el of elements) {
+			hideElement(el);
 		}
 	}
+}
+
+
+/** Switches visible fields depending on contract type. */
+function changeContractType(e) {
+	const payingChecked = inputs.payingContract.checked;
+	const nonPayingChecked = inputs.nonPayingContract.checked;
+	const anyChecked = payingChecked || nonPayingChecked;
+	
+	showSwitch(anyChecked, buttons.submit, resetInstruction, ...fieldsets, ...instructionTextElements);
+	
+	showSwitch(nonPayingChecked, ...nonPayingOnlyElements);
+	
+	showSwitch(payingChecked, ...payingOnlyElements);
 } 
 
 inputs.payingContract.addEventListener("input", changeContractType);
@@ -706,7 +691,7 @@ function fillWarningBoxTable(validationReport) {
 
 /** Opens the invalid inputs warning prompt. */
 function showWarning() {
-	warningBox.classList.remove("hidden");
+	showElement(warningBox);
 	main.inert = true; 
 	fillWarningBoxTable(genWarningBoxTableContent(inputs)); 
 
@@ -716,7 +701,7 @@ function showWarning() {
 
 /** Closes the invalid inputs warning prompt. */
 function hideWarning() {
-	warningBox.classList.add("hidden");
+	hideElement(warningBox);
 	main.inert = false;
 
 	allFieldsHadInput();
@@ -728,13 +713,13 @@ function showProgressBox(promptText = "", isCloseable = false) {
 	buttons.progressGoBack.disabled = !isCloseable; 
 	buttons.progressGoBack.focus({focusVisible: true});
 
-	progressBox.classList.remove("hidden");
-	main.inert = true; 
+	showElement(progressBox);
+	main.inert = true;
 }
 
 /** Closes the contract generation progress prompt. */
 function hideProgressBox() {
-	progressBox.classList.add("hidden");
+	hideElement(progressBox);
 	main.inert = false;
 }
 
