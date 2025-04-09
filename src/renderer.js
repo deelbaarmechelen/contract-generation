@@ -373,155 +373,161 @@ function customValidate(field, condition, invalidMessage) {
 	}
 }
 
-/** Validates that customer is at least 18 years of age. */
-function validateBirthDate(e) {
-	const birthDate = inputs.birthDate.valueAsDate;
-	const condition = birthDate === null || getAge(birthDate) >= 18; // If `birthDate === null` we want to let normal input validation handle it.
+/** Contains all field validation functions. */
+const validate = {
+	/** Validates that customer is at least 18 years of age. */
+	birthDate: (e) => {
+		const birthDate = inputs.birthDate.valueAsDate;
+		const condition = birthDate === null || getAge(birthDate) >= 18; // If `birthDate === null` we want to let normal input validation handle it.
 
-	customValidate(
-		inputs.birthDate, condition,
-		"Klant is onder 18."
-	);
+		customValidate(
+			inputs.birthDate, condition,
+			"Klant is onder 18."
+		);
+	},
+
+	/** Only Mechelaars can get a non-paying contract, unless they have an exception. */
+	postalCode: (e) => {
+		const condition = !inputs.nonPayingContract.checked 
+						  || inputs.uitpasException.checked
+						  || postalCodesMechelen.includes(Number(inputs.postalCode.value));
+
+		customValidate(
+			inputs.postalCode, condition,
+			"Dit is geen postcode uit de gemeente Mechelen."
+		);
+	},
+
+	phoneNumber: async (e) => {
+		// Easiest way to do this is to just try to format it, if it fails, it's a bad number.
+		customValidate(
+			inputs.phoneNumber, await formatPhoneNumber(inputs.phoneNumber.value),
+			"Ongeldig telefoonnummber."
+		);
+	},
+
+	signatureDate: (e) => {
+		const signatureDate = inputs.signatureDate.valueAsDate;
+		const condition = signatureDate === null || isSameDay(signatureDate, new Date());
+	
+		customValidate(
+			inputs.signatureDate, condition,
+			"Handtekeningdatum hoort vandaag te zijn."
+		);
+	},
+
+	endDate: (e) => {
+		const condition = inputs.startDate.valueAsDate === null 
+						  || inputs.endDate.valueAsDate === null
+						  || inputs.startDate.valueAsDate < inputs.endDate.valueAsDate;
+	
+		customValidate(
+			inputs.endDate, condition,
+			"Einddatum komt voor startdatum."
+		);
+	},
+
+	assetTag: (e) => {
+		customValidate(
+			inputs.assetTag, !inputs.assetTag.validity.patternMismatch,
+			"Een assettag heeft gewoonlijk zes cijfers met eventueel een combinatie hoofdletters ervoor. (bv. 'PC250200')."
+		);
+	},
+
+	/** Warns user if the monthly payment is different from expected for device type. */
+	monthlyPayment: (e) => {
+		let condition = false;
+
+		if (inputs.deviceType.value) {
+			const value = inputs.monthlyPayment.value;
+			const euroNum = euroStrToNum(value);
+			const euroNumExpected = deviceTypes[inputs.deviceType.value].monthlyPayment;
+			condition = euroNum == euroNumExpected;
+		}
+		
+		customValidate(
+			inputs.monthlyPayment, condition,
+			"Onverwacht bedrag voor apparaattype."
+		);
+	},
+
+	/** Warns user if the yearly payment is different from expected for device type. */
+	yearlyPayment: (e) => {
+		let condition = false;
+	
+		if (inputs.deviceType.value) {
+			const value = inputs.yearlyPayment.value;
+			const euroNum = euroStrToNum(value);
+			const euroNumExpected = deviceTypes[inputs.deviceType.value].yearlyPayment;
+			condition = euroNum == euroNumExpected;
+		}
+		
+		customValidate(
+			inputs.yearlyPayment, condition,
+			"Onverwacht bedrag voor apparaattype."
+		);
+	},
+
+	/** Warns user if the circle value is different from expected for device type. */
+	circleValue: (e) => {
+		let condition = false;
+	
+		if (inputs.deviceType.value) {
+			const value = inputs.circleValue.value;
+			const euroNum = euroStrToNum(value);
+			const euroNumExpected = deviceTypes[inputs.deviceType.value].circleValue;
+			condition = euroNum == euroNumExpected;
+		}
+		
+		customValidate(
+			inputs.circleValue, condition,
+			"Onverwacht bedrag voor apparaattype."
+		);
+	},
+
+	/** Makes sure structured communication is valid. */
+	structuredCommunication: (e) => {
+		const digits = inputs.structuredCommunication.value.replace(/\D/g, "");
+		const incompleteDigits = parseInt(digits.slice(0, 10));
+		const checksumProvided = parseInt(digits.slice(10, 12));
+	
+		const remainder = incompleteDigits % 97;
+		const validChecksum = remainder == 0 ? 97 : remainder;
+		
+		customValidate(
+			inputs.circleValue, validChecksum === checksumProvided,
+			"Deze gestructureerde mededeling is niet geldig."
+		);
+	}
 }
 
-inputs.birthDate.addEventListener("input", validateBirthDate)
-
-
-/** Only Mechelaars can get a non-paying contract, unless they have an exception. */
-function validatePostalCode(e) {
-	const condition = !inputs.nonPayingContract.checked 
-					  || inputs.uitpasException.checked
-					  || postalCodesMechelen.includes(Number(inputs.postalCode.value));
-
-	customValidate(
-		inputs.nonPayingContract, condition,
-		"Dit is geen postcode uit de gemeente Mechelen."
-	);
-}
+inputs.birthDate.addEventListener("input", validate.birthDate)
 
 // Important principle: If validation depends on a previous field, you need
 // to redo validation once that field changes as well!
-inputs.postalCode.addEventListener("input", validatePostalCode)
-inputs.uitpasException.addEventListener("input", validatePostalCode)
+inputs.postalCode.addEventListener("input", validate.postalCode)
+inputs.uitpasException.addEventListener("input", validate.postalCode)
 
+inputs.phoneNumber.addEventListener("input", validate.phoneNumber);
 
-inputs.phoneNumber.addEventListener("input", async (e) => {
-	// Easiest way to do this is to just try to format it, if it fails, it's a bad number.
-	customValidate(
-		inputs.phoneNumber, await formatPhoneNumber(inputs.phoneNumber.value),
-		"Ongeldig telefoonnummber."
-	);
-});
+inputs.signatureDate.addEventListener("input", validate.signatureDate)
 
-inputs.signatureDate.addEventListener("input", (e) => {
-	const signatureDate = inputs.signatureDate.valueAsDate;
-	const condition = signatureDate === null || isSameDay(signatureDate, new Date());
+inputs.endDate.addEventListener("input", validate.endDate)
 
-	customValidate(
-		inputs.signatureDate, condition,
-		"Handtekeningdatum hoort vandaag te zijn."
-	);
-})
+inputs.assetTag.addEventListener("input", validate.assetTag);
 
-inputs.endDate.addEventListener("input", (e) => {
-	const condition = inputs.startDate.valueAsDate === null 
-					  || inputs.endDate.valueAsDate === null
-					  || inputs.startDate.valueAsDate < inputs.endDate.valueAsDate;
+inputs.monthlyPayment.addEventListener("input", validate.monthlyPayment);
+inputs.deviceType.addEventListener("input", validate.monthlyPayment);
 
-	customValidate(
-		inputs.endDate, condition,
-		"Einddatum komt voor startdatum."
-	);
-})
+inputs.yearlyPayment.addEventListener("input", validate.yearlyPayment);
+inputs.deviceType.addEventListener("input", validate.yearlyPayment);
 
-inputs.assetTag.addEventListener("input", (e) => {
-	customValidate(
-		inputs.assetTag, !inputs.assetTag.validity.patternMismatch,
-		"Een assettag heeft gewoonlijk zes cijfers met eventueel een combinatie hoofdletters ervoor. (bv. 'PC250200')."
-	);
-});
+inputs.circleValue.addEventListener("input", validate.circleValue);
+inputs.deviceType.addEventListener("input", validate.circleValue);
 
-
-/** Warns user if the monthly payment is different from expected for device type. */
-function validateMonthlyPayment(e) {
-	let condition = false;
-
-	if (inputs.deviceType.value) {
-		const value = inputs.monthlyPayment.value;
-		const euroNum = euroStrToNum(value);
-		const euroNumExpected = deviceTypes[inputs.deviceType.value].monthlyPayment;
-		condition = euroNum == euroNumExpected;
-	}
-	
-	customValidate(
-		inputs.monthlyPayment, condition,
-		"Onverwacht bedrag voor apparaattype."
-	);
-}
-
-inputs.monthlyPayment.addEventListener("input", validateMonthlyPayment);
-inputs.deviceType.addEventListener("input", validateMonthlyPayment);
-
-
-/** Warns user if the yearly payment is different from expected for device type. */
-function validateYearlyPayment(e) {
-	let condition = false;
-
-	if (inputs.deviceType.value) {
-		const value = inputs.yearlyPayment.value;
-		const euroNum = euroStrToNum(value);
-		const euroNumExpected = deviceTypes[inputs.deviceType.value].yearlyPayment;
-		condition = euroNum == euroNumExpected;
-	}
-	
-	customValidate(
-		inputs.yearlyPayment, condition,
-		"Onverwacht bedrag voor apparaattype."
-	);
-}
-
-inputs.yearlyPayment.addEventListener("input", validateYearlyPayment);
-inputs.deviceType.addEventListener("input", validateYearlyPayment);
-
-
-/** Warns user if the circle value is different from expected for device type. */
-function validateCircleValue(e) {
-	let condition = false;
-
-	if (inputs.deviceType.value) {
-		const value = inputs.circleValue.value;
-		const euroNum = euroStrToNum(value);
-		const euroNumExpected = deviceTypes[inputs.deviceType.value].circleValue;
-		condition = euroNum == euroNumExpected;
-	}
-	
-	customValidate(
-		inputs.circleValue, condition,
-		"Onverwacht bedrag voor apparaattype."
-	);
-}
-
-inputs.circleValue.addEventListener("input", validateCircleValue);
-inputs.deviceType.addEventListener("input", validateCircleValue);
-
-
-// Makes sure structured communication is valid.
-inputs.structuredCommunication.addEventListener("input", (e) => {
-	const digits = inputs.structuredCommunication.value.replace(/\D/g, "");
-	const incompleteDigits = parseInt(digits.slice(0, 10));
-	const checksumProvided = parseInt(digits.slice(10, 12));
-
-	const remainder = incompleteDigits % 97;
-	const validChecksum = remainder == 0 ? 97 : remainder;
-	
-	customValidate(
-		inputs.circleValue, validChecksum === checksumProvided,
-		"Deze gestructureerde mededeling is niet geldig."
-	);
-})
+inputs.structuredCommunication.addEventListener("input", validate.structuredCommunication)
 
 ////// Autofill
-
 
 function fieldsValid(...prerequisiteFields) {
 	let fieldsValid = true;

@@ -13,10 +13,10 @@ Done:
 - Add declaration that client is 18 years of age
 - Add date validation
 - Add a reset button to clear all contract information before entering a new one
+- Separate input verification logic from input events
 
 Necessary:
 - Validate API key is available in distributable
-- Separate input verification logic from input events
 - Show birthDate on contract
 - Detect if structured communication is empty, give different message
 - End date of paid contract is not necessarily after a year, should not autofill to be after a year.
