@@ -319,6 +319,8 @@ function changeContractType(e) {
 	showSwitch(anyChecked, buttons.submit, resetInstruction, ...fieldsets, ...instructionTextElements);
 	showSwitch(nonPayingChecked, ...nonPayingOnlyElements);
 	showSwitch(payingChecked, ...payingOnlyElements);
+
+	validateAll();
 } 
 
 inputs.payingContract.addEventListener("input", changeContractType);
@@ -352,14 +354,6 @@ for (const [key, el] of Object.entries(inputs)) {
 }
 
 
-/** Trigger/untrigger all validation and make it visible. */
-function allFieldsHadInput() {
-	for (const [key, el] of Object.entries(inputs)) {
-		el.dispatchEvent(new Event("input"), { bubbles: true });
-	}
-}
-
-
 //// Input validation
 
 /** Applies custom validity message to field if condition fails. */
@@ -386,7 +380,7 @@ const validate = {
 		);
 	},
 
-	/** Only Mechelaars can get a non-paying contract, unless they have an exception. */
+	/** Validates postal code. Only Mechelaars can get a non-paying contract, unless they have an exception. */
 	postalCode: (e) => {
 		const condition = !inputs.nonPayingContract.checked 
 						  || inputs.uitpasException.checked
@@ -398,6 +392,7 @@ const validate = {
 		);
 	},
 
+	/** Validates that phone number could be real. */
 	phoneNumber: async (e) => {
 		// Easiest way to do this is to just try to format it, if it fails, it's a bad number.
 		customValidate(
@@ -406,6 +401,7 @@ const validate = {
 		);
 	},
 
+	/** Validates signature date. The signature date should normally be today. */
 	signatureDate: (e) => {
 		const signatureDate = inputs.signatureDate.valueAsDate;
 		const condition = signatureDate === null || isSameDay(signatureDate, new Date());
@@ -416,6 +412,7 @@ const validate = {
 		);
 	},
 
+	/** Validates end date. End date should always be after start date. */
 	endDate: (e) => {
 		const condition = inputs.startDate.valueAsDate === null 
 						  || inputs.endDate.valueAsDate === null
@@ -423,10 +420,11 @@ const validate = {
 	
 		customValidate(
 			inputs.endDate, condition,
-			"Einddatum komt voor startdatum."
+			"Einddatum hoort na startdatum te zijn."
 		);
 	},
 
+	/** Validates assetTag. Assettags normally have six digits prepended with some combination of letters. */
 	assetTag: (e) => {
 		customValidate(
 			inputs.assetTag, !inputs.assetTag.validity.patternMismatch,
@@ -485,7 +483,7 @@ const validate = {
 		);
 	},
 
-	/** Makes sure structured communication is valid. */
+	/** Validates structured communication. The last two digits are determined by the rest of the digits */
 	structuredCommunication: (e) => {
 		const digits = inputs.structuredCommunication.value.replace(/\D/g, "");
 		const incompleteDigits = parseInt(digits.slice(0, 10));
@@ -526,6 +524,20 @@ inputs.circleValue.addEventListener("input", validate.circleValue);
 inputs.deviceType.addEventListener("input", validate.circleValue);
 
 inputs.structuredCommunication.addEventListener("input", validate.structuredCommunication)
+
+/** Executes all validation functions. */
+function validateAll() {
+	for (const [key, validationFunc] of Object.entries(validate)) {
+		validationFunc();
+	}
+}
+
+/** Executes all validation functions and makes all validation warnings visible. */
+function allFieldsHadInput() {
+	for (const [key, el] of Object.entries(inputs)) {
+		el.dispatchEvent(new Event("input"), { bubbles: true });
+	}
+}
 
 ////// Autofill
 
