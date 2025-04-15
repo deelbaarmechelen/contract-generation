@@ -31,7 +31,10 @@
       <legend>UiTPAS</legend>
       <div class="field-box non-paying-only">
         <label for="uitpas-number">UiTPAS-nummer</label>
-        <input id="uitpas-number" type="text" name="uitpas-number" required minlength="13" maxlength="13">
+        <div class="field-box-inner">
+          <input id="uitpas-number" type="text" name="uitpas-number" required minlength="13" maxlength="13">
+          <div class="error" data-for="uitpas-number"></div>
+        </div>
       </div>
       <div class="checkbox-box non-paying-only">
         <label for="uitpas-exception">Ik heb uitzonderlijke toestemming van het Sociaal Huis om zonder UiTPAS te lenen.</label>
@@ -42,15 +45,24 @@
       <legend>Persoonsgegevens</legend>
       <div class="field-box">
         <label for="first-name">Voornaam</label>
-        <input id="first-name" type="text" name="first-name" required maxlength="40">
+        <div class="field-box-inner">
+          <input id="first-name" type="text" name="first-name" required maxlength="40">
+          <div class="error" data-for="first-name"></div>
+        </div>
       </div>
       <div class="field-box">
         <label for="last-name">Achternaam</label>
-        <input id="last-name" type="text" name="last-name" required maxlength="40">
+        <div class="field-box-inner">
+          <input id="last-name" type="text" name="last-name" required maxlength="40">
+          <div class="error" data-for="last-name"></div>
+        </div>
       </div>
       <div class="field-box">
         <label for="birth-date">Geboortedatum</label>
-        <input id="birth-date" type="date" name="birth-date" required>
+        <div class="field-box-inner">
+          <input id="birth-date" type="date" name="birth-date" required>
+          <div class="error" data-for="birth-date">Deze input heeft een probleem.</div>
+        </div>
       </div>
     </fieldset>
     <fieldset class="hidden">
@@ -58,31 +70,49 @@
       <div class="fieldsubset">
         <div class="field-box">
           <label for="street-name">Straatnaam</label>
-          <input id="street-name" type="text" name="street-name" required maxlength="40">
+          <div class="field-box-inner">
+            <input id="street-name" type="text" name="street-name" required maxlength="40">
+            <div class="error" data-for="street-name"></div>
+          </div> 
         </div>
         <div class="number-and-box-number">
           <div class="field-box small">
             <label for="house-number">Huisnummer</label>
-            <input id="house-number" type="text" name="house-number" required maxlength="10">
+            <div class="field-box-inner">
+              <input id="house-number" type="text" name="house-number" required maxlength="10">
+              <div class="error" data-for="house-number"></div>
+            </div> 
           </div>
           <div class="field-box small">
             <label for="box-number">Bus</label>
-            <input id="box-number" type="text" name="box-number" maxlength="10">
+            <div class="field-box-inner">
+              <input id="box-number" type="text" name="box-number" maxlength="10">
+              <div class="error" data-fox="box-number"></div>
+            </div> 
           </div>
         </div>
       </div>
       <div class="fieldsubset">
       <div class="field-box">
         <label for="municipality">Gemeente</label>
-        <input id="municipality" type="text" name="municipality" required maxlength="40">
+        <div class="field-box-inner">
+          <input id="municipality" type="text" name="municipality" required maxlength="40">
+          <div class="error" data-for="municipality"></div>
+        </div> 
       </div>
       <div class="field-box small">
         <label for="postal-code">Postcode</label>
-        <input id="postal-code" type="text" name="postal-code" required maxlength="40">
+        <div class="field-box-inner">
+          <input id="postal-code" type="text" name="postal-code" required maxlength="40">
+          <div class="error" data-for="postal-code"></div>
+        </div> 
       </div>
       <div class="field-box">
         <label for="country">Land</label>
-        <input id="country" type="text" name="country" value="België" required maxlength="40">
+        <div class="field-box-inner">
+          <input id="country" type="text" name="country" value="België" required maxlength="40">
+          <div class="error" data-for="country"></div>
+        </div> 
       </div>
       </div>
     </fieldset>
@@ -90,18 +120,27 @@
       <legend>Contactgegevens</legend>
       <div class="field-box">
         <label for="email">Email</label>
-        <input id="email" type="email" name="email" required maxlength="40">
+        <div class="field-box-inner">
+          <input id="email" type="email" name="email" required maxlength="40">
+          <div class="error" data-for="email"></div>
+        </div> 
       </div>
       <div class="field-box">
         <label for="phone-number">Telefoonnummer</label>
-        <input id="phone-number" type="tel" name="phone-number" required maxlength="40">
+        <div class="field-box-inner">
+          <input id="phone-number" type="tel" name="phone-number" required maxlength="40">
+          <div class="error" data-for="phone-number"></div>
+        </div> 
       </div>
     </fieldset>
     <fieldset class="hidden">
       <legend>Doorverwijzer</legend>
       <div class="field-box">
         <label for="referrer">Doorverwijzer</label>
-        <input id="referrer" type="text" name="referrer" maxlength="40">
+        <div class="field-box-inner">
+          <input id="referrer" type="text" name="referrer" maxlength="40">
+          <div class="error" data-for="referrer"></div>
+        </div> 
       </div>
     </fieldset>
     <div class="instruction-text hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
@@ -115,65 +154,98 @@
         <div class="field-box">
           <label for="signature-date">Tekendatum</label>
           <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
-          <input id="signature-date" type="date" name="signature-date" required>
+          <div class="field-box-inner">
+            <input id="signature-date" type="date" name="signature-date" required>
+            <div class="error" data-for="signature-date"></div>
+          </div> 
         </div>
         <div class="field-box">
           <label for="start-date">Startdatum</label>
           <input type="button" id="auto-start-date" value="&#x1F50E;&#xFE0E;">
-          <input id="start-date" type="date" name="start-date" required>
+          <div class="field-box-inner">
+            <input id="start-date" type="date" name="start-date" required>
+            <div class="error" data-for="start-date"></div>
+          </div> 
         </div>
         <div class="field-box">
           <label for="end-date">Einddatum</label>
           <input type="button" id="auto-end-date" class="non-paying-only" value="&#x1F50E;&#xFE0E;">
-          <input id="end-date" type="date" name="start-date" required>
+          <div class="field-box-inner">
+            <input id="end-date" type="date" name="start-date" required>
+            <div class="error" data-for="end-date"></div>
+          </div> 
         </div>
       </div>
       <div class="fieldsubset">
         <div class="field-box">
           <label for="client-number">Klantnummer</label>
-          <input id="client-number" type="text" name="client-number" maxlength="40">
+          <div class="field-box-inner">
+            <input id="client-number" type="text" name="client-number" maxlength="40">
+            <div class="error" data-for="client-number"></div>
+          </div> 
         </div>
         <div class="field-box">
           <label for="contract-number">Contractnummer</label>
-          <input id="contract-number" type="text" name="contract-number" maxlength="40">
+          <div class="field-box-inner">
+            <input id="contract-number" type="text" name="contract-number" maxlength="40">
+            <div class="error" data-for="contract-number"></div>
+          </div> 
         </div>
       </div>
     </fieldset>
     <fieldset class="hidden non-paying-only">
       <legend>Opleidingsmoment</legend>
       <div class="field-box">
-          <label for="workshop-date">Datum opleidingsmoment</label>
+        <label for="workshop-date">Datum opleidingsmoment</label>
+        <div class="field-box-inner">
           <input id="workshop-date" type="date" name="workshop-date" required>
+          <div class="error" data-for="workshop-date"></div>
+        </div> 
       </div>
       <div class="checkbox-box non-paying-only">
         <label for="workshop-exception">Klant is vrijgesteld van opleidingsmoment door het voltooien van een vaardigheidstest.</label>
-        <input id="workshop-exception" type="checkbox" name="workshop-exception">
+        <div class="field-box-inner">
+          <input id="workshop-exception" type="checkbox" name="workshop-exception">
+          <div class="error" data-for="workshop-exception"></div>
+        </div> 
       </div>
     </fieldset>
     <fieldset class="hidden">
       <legend>Apparaat</legend>
       <div class="field-box">
         <label for="asset-tag">Assettag</label>
-        <input id="asset-tag" type="text" name="asset-tag" maxlength="40" required pattern="^[A-Z]*\d{6}$">
+        <div class="field-box-inner">
+          <input id="asset-tag" type="text" name="asset-tag" maxlength="40" required pattern="^[A-Z]*\d{6}$">
+          <div class="error" data-for="asset-tag"></div>
+        </div> 
       </div>
       <div class="fieldsubset">
         <div class="field-box">
           <label for="device-brand">Merk</label>
           <input type="button" id="auto-device-brand" value="&#x1F50E;&#xFE0E;">
-          <input id="device-brand" type="text" name="device-brand" required maxlength="40">
+          <div class="field-box-inner">
+            <input id="device-brand" type="text" name="device-brand" required maxlength="40">
+            <div class="error" data-for="device-brand"></div>
+          </div> 
         </div>
         <div class="field-box">
           <label for="device-model">Model</label>
           <input type="button" id="auto-device-model" value="&#x1F50E;&#xFE0E;">
-          <input id="device-model" type="text" name="device-model" required maxlength="40">
+          <div class="field-box-inner">
+            <input id="device-model" type="text" name="device-model" required maxlength="40">
+            <div class="error" data-for="device-model"></div>
+          </div> 
         </div>
         <div class="field-box">
           <label for="device-type">Type</label>
-          <select id="device-type" name="device-type" required>
-            <option value="" selected class="select-empty-option">Kies type</option>
-            <option value="laptop-win-10">Laptop (Win 10)</option>
-            <option value="laptop-win-11">Laptop (Win 11)</option>
-          </select>
+          <div class="field-box-inner">
+            <select id="device-type" name="device-type" required>
+              <option value="" selected class="select-empty-option">Kies type</option>
+              <option value="laptop-win-10">Laptop (Win 10)</option>
+              <option value="laptop-win-11">Laptop (Win 11)</option>
+            </select>
+            <div class="error" data-for="device-type"></div>
+          </div> 
         </div>
       </div>
       <div class="fieldsubset">
@@ -197,27 +269,42 @@
         <div class="field-box payment-field">
           <label for="monthly-payment">Maandprijs</label>
           <input type="button" id="auto-monthly-payment" value="&#x1F50E;&#xFE0E;">
-          <input id="monthly-payment" type="text" name="monthly-payment" maxlength="40" required>
+          <div class="field-box-inner">
+            <input id="monthly-payment" type="text" name="monthly-payment" maxlength="40" required>
+            <div class="error" data-for="monthly-payment"></div>
+          </div> 
         </div>
         <div class="field-box payment-field">
           <label for="yearly-payment">Jaarprijs</label>
           <input type="button" id="auto-yearly-payment" value="&#x1F50E;&#xFE0E;">
-          <input id="yearly-payment" type="text" name="yearly-payment" maxlength="40" required>
+          <div class="field-box-inner">
+            <input id="yearly-payment" type="text" name="yearly-payment" maxlength="40" required>
+            <div class="error" data-for="yearly-payment"></div>
+          </div> 
         </div>
         <div class="field-box payment-field">
           <label for="circle-value">Cirkelwaarde</label>
           <input type="button" id="auto-circle-value" value="&#x1F50E;&#xFE0E;">
-          <input id="circle-value" type="text" name="circle-value" maxlength="40" required>
+          <div class="field-box-inner">
+            <input id="circle-value" type="text" name="circle-value" maxlength="40" required>
+            <div class="error" data-for="circle-value"></div>
+          </div> 
         </div>
         <div class="field-box payment-field">
           <label for="advance-payment">Voorschot</label>
-          <input id="advance-payment" type="text" name="advance-payment" maxlength="40" required>
+          <div class="field-box-inner">
+            <input id="advance-payment" type="text" name="advance-payment" maxlength="40" required>
+            <div class="error" data-for="advance-payment"></div>
+          </div> 
         </div>
       </div>
       <div class="field-box paying-only">
         <label for="structured-communication">Gestructureerde mededeling</label>
         <input type="button" id="auto-structured-communication" value="&#x1F50E;&#xFE0E;">
-        <input id="structured-communication" type="text" name="structured-communication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="21">
+        <div class="field-box-inner">
+          <input id="structured-communication" type="text" name="structured-communication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="21">
+          <div class="error" data-for="structured-communication"></div>
+        </div> 
       </div>
     </fieldset>
     <div id="final-form-controls">

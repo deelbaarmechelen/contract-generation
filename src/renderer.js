@@ -350,20 +350,35 @@ inputs.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 // The .changed class makes it so invalid inputs are marked in red.
 // You don't want users to be scolded for invalid inputs they didn't even touch.
 for (const [key, el] of Object.entries(inputs)) {
-	el.addEventListener("input", (e) => el.classList.add("changed"))
+	el.addEventListener("input", (e) => {
+		el.classList.add("changed");
+		fillErrorDiv(el);
+	});
 }
 
 
 //// Input validation
 
+/** Enters validation message into error div. */
+function fillErrorDiv(el) {
+	errorDiv = document.querySelector(".error[data-for=" + el.id + "]");
+	console.log(el.validationMessage);
+	if (errorDiv) {
+		errorDiv.innerText = el.validationMessage;
+	}
+}
+
 /** Applies custom validity message to field if condition fails. */
 function customValidate(field, condition, invalidMessage) {
+	errorDiv = document.querySelector(".error[data-for=" + field.id + "]");
 	if (condition) {
 		field.setCustomValidity("");
 		field.removeAttribute("title");
+		fillErrorDiv(field);
 	} else {
 		field.setCustomValidity(invalidMessage);
 		field.setAttribute("title", invalidMessage);
+		fillErrorDiv(field);
 	}
 }
 
@@ -384,11 +399,12 @@ const validate = {
 	postalCode: (e) => {
 		const condition = !inputs.nonPayingContract.checked
 			|| inputs.uitpasException.checked
+			|| !inputs.postalCode.value
 			|| postalCodesMechelen.includes(Number(inputs.postalCode.value));
 
 		customValidate(
 			inputs.postalCode, condition,
-			"Dit is geen postcode uit de gemeente Mechelen."
+			"Niet in Mechelen."
 		);
 	},
 
@@ -396,8 +412,8 @@ const validate = {
 	phoneNumber: async (e) => {
 		// Easiest way to do this is to just try to format it, if it fails, it's a bad number.
 		customValidate(
-			inputs.phoneNumber, await formatPhoneNumber(inputs.phoneNumber.value),
-			"Ongeldig telefoonnummber."
+			inputs.phoneNumber, !inputs.phoneNumber.value || await formatPhoneNumber(inputs.phoneNumber.value),
+			"Ongeldig telefoonnummer."
 		);
 	},
 
@@ -434,9 +450,9 @@ const validate = {
 
 	/** Warns user if the monthly payment is different from expected for device type. */
 	monthlyPayment: (e) => {
-		let condition = false;
+		let condition = true;
 
-		if (inputs.deviceType.value) {
+		if (inputs.deviceType.value && inputs.monthlyPayment.value) {
 			const value = inputs.monthlyPayment.value;
 			const euroNum = euroStrToNum(value);
 			const euroNumExpected = deviceTypes[inputs.deviceType.value].monthlyPayment;
@@ -451,9 +467,9 @@ const validate = {
 
 	/** Warns user if the yearly payment is different from expected for device type. */
 	yearlyPayment: (e) => {
-		let condition = false;
+		let condition = true;
 
-		if (inputs.deviceType.value) {
+		if (inputs.deviceType.value && inputs.circleValue.value) {
 			const value = inputs.yearlyPayment.value;
 			const euroNum = euroStrToNum(value);
 			const euroNumExpected = deviceTypes[inputs.deviceType.value].yearlyPayment;
@@ -468,9 +484,9 @@ const validate = {
 
 	/** Warns user if the circle value is different from expected for device type. */
 	circleValue: (e) => {
-		let condition = false;
+		let condition = true;
 
-		if (inputs.deviceType.value) {
+		if (inputs.deviceType.value && inputs.circleValue.value) {
 			const value = inputs.circleValue.value;
 			const euroNum = euroStrToNum(value);
 			const euroNumExpected = deviceTypes[inputs.deviceType.value].circleValue;

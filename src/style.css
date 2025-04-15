@@ -10,16 +10,22 @@
   --font-color: black;
   --font-color-input: var(--font-color);
   --font-color-disabled: grey;
+  --font-color-error: var(--font-color);
 
   --border-color: black;
   --border-color-input: var(--border-color);
 
   --outline-color-hover: lightgrey;
   --outline-color-focus: grey;
-  --outline-color-invalid: orangered;
+  --outline-color-invalid: red;
 
   --border-thickness: 2px;
   --border-radius: 8px;
+
+  --input-padding: .3em;
+  --line-height: 1.2em;
+
+  --input-height: calc(2 * var(--border-thickness) + 2 * var(--input-padding) + var(--line-height));
 
   --max-width: 1000px;
   --min-width: 400px;
@@ -54,7 +60,7 @@ body {
 	font-family: sans-serif;
 	font-size: 14pt;
 	color: var(--font-color);
-    line-height: 1.2;
+    line-height: var(--line-height);
 	min-width: var(--min-width);
 }
 
@@ -70,11 +76,11 @@ h1 {
 
 fieldset {
 	display: flex;
-	column-gap: 1em;
-	row-gap: 1em;
+	column-gap: 1.2em;
+	row-gap: 1.2em;
 	flex-wrap: wrap;
 	margin: 1em 0 1em 0;
-	padding: .5em 1em 1em 1em;
+	padding: .7em 1.2em 1.2em 1.2em;
 
 	border: var(--border-thickness);
 	border-radius: var(--border-radius);
@@ -84,8 +90,8 @@ fieldset {
 
 .fieldsubset {
 	display: flex;
-	column-gap: 1em;
-	row-gap: 1em;
+	column-gap: 1.2em;
+	row-gap: 1.2em;
 	flex-wrap: wrap;
 	
 	width: 100%;
@@ -93,7 +99,7 @@ fieldset {
 
 .number-and-box-number {
 	display: flex;
-	column-gap: 1em;
+	column-gap: 1.2em;
 	flex-wrap: wrap;
 	flex-grow: 0;
 }
@@ -101,7 +107,7 @@ fieldset {
 .field-box {
 	display: flex;
 	column-gap: .5em;
-	align-items: center;
+	align-items: top;
 	flex-grow: 1;
 	
 	min-width: 30%;
@@ -114,12 +120,17 @@ fieldset {
 
 .field-box label {
 	flex-grow: 0;
+	height: var(--input-height);
+	align-content: center;
+	margin: 0 0 auto 0;
 }
 
 input:not([type="radio"], [type="checkbox"]), select {
-	width: 125px;
-	padding: .25em;
-	flex-grow: 1;
+	width: 100%;
+	box-sizing: border-box;
+	height: var(--input-height);
+
+	padding: var(--input-padding);
 
 	background-color: var(--bg-color-input);
 	
@@ -157,7 +168,7 @@ input:not([type="radio"], [type="checkbox"]), select {
 	}
 }
 
-.field-box.small input {
+.field-box.small .field-box-inner {
 	width: 75px;
 }
 
@@ -227,11 +238,13 @@ input:not([type="radio"], [type="checkbox"]), select {
 	display: none;
 }
 
-input[type="button"], input[type="submit"]{
-	box-sizing: content-box;
+input[type="button"], input[type="submit"] {
+	box-sizing: border-box;
 	flex-grow: 0;
 	width: auto;
-	height: auto;
+
+	max-height: var(--input-height);
+	margin-bottom: auto;
 	
 	background-color: var(--bg-color-button);
 	
@@ -306,4 +319,21 @@ input[type="button"], input[type="submit"]{
 	max-width: 35%;
 	font-size: 80%;
 	opacity: .75;
+}
+
+.field-box-inner {
+	width: 125px;
+	flex-grow: 1;
+}
+
+.error {
+	display: none;
+	line-height: 1;
+	margin-top: .6em;
+	font-size: 80%;
+	color: var(--font-color-error);
+}
+
+.changed:is(input, select):invalid + .error:not(:empty) {
+	display: block;
 }
