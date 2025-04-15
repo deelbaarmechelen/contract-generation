@@ -57,18 +57,18 @@ async function handleRenderPdf(event, data) {
   var options = {
     convertTo: extension,
   };
-  var templateName = 'template-ontlening.odt';
+  var templateName = data.contractType == 'addendum' ? 'template-addendum.odt' : 'template-ontlening.odt';
   var templatePath = path.join(__dirname, 'resources', templateName);
   // template file path input
   try {
     const result = await renderAsync(templatePath, data, options);
     const pathDirectory = data.generationInfo.path.trim().length === 0 ? '.' : data.generationInfo.path;
     let fileName = data.contractNumber.trim().length === 0 ? 'contract' : data.contractNumber;
-    // if (data.isExtension) {
-    //  const today = new Date();
-    //  const formattedDate = formatDateYYYYMMDD(today);
-    //  fileName += '-addendum-' + formattedDate;
-    // }
+    if (data.contractType == 'addendum') {
+     const today = new Date();
+     const formattedDate = formatDateYYYYMMDD(today);
+     fileName += '-addendum-' + formattedDate;
+    }
     fileName += '.' + extension;
     const filePath = path.join(pathDirectory, fileName);
     fs.writeFileSync(filePath, result);

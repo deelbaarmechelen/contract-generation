@@ -19,29 +19,33 @@
       <div class="radio-option-list">
         <div class="radio-option">
           <label for="non-paying-contract">Niet-betalend contract</label>
-          <input id="non-paying-contract" type="radio" name="contract-type" required value="niet-betalend">
+          <input id="non-paying-contract" type="radio" name="contract-type" required value="non-paying">
         </div>
         <div class="radio-option">
           <label for="paying-contract">Betalend contract</label>
-          <input id="paying-contract" type="radio" name="contract-type" required value="betalend">
+          <input id="paying-contract" type="radio" name="contract-type" required value="paying">
+        </div>
+        <div class="radio-option">
+          <label for="addendum">Addendum</label>
+          <input id="addendum" type="radio" name="contract-type" required value="addendum">
         </div>
       </div>
     </fieldset>
     <fieldset class="non-paying-only hidden">
       <legend>UiTPAS</legend>
-      <div class="field-box non-paying-only">
+      <div class="field-box">
         <label for="uitpas-number">UiTPAS-nummer</label>
         <div class="field-box-inner">
           <input id="uitpas-number" type="text" name="uitpas-number" required minlength="13" maxlength="13">
           <div class="error" data-for="uitpas-number"></div>
         </div>
       </div>
-      <div class="checkbox-box non-paying-only">
+      <div class="checkbox-box">
         <label for="uitpas-exception">Ik heb uitzonderlijke toestemming van het Sociaal Huis om zonder UiTPAS te lenen.</label>
         <input id="uitpas-exception" type="checkbox" name="uitpas-exception">
       </div>
     </fieldset>
-    <fieldset class="hidden">
+    <fieldset class="new-contract-only hidden">
       <legend>Persoonsgegevens</legend>
       <div class="field-box">
         <label for="first-name">Voornaam</label>
@@ -65,7 +69,7 @@
         </div>
       </div>
     </fieldset>
-    <fieldset class="hidden">
+    <fieldset class="new-contract-only hidden">
       <legend>Adres</legend>
       <div class="fieldsubset">
         <div class="field-box">
@@ -116,7 +120,7 @@
       </div>
       </div>
     </fieldset>
-    <fieldset class="hidden">
+    <fieldset class="new-contract-only hidden">
       <legend>Contactgegevens</legend>
       <div class="field-box">
         <label for="email">Email</label>
@@ -133,7 +137,7 @@
         </div> 
       </div>
     </fieldset>
-    <fieldset class="hidden">
+    <fieldset class="new-contract-only hidden">
       <legend>Doorverwijzer</legend>
       <div class="field-box">
         <label for="referrer">Doorverwijzer</label>
@@ -143,14 +147,30 @@
         </div> 
       </div>
     </fieldset>
-    <div class="instruction-text hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
+    <div class="instruction-text new-contract-only hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
     <fieldset class="hidden">
       <legend>Contractgegevens</legend>
-      <div class="checkbox-box">
+      <div class="checkbox-box new-contract-only">
         <label for="is-extension">Dit contract is een verlenging.</label>
         <input id="is-extension" type="checkbox" name="is-extension">
       </div>
       <div class="fieldsubset">
+        <div class="field-box">
+          <label for="client-number">Klantnummer</label>
+          <div class="field-box-inner">
+            <input id="client-number" type="text" name="client-number" maxlength="40">
+            <div class="error" data-for="client-number"></div>
+          </div> 
+        </div>
+        <div class="field-box">
+          <label for="contract-number">Contractnummer</label>
+          <div class="field-box-inner">
+            <input id="contract-number" type="text" name="contract-number" maxlength="40">
+            <div class="error" data-for="contract-number"></div>
+          </div> 
+        </div>
+      </div>
+      <div class="fieldsubset new-contract-only">
         <div class="field-box">
           <label for="signature-date">Tekendatum</label>
           <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
@@ -176,24 +196,8 @@
           </div> 
         </div>
       </div>
-      <div class="fieldsubset">
-        <div class="field-box">
-          <label for="client-number">Klantnummer</label>
-          <div class="field-box-inner">
-            <input id="client-number" type="text" name="client-number" maxlength="40">
-            <div class="error" data-for="client-number"></div>
-          </div> 
-        </div>
-        <div class="field-box">
-          <label for="contract-number">Contractnummer</label>
-          <div class="field-box-inner">
-            <input id="contract-number" type="text" name="contract-number" maxlength="40">
-            <div class="error" data-for="contract-number"></div>
-          </div> 
-        </div>
-      </div>
     </fieldset>
-    <fieldset class="hidden non-paying-only">
+    <fieldset class="non-paying-only hidden">
       <legend>Opleidingsmoment</legend>
       <div class="field-box">
         <label for="workshop-date">Datum opleidingsmoment</label>
@@ -207,7 +211,7 @@
         <input id="workshop-exception" type="checkbox" name="workshop-exception">
       </div>
     </fieldset>
-    <fieldset class="hidden">
+    <fieldset class="new-contract-only hidden">
       <legend>Apparaat</legend>
       <div class="field-box">
         <label for="asset-tag">Assettag</label>
@@ -260,7 +264,7 @@
         </div>
       </div>
     </fieldset>
-    <fieldset class="hidden paying-only">
+    <fieldset class="paying-only hidden">
       <legend>Betaalgegevens</legend>
       <div class="fieldsubset">
         <div class="field-box payment-field">
@@ -304,6 +308,152 @@
         </div> 
       </div>
     </fieldset>
+    <fieldset class="addendum-only hidden">
+      <legend>Type addendum</legend>
+      <div class="center-checkboxes">
+        <div class="checkbox-box">
+          <label for="replacement">Vervanging</label>
+          <input id="replacement" type="checkbox" name="replacement">
+        </div>
+        <div class="checkbox-box">
+          <label for="extension">Verlenging</label>
+          <input id="extension" type="checkbox" name="verlenging">
+        </div>
+      </div>
+    </fieldset>
+    <fieldset id="fs-replacement-old" class="addendum-only hidden">
+      <legend>Oud toestel</legend>
+      <div class="field-box">
+        <label for="old-asset-tag">Assettag</label>
+        <div class="field-box-inner">
+          <input id="old-asset-tag" type="text" name="old-asset-tag" maxlength="40" required pattern="^[A-Z]*\d{6}$">
+          <div class="error" data-for="old-asset-tag"></div>
+        </div> 
+      </div>
+      <div class="fieldsubset">
+        <div class="field-box">
+          <label for="old-device-brand">Merk</label>
+          <input type="button" id="auto-old-device-brand" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="old-device-brand" type="text" name="old-device-brand" required maxlength="40">
+            <div class="error" data-for="old-device-brand"></div>
+          </div> 
+        </div>
+        <div class="field-box">
+          <label for="old-device-model">Model</label>
+          <input type="button" id="auto-old-device-model" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="old-device-model" type="text" name="old-device-model" required maxlength="40">
+            <div class="error" data-for="old-device-model"></div>
+          </div> 
+        </div>
+        <div class="field-box">
+          <label for="device-type">Type</label>
+          <div class="field-box-inner">
+            <select id="old-device-type" name="old-device-type" required>
+              <option value="" selected class="select-empty-option">Kies type</option>
+              <option value="laptop-win-10">Laptop (Win 10)</option>
+              <option value="laptop-win-11">Laptop (Win 11)</option>
+            </select>
+            <div class="error" data-for="old-device-type"></div>
+          </div> 
+        </div>
+      </div>
+      <div class="fieldsubset">
+        <div class="checkbox-box">
+          <label for="old-includes-charger">Inclusief lader</label>
+          <input id="old-includes-charger" type="checkbox" name="old-includes-charger" checked>
+        </div>
+        <div class="checkbox-box non-paying-only">
+          <label for="old-includes-mouse">Inclusief muis</label>
+          <input id="old-includes-mouse" type="checkbox" name="old-includes-mouse">
+        </div>
+        <div class="checkbox-box non-paying-only">
+          <label for="old-includes-smart-card-reader">Inclusief eID-lezer</label>
+          <input id="old-includes-smart-card-reader" type="checkbox" name="old-includes-smart-card-reader">
+        </div>
+      </div>
+    </fieldset>
+    <fieldset id="fs-replacement-new" class="addendum-only hidden">
+      <legend>Nieuw toestel</legend>
+      <div class="field-box">
+        <label for="new-asset-tag">Assettag</label>
+        <div class="field-box-inner">
+          <input id="new-asset-tag" type="text" name="new-asset-tag" maxlength="40" required pattern="^[A-Z]*\d{6}$">
+          <div class="error" data-for="new-asset-tag"></div>
+        </div> 
+      </div>
+      <div class="fieldsubset">
+        <div class="field-box">
+          <label for="new-device-brand">Merk</label>
+          <input type="button" id="auto-new-device-brand" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="new-device-brand" type="text" name="new-device-brand" required maxlength="40">
+            <div class="error" data-for="new-device-brand"></div>
+          </div> 
+        </div>
+        <div class="field-box">
+          <label for="new-device-model">Model</label>
+          <input type="button" id="auto-new-device-model" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="new-device-model" type="text" name="new-device-model" required maxlength="40">
+            <div class="error" data-for="new-device-model"></div>
+          </div> 
+        </div>
+        <div class="field-box">
+          <label for="new-device-type">Type</label>
+          <div class="field-box-inner">
+            <select id="new-device-type" name="new-device-type" required>
+              <option value="" selected class="select-empty-option">Kies type</option>
+              <option value="laptop-win-10">Laptop (Win 10)</option>
+              <option value="laptop-win-11">Laptop (Win 11)</option>
+            </select>
+            <div class="error" data-for="new-device-type"></div>
+          </div> 
+        </div>
+      </div>
+      <div class="fieldsubset">
+        <div class="checkbox-box">
+          <label for="new-includes-charger">Inclusief lader</label>
+          <input id="new-includes-charger" type="checkbox" name="new-includes-charger" checked>
+        </div>
+        <div class="checkbox-box non-paying-only">
+          <label for="new-includes-mouse"> Inclusief muis</label>
+          <input id="new-includes-mouse" type="checkbox" name="new-includes-mouse">
+        </div>
+        <div class="checkbox-box non-paying-only">
+          <label for="new-includes-smart-card-reader">Inclusief eID-lezer</label>
+          <input id="new-includes-smart-card-reader" type="checkbox" name="new-includes-smart-card-reader">
+        </div>
+      </div>
+    </fieldset>
+    <fieldset id="fs-replacement-reason" class="addendum-only hidden">
+      <legend>Reden</legend>
+      <div class="field-box">
+        <label for="replacement-reason">Reden tot vervanging</label>
+        <div class="field-box-inner">
+          <input id="replacement-reason" type="text" name="replacement-reason" required maxlength="250">
+          <div class="error" data-for="replacement-reason"></div>
+        </div> 
+      </div>
+    </fieldset>
+    <fieldset id="fs-extension" class="addendum-only hidden">
+      <legend>Verlenging</legend>
+      <div class="field-box">
+        <label for="old-end-date">Oude einddatum</label>
+        <div class="field-box-inner">
+          <input id="old-end-date" type="date" name="old-end-date" required>
+          <div class="error" data-for="start-date"></div>
+        </div> 
+      </div>
+      <div class="field-box">
+        <label for="new-end-date">Nieuwe einddatum</label>
+        <div class="field-box-inner">
+          <input id="new-end-date" type="date" name="new-end-date" required>
+          <div class="error" data-for="start-date"></div>
+        </div> 
+      </div>
+    </fieldset>
     <div id="final-form-controls">
       <div id="reset-instruction" class="hidden">Druk Ctrl + R om contract te legen.</div>
       <input id="submit" type="submit" value="Genereren" class="hidden">
@@ -334,6 +484,6 @@
     </div>
   </div>
   <script src="apikey.js"></script>
-  <script src="renderer.js"></script>
+  <script src="renderer.js" type="module"></script>
 </body>
 </html>

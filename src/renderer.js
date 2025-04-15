@@ -3,8 +3,18 @@
 const main = document.getElementsByTagName("main")[0];
 const digibankForm = document.getElementById("digibank-form");
 const fieldsets = main.getElementsByTagName("fieldset");
+
 const nonPayingOnlyElements = document.getElementsByClassName("non-paying-only");
 const payingOnlyElements = document.getElementsByClassName("paying-only");
+const newContractOnlyElements = document.getElementsByClassName("new-contract-only");
+const addendumOnlyElements = document.getElementsByClassName("addendum-only");
+
+
+const fsReplacementOld = document.getElementById("fs-replacement-old");
+const fsReplacementNew = document.getElementById("fs-replacement-new");
+const fsReplacementReason = document.getElementById("fs-replacement-reason");
+const fsExtension = document.getElementById("fs-extension");
+
 const instructionTextElements = main.getElementsByClassName("instruction-text");  // Really just the text that the _Digibankmedewerker_ will take it from here.
 const resetInstruction = document.getElementById("reset-instruction");
 
@@ -16,6 +26,7 @@ const progressBoxText = document.getElementById("progress-box-text")
 const inputs = {  // Not necessarily all <input> tags.
 	payingContract: document.getElementById('paying-contract'),
 	nonPayingContract: document.getElementById('non-paying-contract'),
+	addendum: document.getElementById('addendum'),
 
 	uitpasNumber: document.getElementById('uitpas-number'),
 	uitpasException: document.getElementById('uitpas-exception'),
@@ -60,7 +71,33 @@ const inputs = {  // Not necessarily all <input> tags.
 	yearlyPayment: document.getElementById('yearly-payment'),
 	circleValue: document.getElementById('circle-value'),
 	advancePayment: document.getElementById('advance-payment'),
-	structuredCommunication: document.getElementById('structured-communication')
+	structuredCommunication: document.getElementById('structured-communication'),
+
+	replacement: document.getElementById('replacement'),
+	extension: document.getElementById('extension'),
+
+	oldAssetTag: document.getElementById('old-asset-tag'),
+	oldDeviceBrand: document.getElementById('old-device-brand'),
+	oldDeviceModel: document.getElementById('old-device-model'),
+	oldDeviceType: document.getElementById('old-device-type'),
+
+	oldIncludesCharger: document.getElementById('old-includes-charger'),
+	oldIncludesMouse: document.getElementById('old-includes-mouse'),
+	oldIncludesSmartCardReader: document.getElementById('old-includes-smart-card-reader'),
+
+	newAssetTag: document.getElementById('new-asset-tag'),
+	newDeviceBrand: document.getElementById('new-device-brand'),
+	newDeviceModel: document.getElementById('new-device-model'),
+	newDeviceType: document.getElementById('new-device-type'),
+
+	newIncludesCharger: document.getElementById('new-includes-charger'),
+	newIncludesMouse: document.getElementById('new-includes-mouse'),
+	newIncludesSmartCardReader: document.getElementById('new-includes-smart-card-reader'),
+
+	replacementReason: document.getElementById('replacement-reason'),
+
+	oldEndDate: document.getElementById('old-end-date'),
+	newEndDate: document.getElementById('new-end-date')
 }
 
 const buttons = {
@@ -83,6 +120,12 @@ const buttons = {
 	autoYearlyPayment: document.getElementById("auto-yearly-payment"),
 	autoCircleValue: document.getElementById("auto-circle-value"),
 	autoStructuredCommunication: document.getElementById("auto-structured-communication"),
+
+	autoOldDeviceBrand: document.getElementById("auto-old-device-brand"),
+	autoOldDeviceModel: document.getElementById("auto-old-device-model"),
+
+	autoNewDeviceBrand: document.getElementById("auto-new-device-brand"),
+	autoNewDeviceModel: document.getElementById("auto-new-device-model")
 }
 
 
@@ -323,17 +366,30 @@ function showSwitch(condition, ...elements) {
 function changeContractType(e) {
 	const payingChecked = inputs.payingContract.checked;
 	const nonPayingChecked = inputs.nonPayingContract.checked;
-	const anyChecked = payingChecked || nonPayingChecked;
+	const addendumChecked = inputs.addendum.checked;
+
+	const newContractChecked = payingChecked || nonPayingChecked;
+	const anyChecked = newContractChecked || addendumChecked;
 
 	showSwitch(anyChecked, buttons.submit, resetInstruction, ...fieldsets, ...instructionTextElements);
+	showSwitch(newContractChecked, ...newContractOnlyElements);
 	showSwitch(nonPayingChecked, ...nonPayingOnlyElements);
 	showSwitch(payingChecked, ...payingOnlyElements);
+	showSwitch(addendumChecked, ...addendumOnlyElements);
+	showSwitch(true, fieldsets[0])
+
+	inputs.contractNumber.required = addendumChecked;
+	inputs.clientNumber.required = addendumChecked;
+
+	toggleReplacement();
+	toggleExtension();
 
 	validateAll();
 }
 
 inputs.payingContract.addEventListener("input", changeContractType);
 inputs.nonPayingContract.addEventListener("input", changeContractType);
+inputs.addendum.addEventListener("input", changeContractType);
 
 
 /** Disable uitpasNumber field when the user is excepted from it. */
@@ -355,6 +411,19 @@ inputs.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
 inputs.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 
 
+function toggleExtension(e) {
+	showSwitch(inputs.extension.checked, fsExtension);
+}
+
+inputs.extension.addEventListener("input", toggleExtension);
+
+
+function toggleReplacement(e) {
+	showSwitch(inputs.replacement.checked, fsReplacementOld, fsReplacementNew, fsReplacementReason);
+}
+
+inputs.replacement.addEventListener("input", toggleReplacement);
+
 // Adds .changed class to input elements after they've been changed.
 // The .changed class makes it so invalid inputs are marked in red.
 // You don't want users to be scolded for invalid inputs they didn't even touch.
@@ -370,7 +439,7 @@ for (const [key, el] of Object.entries(inputs)) {
 
 /** Enters validation message into error div. */
 function fillErrorDiv(el) {
-	errorDiv = document.querySelector(".error[data-for=" + el.id + "]");
+	const errorDiv = document.querySelector(".error[data-for=" + el.id + "]");
 	if (errorDiv) {
 		errorDiv.innerText = el.validationMessage;
 	}
@@ -378,7 +447,7 @@ function fillErrorDiv(el) {
 
 /** Applies custom validity message to field if condition fails. */
 function customValidate(field, condition, invalidMessage) {
-	errorDiv = document.querySelector(".error[data-for=" + field.id + "]");
+	const errorDiv = document.querySelector(".error[data-for=" + field.id + "]");
 	if (condition) {
 		field.setCustomValidity("");
 		field.removeAttribute("title");
@@ -559,7 +628,7 @@ function validateAll() {
 /** Executes all validation functions and makes all validation warnings visible. */
 function allFieldsHadInput() {
 	for (const [key, el] of Object.entries(inputs)) {
-		el.dispatchEvent(new Event("input"), { bubbles: true });
+		el.dispatchEvent(new Event("input", { bubbles: true }));
 	}
 }
 
@@ -574,7 +643,7 @@ function fieldsValid(...prerequisiteFields) {
 				field.reportValidity();
 			}
 
-			field.dispatchEvent(new Event("input"), { bubbles: true });
+			field.dispatchEvent(new Event("input", { bubbles: true }));
 		}
 	}
 	return fieldsValid
@@ -608,7 +677,7 @@ buttons.autoSignatureDate.addEventListener("click", (e) => {
 
 	// Emulate a user changing the field, which is important for correct display
 	// of invalid inputs.
-	inputs.signatureDate.dispatchEvent(new Event("input"), { bubbles: true });
+	inputs.signatureDate.dispatchEvent(new Event("input", { bubbles: true }));
 });
 
 
@@ -619,7 +688,7 @@ buttons.autoStartDate.addEventListener("click", (e) => {
 
 	inputs.startDate.valueAsDate = inputs.signatureDate.valueAsDate;
 
-	inputs.startDate.dispatchEvent(new Event("input"), { bubbles: true });
+	inputs.startDate.dispatchEvent(new Event("input", { bubbles: true }));
 });
 
 
@@ -633,7 +702,7 @@ buttons.autoEndDate.addEventListener("click", (e) => {
 		date.getMonth(),
 		date.getDate());
 
-	inputs.endDate.dispatchEvent(new Event("input"), { bubbles: true });
+	inputs.endDate.dispatchEvent(new Event("input", { bubbles: true }));
 });
 
 
@@ -644,39 +713,62 @@ buttons.autoStructuredCommunication.addEventListener("click", (e) => {
 
 	inputs.structuredCommunication.value = calcStructuredCommunication();
 
-	inputs.structuredCommunication.dispatchEvent(new Event("input"), { bubbles: true });
+	inputs.structuredCommunication.dispatchEvent(new Event("input", { bubbles: true }));
 });
 
-
-async function autoDeviceBrandAndModel(e) {
-	if (!fieldsValid(inputs.assetTag)) {
-		return
-	}
-	showProgressBox("Gegevens over asset aan het opzoeken.", true);
-
-	window.inventoryAPI.getAssetDetails({ assetTag: inputs.assetTag.value })
-		.then((data) => {
+/** Function factory to create function that gets device brand and model based on assettag from Snipe-IT inventory. 
+ * @param { HTMLElement } assetTag - HTML element with value property representing the assettag.
+ * @param { HTMLElement } brand - HTML element with value property representing the brand.
+ * @param { HTMLElement } model - HTML element with value property representing the model.
+ * @returns { Function } Async event listener function to be associated with autoFill buttons for the brand and model.
+*/
+function factoryAutoDeviceBrandAndModel(assetTag, brand, model) {
+	const autoDeviceBrandAndModel = async (e) => {
+		if (!fieldsValid(assetTag)) {
+			return
+		}
+	
+		showProgressBox("Gegevens over asset aan het opzoeken.", true);
+	
+		try {
+			const data = await window.inventoryAPI.getAssetDetails({ assetTag: assetTag.value });
+			
 			console.log(data);
+		
 			if (!data.success) {
 				showProgressBox("Fout tijdens het opzoeken van asset:\n\"" + data.error + "\"", true);
 				return
 			}
-
-			inputs.deviceBrand.value = data.asset.brand;
-			inputs.deviceModel.value = data.asset.model;
-
+		
+			brand.value = data.asset.brand;
+			model.value = data.asset.model;
+		
 			hideProgressBox();
-
-			inputs.deviceBrand.dispatchEvent(new Event("input"), { bubbles: true });
-			inputs.deviceModel.dispatchEvent(new Event("input"), { bubbles: true });
-		}).catch((e) => {
+		
+			brand.dispatchEvent(new Event("input", { bubbles: true }));
+			model.deviceModel.dispatchEvent(new Event("input", { bubbles: true }));
+		} catch (err) {
 			showProgressBox("Fout tijdens het opzoeken van asset.", true);
-			throw e;
-		});
+			throw err;
+		}
+	};
+	return autoDeviceBrandAndModel
 }
+
+const autoDeviceBrandAndModel = factoryAutoDeviceBrandAndModel(
+	inputs.assetTag, inputs.deviceBrand, inputs.deviceModel
+);
 
 buttons.autoDeviceBrand.addEventListener("click", autoDeviceBrandAndModel);
 buttons.autoDeviceModel.addEventListener("click", autoDeviceBrandAndModel);
+
+
+const autoOldDeviceBrandAndModel = factoryAutoDeviceBrandAndModel(
+	inputs.oldAssetTag, inputs.oldDeviceBrand, inputs.oldDeviceModel
+);
+
+buttons.autoOldDeviceBrand.addEventListener("click", autoOldDeviceBrandAndModel);
+buttons.autoOldDeviceModel.addEventListener("click", autoOldDeviceBrandAndModel);
 
 
 buttons.autoMonthlyPayment.addEventListener("click", (e) => {
@@ -686,7 +778,7 @@ buttons.autoMonthlyPayment.addEventListener("click", (e) => {
 
 	inputs.monthlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].monthlyPayment);
 
-	inputs.monthlyPayment.dispatchEvent(new Event("input"), { bubbles: true });
+	inputs.monthlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
 });
 
 
@@ -697,7 +789,7 @@ buttons.autoYearlyPayment.addEventListener("click", (e) => {
 
 	inputs.yearlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].yearlyPayment);
 
-	inputs.yearlyPayment.dispatchEvent(new Event("input"), { bubbles: true });
+	inputs.yearlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
 });
 
 
@@ -708,7 +800,7 @@ buttons.autoCircleValue.addEventListener("click", (e) => {
 
 	inputs.circleValue.value = formatEuro(deviceTypes[inputs.deviceType.value].circleValue);
 
-	inputs.circleValue.dispatchEvent(new Event("input"), { bubbles: true });
+	inputs.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
 });
 
 
@@ -723,7 +815,6 @@ function genWarningBoxTableContent(inputs) {
 		}
 
 		const labelElement = document.querySelector("label[for=" + value.id + "]");
-		labelText = labelElement.innerHTML;
 		output.push({ label: labelElement.innerHTML, validationMessage: value.validationMessage });
 	}
 	return output
@@ -840,7 +931,7 @@ async function collectFormData(pdfPath) {
 			"phone": await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value)),
 			"email": inputs.email.value,
 		},
-		"contract-type": inputs.payingContract.checked ? "paying" : "non-paying",
+		"contractType": document.querySelector('input[name="contract-type"]:checked').value,
 		"subscription": {
 			"structuredReference": inputs.structuredCommunication.value,
 			"monthlyPayment": formatEuro(inputs.monthlyPayment.value),
@@ -871,7 +962,34 @@ async function collectFormData(pdfPath) {
 		},
 		"contractDate": formatDate(inputs.signatureDate.valueAsDate),
 		"startDate": formatDate(inputs.startDate.valueAsDate),
-		"endDate": formatDate(inputs.endDate.valueAsDate)
+		"endDate": formatDate(inputs.endDate.valueAsDate),
+		"oldDevice": {
+			"deviceType": inputs.oldDeviceType.value ? deviceTypes[inputs.oldDeviceType.value].fullName : "",
+			"deviceBrand": inputs.oldDeviceBrand.value,
+			"deviceModel": inputs.oldDeviceModel.value,
+			"assetTag": inputs.oldAssetTag.value,
+			"accessories": {
+				"charger": inputs.oldIncludesCharger.checked,
+				"mouse": inputs.oldIncludesMouse.checked,
+				"eIdReader": inputs.oldIncludesSmartCardReader.checked
+			}
+
+		},
+		"newDevice": {
+			"deviceType": inputs.newDeviceType.value ? deviceTypes[inputs.newDeviceType.value].fullName : "",
+			"deviceBrand": inputs.newDeviceBrand.value,
+			"deviceModel": inputs.newDeviceModel.value,
+			"assetTag": inputs.newAssetTag.value,
+			"accessories": {
+				"charger": inputs.newIncludesCharger.checked,
+				"mouse": inputs.newIncludesMouse.checked,
+				"eIdReader": inputs.newIncludesSmartCardReader.checked
+			}
+
+		},
+		"replacementReason": inputs.replacementReason.value,
+		"oldEndDate": formatDate(inputs.oldEndDate.valueAsDate),
+		"newEndDate": formatDate(inputs.newEndDate.valueAsDate),
 	};
 }
 

@@ -337,3 +337,12 @@ input[type="button"], input[type="submit"] {
 .changed:is(input, select):invalid + .error:not(:empty) {
 	display: block;
 }
+
+.center-checkboxes:not(.hidden) {
+	display: flex;
+	column-gap: 1.2em;
+	row-gap: 1.2em;
+	flex-wrap: wrap;
+	justify-content: center;
+	width: 100%;
+}
