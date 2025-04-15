@@ -147,12 +147,14 @@ function testFill() {
 
 	buttons.autoSignatureDate.click();
 	buttons.autoStartDate.click();
-	buttons.autoEndDate.click();
 
 	if (inputs.nonPayingContract.checked) {
 		inputs.uitpasNumber.value = "1111111111111";
+		buttons.autoEndDate.click();
 		inputs.workshopDate.valueAsDate = new Date();
 	} else {
+		const startDate = inputs.startDate.valueAsDate;
+		inputs.endDate.valueAsDate = new Date(startDate.getUTCFullYear() + 1, startDate.getMonth(), startDate.getDate());
 		buttons.autoStructuredCommunication.click();
 		buttons.autoMonthlyPayment.click();
 		buttons.autoYearlyPayment.click();
