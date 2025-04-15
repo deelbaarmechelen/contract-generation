@@ -223,6 +223,11 @@ function formatDate(date) {
 	return date ? date.toLocaleDateString("nl-BE") : "";
 }
 
+/** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string. */
+function formatDateLong(date) {
+	return date ? date.toLocaleDateString("nl-BE", {weekday: "long", year: "numeric", month: "long", day: "numeric"}) : "";
+}
+
 /** Calculates a person's age according to their birth date. 
  * Shamelessly stolen from codeandcloud on StackExchange.
  * https://stackoverflow.com/a/7091965/15709119
@@ -834,7 +839,7 @@ async function collectFormData(pdfPath) {
 			"number": inputs.uitpasNumber.value,
 			"aptitudeTest": inputs.workshopException.checked,
 			"courseEnrolment": !inputs.workshopException.checked,
-			"courseDate": formatDate(inputs.workshopDate.valueAsDate),
+			"courseDate": formatDateLong(inputs.workshopDate.valueAsDate),
 			"courseNotification": courseNotification
 		},
 		"referer": inputs.referrer.value,
