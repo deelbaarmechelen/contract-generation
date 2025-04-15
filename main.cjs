@@ -112,10 +112,18 @@ function formatPhoneNumber(e, rawPhoneNumber) {
 
 async function handleGetAsset(event, data) {
   console.log('Fetching asset data for tag:', data.assetTag);
+
   if (data.assetTag === undefined || data.assetTag === '') {
     return {
       success: false,
       error: 'Asset tag is required'
+    }
+  }
+
+  if (!process.env.INVENTORY_API_KEY) {
+    return {
+      success: false,
+      error: 'Please configure API key'
     }
   }
   

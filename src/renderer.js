@@ -650,16 +650,27 @@ async function autoDeviceBrandAndModel(e) {
 	if (!fieldsValid(inputs.assetTag)) {
 		return
 	}
+	showProgressBox("Gegevens over asset aan het opzoeken.", true);
 
 	window.inventoryAPI.getAssetDetails({ assetTag: inputs.assetTag.value })
 		.then((data) => {
 			console.log(data);
+			if (!data.success) {
+				showProgressBox("Fout tijdens het opzoeken van asset:\n\"" + data.error + "\"", true);
+				return
+			}
+
 			inputs.deviceBrand.value = data.asset.brand;
 			inputs.deviceModel.value = data.asset.model;
-		});
 
-	inputs.deviceBrand.dispatchEvent(new Event("input"), { bubbles: true });
-	inputs.deviceModel.dispatchEvent(new Event("input"), { bubbles: true });
+			hideProgressBox();
+
+			inputs.deviceBrand.dispatchEvent(new Event("input"), { bubbles: true });
+			inputs.deviceModel.dispatchEvent(new Event("input"), { bubbles: true });
+		}).catch((e) => {
+			showProgressBox("Fout tijdens het opzoeken van asset.", true);
+			throw e;
+		});
 }
 
 buttons.autoDeviceBrand.addEventListener("click", autoDeviceBrandAndModel);
