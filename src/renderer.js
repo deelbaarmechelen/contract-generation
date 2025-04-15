@@ -218,12 +218,14 @@ async function formatPhoneNumber(phoneNumber) {
 	return await window.libphonenumber.formatPhoneNumber(String(phoneNumber));
 }
 
-/** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string. */
+/** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string.
+ *  Short numeric date. */
 function formatDate(date) {
 	return date ? date.toLocaleDateString("nl-BE") : "";
 }
 
-/** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string. */
+/** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string.
+ * 	Includes weekday and full name of month. */
 function formatDateLong(date) {
 	return date ? date.toLocaleDateString("nl-BE", {weekday: "long", year: "numeric", month: "long", day: "numeric"}) : "";
 }
@@ -367,7 +369,6 @@ for (const [key, el] of Object.entries(inputs)) {
 /** Enters validation message into error div. */
 function fillErrorDiv(el) {
 	errorDiv = document.querySelector(".error[data-for=" + el.id + "]");
-	console.log(el.validationMessage);
 	if (errorDiv) {
 		errorDiv.innerText = el.validationMessage;
 	}
