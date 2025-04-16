@@ -987,6 +987,8 @@ async function collectFormData(pdfPath) {
 		"contractDate": formatDate(inputs.signatureDate.valueAsDate),
 		"startDate": formatDate(inputs.startDate.valueAsDate),
 		"endDate": formatDate(inputs.endDate.valueAsDate),
+		"extension": inputs.extension.checked,
+		"replacement": inputs.replacement.checked,
 		"oldDevice": {
 			"deviceType": inputs.oldDeviceType.value ? deviceTypes[inputs.oldDeviceType.value].fullName : "",
 			"deviceBrand": inputs.oldDeviceBrand.value,
