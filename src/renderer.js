@@ -686,51 +686,7 @@ function calcStructuredCommunication() {
 }
 
 
-//// Autofill click events
-
-buttons.autoSignatureDate.addEventListener("click", (e) => {
-	inputs.signatureDate.valueAsDate = new Date();
-
-	// Emulate a user changing the field, which is important for correct display
-	// of invalid inputs.
-	inputs.signatureDate.dispatchEvent(new Event("input", { bubbles: true }));
-});
-
-
-buttons.autoStartDate.addEventListener("click", (e) => {
-	if (!fieldsValid(inputs.signatureDate)) {
-		return
-	}
-
-	inputs.startDate.valueAsDate = inputs.signatureDate.valueAsDate;
-
-	inputs.startDate.dispatchEvent(new Event("input", { bubbles: true }));
-});
-
-
-buttons.autoEndDate.addEventListener("click", (e) => {
-	if (!fieldsValid(inputs.startDate)) {
-		return
-	}
-
-	const date = inputs.startDate.valueAsDate;
-	inputs.endDate.valueAsDate = new Date(date.getUTCFullYear() + 1,
-		date.getMonth(),
-		date.getDate());
-
-	inputs.endDate.dispatchEvent(new Event("input", { bubbles: true }));
-});
-
-
-buttons.autoStructuredCommunication.addEventListener("click", (e) => {
-	if (!fieldsValid(inputs.signatureDate, inputs.assetTag)) {
-		return
-	}
-
-	inputs.structuredCommunication.value = calcStructuredCommunication();
-
-	inputs.structuredCommunication.dispatchEvent(new Event("input", { bubbles: true }));
-});
+//// Autofill function factories
 
 /** Function factory to create function that gets device brand and model based on assettag from Snipe-IT inventory. 
  * @param { HTMLElement } assetTag - HTML element with value property representing the assettag.
@@ -775,58 +731,102 @@ const autoDeviceBrandAndModel = factoryAutoDeviceBrandAndModel(
 	inputs.assetTag, inputs.deviceBrand, inputs.deviceModel
 );
 
-buttons.autoDeviceBrand.addEventListener("click", autoDeviceBrandAndModel);
-buttons.autoDeviceModel.addEventListener("click", autoDeviceBrandAndModel);
-
-
 const autoOldDeviceBrandAndModel = factoryAutoDeviceBrandAndModel(
 	inputs.oldAssetTag, inputs.oldDeviceBrand, inputs.oldDeviceModel
 );
-
-buttons.autoOldDeviceBrand.addEventListener("click", autoOldDeviceBrandAndModel);
-buttons.autoOldDeviceModel.addEventListener("click", autoOldDeviceBrandAndModel);
-
 
 const autoNewDeviceBrandAndModel = factoryAutoDeviceBrandAndModel(
 	inputs.newAssetTag, inputs.newDeviceBrand, inputs.newDeviceModel
 );
 
-buttons.autoNewDeviceBrand.addEventListener("click", autoNewDeviceBrandAndModel);
-buttons.autoNewDeviceModel.addEventListener("click", autoNewDeviceBrandAndModel);
+//// Autofill click events
 
+const autoFill = {
+	signatureDate: (e) => {
+		inputs.signatureDate.valueAsDate = new Date();
+	
+		// Emulate a user changing the field, which is important for correct display
+		// of invalid inputs.
+		inputs.signatureDate.dispatchEvent(new Event("input", { bubbles: true }));
+	},
+	startDate: (e) => {
+		if (!fieldsValid(inputs.signatureDate)) {
+			return
+		}
+	
+		inputs.startDate.valueAsDate = inputs.signatureDate.valueAsDate;
+	
+		inputs.startDate.dispatchEvent(new Event("input", { bubbles: true }));
+	},
+	endDate: (e) => {
+		if (!fieldsValid(inputs.startDate)) {
+			return
+		}
+	
+		const date = inputs.startDate.valueAsDate;
+		inputs.endDate.valueAsDate = new Date(date.getUTCFullYear() + 1,
+			date.getMonth(),
+			date.getDate());
+	
+		inputs.endDate.dispatchEvent(new Event("input", { bubbles: true }));
+	},
+	structuredCommunication: (e) => {
+		if (!fieldsValid(inputs.signatureDate, inputs.assetTag)) {
+			return
+		}
+	
+		inputs.structuredCommunication.value = calcStructuredCommunication();
+	
+		inputs.structuredCommunication.dispatchEvent(new Event("input", { bubbles: true }));
+	},
+	deviceBrand: autoDeviceBrandAndModel,
+	deviceModel: autoDeviceBrandAndModel,
+	oldDeviceBrand: autoOldDeviceBrandAndModel,
+	oldDeviceModel: autoOldDeviceBrandAndModel,
+	newDeviceBrand: autoNewDeviceBrandAndModel,
+	newDeviceModel: autoNewDeviceBrandAndModel,
+	monthlyPayment: (e) => {
+		if (!fieldsValid(inputs.deviceType)) {
+			return
+		}
+	
+		inputs.monthlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].monthlyPayment);
+	
+		inputs.monthlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
+	},
+	yearlyPayment: (e) => {
+		if (!fieldsValid(inputs.deviceType)) {
+			return
+		}
+	
+		inputs.yearlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].yearlyPayment);
+	
+		inputs.yearlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
+	},
+	circleValue: (e) => {
+		if (!fieldsValid(inputs.deviceType)) {
+			return
+		}
+	
+		inputs.circleValue.value = formatEuro(deviceTypes[inputs.deviceType.value].circleValue);
+	
+		inputs.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
+	},
+}
 
-buttons.autoMonthlyPayment.addEventListener("click", (e) => {
-	if (!fieldsValid(inputs.deviceType)) {
-		return
-	}
-
-	inputs.monthlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].monthlyPayment);
-
-	inputs.monthlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
-});
-
-
-buttons.autoYearlyPayment.addEventListener("click", (e) => {
-	if (!fieldsValid(inputs.deviceType)) {
-		return
-	}
-
-	inputs.yearlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].yearlyPayment);
-
-	inputs.yearlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
-});
-
-
-buttons.autoCircleValue.addEventListener("click", (e) => {
-	if (!fieldsValid(inputs.deviceType)) {
-		return
-	}
-
-	inputs.circleValue.value = formatEuro(deviceTypes[inputs.deviceType.value].circleValue);
-
-	inputs.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
-});
-
+buttons.autoSignatureDate.addEventListener("click", autoFill.signatureDate);
+buttons.autoStartDate.addEventListener("click", autoFill.startDate);
+buttons.autoEndDate.addEventListener("click", autoFill.endDate);
+buttons.autoStructuredCommunication.addEventListener("click", autoFill.structuredCommunication);
+buttons.autoDeviceBrand.addEventListener("click", autoFill.deviceBrand);
+buttons.autoDeviceModel.addEventListener("click", autoFill.deviceModel);
+buttons.autoOldDeviceBrand.addEventListener("click", autoFill.oldDeviceBrand);
+buttons.autoOldDeviceModel.addEventListener("click", autoFill.oldDeviceModel);
+buttons.autoNewDeviceBrand.addEventListener("click", autoFill.newDeviceBrand);
+buttons.autoNewDeviceModel.addEventListener("click", autoFill.newDeviceModel);
+buttons.autoMonthlyPayment.addEventListener("click", autoFill.monthlyPayment);
+buttons.autoYearlyPayment.addEventListener("click", autoFill.yearlyPayment);
+buttons.autoCircleValue.addEventListener("click", autoFill.circleValue);
 
 ////// Invalid fields prompt after submit
 
