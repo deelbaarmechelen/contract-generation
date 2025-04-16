@@ -14,7 +14,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.90/pdf.js"></script>
   <h1>Uitleningsformulier Digibankatelier Mechelen</h1>
   <main><form id="digibank-form" action="#" autocomplete="off">
-    <fieldset>
+    <fieldset class="fieldset">
       <legend>Type contract</legend>
       <div class="radio-option-list">
         <div class="radio-option">
@@ -31,7 +31,7 @@
         </div>
       </div>
     </fieldset>
-    <fieldset class="non-paying-only hidden">
+    <fieldset class="fieldset non-paying-only hidden">
       <legend>UiTPAS</legend>
       <div class="field-box">
         <label for="uitpas-number">UiTPAS-nummer</label>
@@ -45,7 +45,7 @@
         <input id="uitpas-exception" type="checkbox" name="uitpas-exception">
       </div>
     </fieldset>
-    <fieldset class="new-contract-only hidden">
+    <fieldset class="fieldset new-contract-only hidden">
       <legend>Persoonsgegevens</legend>
       <div class="field-box">
         <label for="first-name">Voornaam</label>
@@ -69,9 +69,9 @@
         </div>
       </div>
     </fieldset>
-    <fieldset class="new-contract-only hidden">
+    <fieldset class="fieldset new-contract-only hidden">
       <legend>Adres</legend>
-      <div class="fieldsubset">
+      <fieldset class="fieldsubset">
         <div class="field-box">
           <label for="street-name">Straatnaam</label>
           <div class="field-box-inner">
@@ -95,8 +95,8 @@
             </div> 
           </div>
         </div>
-      </div>
-      <div class="fieldsubset">
+      </fieldset>
+      <fieldset class="fieldsubset">
       <div class="field-box">
         <label for="municipality">Gemeente</label>
         <div class="field-box-inner">
@@ -118,9 +118,9 @@
           <div class="error" data-for="country"></div>
         </div> 
       </div>
-      </div>
+      </fieldset>
     </fieldset>
-    <fieldset class="new-contract-only hidden">
+    <fieldset class="fieldset new-contract-only hidden">
       <legend>Contactgegevens</legend>
       <div class="field-box">
         <label for="email">Email</label>
@@ -137,7 +137,7 @@
         </div> 
       </div>
     </fieldset>
-    <fieldset class="new-contract-only hidden">
+    <fieldset class="fieldset new-contract-only hidden">
       <legend>Doorverwijzer</legend>
       <div class="field-box">
         <label for="referrer">Doorverwijzer</label>
@@ -148,13 +148,13 @@
       </div>
     </fieldset>
     <div class="instruction-text new-contract-only hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
-    <fieldset class="hidden">
+    <fieldset class="fieldset hidden">
       <legend>Contractgegevens</legend>
       <div class="checkbox-box new-contract-only">
         <label for="is-extension">Dit contract is een verlenging.</label>
         <input id="is-extension" type="checkbox" name="is-extension">
       </div>
-      <div class="fieldsubset">
+      <fieldset class="fieldsubset">
         <div class="field-box">
           <label for="client-number">Klantnummer</label>
           <div class="field-box-inner">
@@ -169,8 +169,8 @@
             <div class="error" data-for="contract-number"></div>
           </div> 
         </div>
-      </div>
-      <div class="fieldsubset new-contract-only">
+      </fieldset>
+      <fieldset class="fieldsubset new-contract-only">
         <div class="field-box">
           <label for="signature-date">Tekendatum</label>
           <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
@@ -195,9 +195,9 @@
             <div class="error" data-for="end-date"></div>
           </div> 
         </div>
-      </div>
+      </fieldset>
     </fieldset>
-    <fieldset class="non-paying-only hidden">
+    <fieldset class="fieldset non-paying-only hidden">
       <legend>Opleidingsmoment</legend>
       <div class="field-box">
         <label for="workshop-date">Datum opleidingsmoment</label>
@@ -211,7 +211,7 @@
         <input id="workshop-exception" type="checkbox" name="workshop-exception">
       </div>
     </fieldset>
-    <fieldset class="new-contract-only hidden">
+    <fieldset class="fieldset new-contract-only hidden">
       <legend>Apparaat</legend>
       <div class="field-box">
         <label for="asset-tag">Assettag</label>
@@ -220,7 +220,7 @@
           <div class="error" data-for="asset-tag"></div>
         </div> 
       </div>
-      <div class="fieldsubset">
+      <fieldset class="fieldsubset">
         <div class="field-box">
           <label for="device-brand">Merk</label>
           <input type="button" id="auto-device-brand" value="&#x1F50E;&#xFE0E;">
@@ -248,8 +248,8 @@
             <div class="error" data-for="device-type"></div>
           </div> 
         </div>
-      </div>
-      <div class="fieldsubset">
+      </fieldset>
+      <fieldset class="fieldsubset">
         <div class="checkbox-box">
           <label for="includes-charger">Inclusief lader</label>
           <input id="includes-charger" type="checkbox" name="includes-charger" checked>
@@ -262,11 +262,11 @@
           <label for="includes-smart-card-reader">Inclusief eID-lezer</label>
           <input id="includes-smart-card-reader" type="checkbox" name="includes-smart-card-reader">
         </div>
-      </div>
+      </fieldset>
     </fieldset>
-    <fieldset class="paying-only hidden">
+    <fieldset class="fieldset paying-only hidden">
       <legend>Betaalgegevens</legend>
-      <div class="fieldsubset">
+      <fieldset class="fieldsubset">
         <div class="field-box payment-field">
           <label for="monthly-payment">Maandprijs</label>
           <input type="button" id="auto-monthly-payment" value="&#x1F50E;&#xFE0E;">
@@ -298,7 +298,7 @@
             <div class="error" data-for="advance-payment"></div>
           </div> 
         </div>
-      </div>
+      </fieldset>
       <div class="field-box paying-only">
         <label for="structured-communication">Gestructureerde mededeling</label>
         <input type="button" id="auto-structured-communication" value="&#x1F50E;&#xFE0E;">
@@ -308,7 +308,7 @@
         </div> 
       </div>
     </fieldset>
-    <fieldset class="addendum-only hidden">
+    <fieldset class="fieldset addendum-only hidden">
       <legend>Type addendum</legend>
       <div class="center-checkboxes">
         <div class="checkbox-box">
@@ -321,7 +321,7 @@
         </div>
       </div>
     </fieldset>
-    <fieldset id="fs-replacement-old" class="addendum-only hidden">
+    <fieldset id="fs-replacement-old" class="fieldset addendum-only hidden">
       <legend>Oud toestel</legend>
       <div class="field-box">
         <label for="old-asset-tag">Assettag</label>
@@ -330,7 +330,7 @@
           <div class="error" data-for="old-asset-tag"></div>
         </div> 
       </div>
-      <div class="fieldsubset">
+      <fieldset class="fieldsubset">
         <div class="field-box">
           <label for="old-device-brand">Merk</label>
           <input type="button" id="auto-old-device-brand" value="&#x1F50E;&#xFE0E;">
@@ -348,7 +348,7 @@
           </div> 
         </div>
         <div class="field-box">
-          <label for="device-type">Type</label>
+          <label for="old-device-type">Type</label>
           <div class="field-box-inner">
             <select id="old-device-type" name="old-device-type" required>
               <option value="" selected class="select-empty-option">Kies type</option>
@@ -358,8 +358,8 @@
             <div class="error" data-for="old-device-type"></div>
           </div> 
         </div>
-      </div>
-      <div class="fieldsubset">
+      </fieldset>
+      <fieldset class="fieldsubset">
         <div class="checkbox-box">
           <label for="old-includes-charger">Inclusief lader</label>
           <input id="old-includes-charger" type="checkbox" name="old-includes-charger" checked>
@@ -372,9 +372,9 @@
           <label for="old-includes-smart-card-reader">Inclusief eID-lezer</label>
           <input id="old-includes-smart-card-reader" type="checkbox" name="old-includes-smart-card-reader">
         </div>
-      </div>
+      </fieldset>
     </fieldset>
-    <fieldset id="fs-replacement-new" class="addendum-only hidden">
+    <fieldset id="fs-replacement-new" class="fieldset addendum-only hidden">
       <legend>Nieuw toestel</legend>
       <div class="field-box">
         <label for="new-asset-tag">Assettag</label>
@@ -383,7 +383,7 @@
           <div class="error" data-for="new-asset-tag"></div>
         </div> 
       </div>
-      <div class="fieldsubset">
+      <fieldset class="fieldsubset">
         <div class="field-box">
           <label for="new-device-brand">Merk</label>
           <input type="button" id="auto-new-device-brand" value="&#x1F50E;&#xFE0E;">
@@ -411,8 +411,8 @@
             <div class="error" data-for="new-device-type"></div>
           </div> 
         </div>
-      </div>
-      <div class="fieldsubset">
+      </fieldset>
+      <fieldset class="fieldsubset">
         <div class="checkbox-box">
           <label for="new-includes-charger">Inclusief lader</label>
           <input id="new-includes-charger" type="checkbox" name="new-includes-charger" checked>
@@ -425,9 +425,9 @@
           <label for="new-includes-smart-card-reader">Inclusief eID-lezer</label>
           <input id="new-includes-smart-card-reader" type="checkbox" name="new-includes-smart-card-reader">
         </div>
-      </div>
+      </fieldset>
     </fieldset>
-    <fieldset id="fs-replacement-reason" class="addendum-only hidden">
+    <fieldset id="fs-replacement-reason" class="fieldset addendum-only hidden">
       <legend>Reden</legend>
       <div class="field-box">
         <label for="replacement-reason">Reden tot vervanging</label>
@@ -437,7 +437,7 @@
         </div> 
       </div>
     </fieldset>
-    <fieldset id="fs-extension" class="addendum-only hidden">
+    <fieldset id="fs-extension" class="fieldset addendum-only hidden">
       <legend>Verlenging</legend>
       <div class="field-box">
         <label for="old-end-date">Oude einddatum</label>

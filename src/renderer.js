@@ -9,7 +9,6 @@ const payingOnlyElements = document.getElementsByClassName("paying-only");
 const newContractOnlyElements = document.getElementsByClassName("new-contract-only");
 const addendumOnlyElements = document.getElementsByClassName("addendum-only");
 
-
 const fsReplacementOld = document.getElementById("fs-replacement-old");
 const fsReplacementNew = document.getElementById("fs-replacement-new");
 const fsReplacementReason = document.getElementById("fs-replacement-reason");
@@ -148,7 +147,6 @@ const deviceTypes = {
 
 const postalCodesMechelen = [2800, 2801, 2811, 2812];
 
-
 //// Testing
 
 /** Helper function for manual testing. */
@@ -272,7 +270,7 @@ function formatDate(date) {
 /** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string.
  * 	Includes weekday and full name of month. */
 function formatDateLong(date) {
-	return date ? date.toLocaleDateString("nl-BE", {weekday: "long", year: "numeric", month: "long", day: "numeric"}) : "";
+	return date ? date.toLocaleDateString("nl-BE", { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : "";
 }
 
 /** Calculates a person's age according to their birth date. 
@@ -334,31 +332,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-/** Hides HTMLElement. */
-function hideElement(el) {
-	el.classList.add("hidden");
-	el.disabled = true;
-}
+/** Checks condition and disables elements only if false. 
+ * If element has no valid disabled attribute, then it will disable all children that do. */
+function enableSwitch(condition, ...elements) {
+	const shouldDisable = !condition;
+	const disableQuery = "button, fieldset, optgroup, option, select, textarea, input";
 
-
-/** Shows HTMLElement. */
-function showElement(el) {
-	el.classList.remove("hidden");
-	el.disabled = false;
+	for (const el of elements) {
+		if (el.matches(disableQuery)) {
+			el.disabled = shouldDisable;
+		} else {
+			for (const child of el.querySelectorAll(disableQuery)) {
+				child.disabled = shouldDisable;
+			}
+		}
+	};
 }
 
 
 /** Checks condition and shows elements only if true. */
 function showSwitch(condition, ...elements) {
-	if (condition) {
-		for (const el of elements) {
-			showElement(el);
-		}
-	} else {
-		for (const el of elements) {
-			hideElement(el);
-		}
-	}
+	elements.map((el) => el.classList.toggle("hidden", !condition));
+	enableSwitch(condition, ...elements);
 }
 
 
@@ -727,24 +722,24 @@ function factoryAutoDeviceBrandAndModel(assetTag, brand, model) {
 		if (!fieldsValid(assetTag)) {
 			return
 		}
-	
+
 		showProgressBox("Gegevens over asset aan het opzoeken.", true);
-	
+
 		try {
 			const data = await window.inventoryAPI.getAssetDetails({ assetTag: assetTag.value });
-			
+
 			console.log(data);
-		
+
 			if (!data.success) {
 				showProgressBox("Fout tijdens het opzoeken van asset:\n\"" + data.error + "\"", true);
 				return
 			}
-		
+
 			brand.value = data.asset.brand;
 			model.value = data.asset.model;
-		
+
 			hideProgressBox();
-		
+
 			brand.dispatchEvent(new Event("input", { bubbles: true }));
 			model.deviceModel.dispatchEvent(new Event("input", { bubbles: true }));
 		} catch (err) {
@@ -844,7 +839,7 @@ function fillWarningBoxTable(validationReport) {
 
 /** Opens the invalid inputs warning prompt. */
 function showWarning() {
-	showElement(warningBox);
+	showSwitch(true, warningBox);
 	main.inert = true;
 	fillWarningBoxTable(genWarningBoxTableContent(inputs));
 
@@ -854,7 +849,7 @@ function showWarning() {
 
 /** Closes the invalid inputs warning prompt. */
 function hideWarning() {
-	hideElement(warningBox);
+	showSwitch(false, warningBox);
 	main.inert = false;
 
 	allFieldsHadInput();
@@ -866,13 +861,13 @@ function showProgressBox(promptText = "", isCloseable = false) {
 	buttons.progressGoBack.disabled = !isCloseable;
 	buttons.progressGoBack.focus({ focusVisible: true });
 
-	showElement(progressBox);
+	showSwitch(true, progressBox);
 	main.inert = true;
 }
 
 /** Closes the contract generation progress prompt. */
 function hideProgressBox() {
-	hideElement(progressBox);
+	showSwitch(false, progressBox);
 	main.inert = false;
 }
 
