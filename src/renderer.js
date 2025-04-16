@@ -154,12 +154,6 @@ function testFill() {
 	// I'm not figuring out node.js unit testing right now. 
 	// Ooga booga me use developer console.
 
-	// Works for both contract types.
-	if (!inputs.nonPayingContract.checked) {
-		inputs.payingContract.checked = true;
-		changeContractType();
-	}
-
 	inputs.firstName.value = "Pietje";
 	inputs.lastName.value = "De Laptopwiller";
 	inputs.birthDate.valueAsDate = new Date("1995-12-17T03:24:00");
@@ -179,7 +173,7 @@ function testFill() {
 	inputs.contractNumber.value = "C-B-25-100000";
 	inputs.clientNumber.value = "1000001";
 
-	inputs.assetTag.value = "PC250200";
+	inputs.assetTag.value = "PC990200";
 	inputs.deviceBrand.value = "LapInc.";
 	inputs.deviceModel.value = "Thinkbook PP890";
 	inputs.deviceType.value = "laptop-win-10";  // Miracle that this works like that.
@@ -192,7 +186,7 @@ function testFill() {
 		inputs.uitpasNumber.value = "1111111111111";
 		buttons.autoEndDate.click();
 		inputs.workshopDate.valueAsDate = new Date();
-	} else {
+	} else if (inputs.payingContract.checked) {
 		const startDate = inputs.startDate.valueAsDate;
 		inputs.endDate.valueAsDate = new Date(startDate.getUTCFullYear() + 1, startDate.getMonth(), startDate.getDate());
 		buttons.autoStructuredCommunication.click();
@@ -200,11 +194,32 @@ function testFill() {
 		buttons.autoYearlyPayment.click();
 		buttons.autoCircleValue.click();
 		inputs.advancePayment.value = "€ 50";
+	} else {
+		inputs.replacement.checked = true;
+		inputs.extension.checked = true;
+
+		inputs.oldAssetTag.value = "PC990201";
+		inputs.oldDeviceBrand.value = "SELL";
+		inputs.oldDeviceModel.value = "Longitude 4469";
+		inputs.oldDeviceType.value = "laptop-win-10";
+	
+		inputs.newAssetTag.value = "PC990202";
+		inputs.newDeviceBrand.value = "SELL";
+		inputs.newDeviceModel.value = "Altitude 4m";
+		inputs.newDeviceType.value = "laptop-win-10";
+
+		inputs.replacementReason.value = "Een kabouter heeft er soep en cola over gemorst.";
+
+		const signatureDate = inputs.signatureDate.valueAsDate;
+
+		inputs.oldEndDate.valueAsDate = signatureDate;
+		inputs.newEndDate.valueAsDate = new Date(signatureDate.getUTCFullYear() + 1, signatureDate.getMonth(), signatureDate.getDate());
 	}
 
 	allFieldsHadInput();
 }
 
+window.testFill = testFill;
 
 //// General utility
 
