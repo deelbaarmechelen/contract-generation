@@ -772,6 +772,14 @@ buttons.autoOldDeviceBrand.addEventListener("click", autoOldDeviceBrandAndModel)
 buttons.autoOldDeviceModel.addEventListener("click", autoOldDeviceBrandAndModel);
 
 
+const autoNewDeviceBrandAndModel = factoryAutoDeviceBrandAndModel(
+	inputs.newAssetTag, inputs.newDeviceBrand, inputs.newDeviceModel
+);
+
+buttons.autoNewDeviceBrand.addEventListener("click", autoNewDeviceBrandAndModel);
+buttons.autoNewDeviceModel.addEventListener("click", autoNewDeviceBrandAndModel);
+
+
 buttons.autoMonthlyPayment.addEventListener("click", (e) => {
 	if (!fieldsValid(inputs.deviceType)) {
 		return
