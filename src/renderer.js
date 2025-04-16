@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /** Checks condition and disables elements only if false. 
- * If element has no valid disabled attribute, then it will disable all children that do. */
+ * If element has no valid disabled attribute, then it will disable/enable all children that do. */
 function enableSwitch(condition, ...elements) {
 	const shouldDisable = !condition;
 	const disableQuery = "button, fieldset, optgroup, option, select, textarea, input";
