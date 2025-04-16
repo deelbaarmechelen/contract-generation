@@ -20,6 +20,7 @@ Necessary:
 - Add date validation
 - Validate API key is available in distributable
 - Add a reset button to clear all contract information before entering a new one
+- Add free text field for remarks
 
 Luxuries:
 
