@@ -4,10 +4,9 @@ const main = document.getElementsByTagName("main")[0];
 const digibankForm = document.getElementById("digibank-form");
 const fieldsets = main.getElementsByTagName("fieldset");
 
-const nonPayingOnlyElements = document.getElementsByClassName("non-paying-only");
-const payingOnlyElements = document.getElementsByClassName("paying-only");
-const newContractOnlyElements = document.getElementsByClassName("new-contract-only");
-const addendumOnlyElements = document.getElementsByClassName("addendum-only");
+const nonPayingElements = document.getElementsByClassName("non-paying");
+const payingElements = document.getElementsByClassName("paying");
+const addendumElements = document.getElementsByClassName("addendum");
 
 const fsReplacementOld = document.getElementById("fs-replacement-old");
 const fsReplacementNew = document.getElementById("fs-replacement-new");
@@ -357,21 +356,28 @@ function showSwitch(condition, ...elements) {
 }
 
 
-/** Switches visible fields depending on contract type. */
+/** Switches visible fields depending on contract type. 
+ * Form elements by default show for all contract types,
+ * except if they have the class corresponding to a contract type,
+ * then they will only show for contract types corresponding to the 
+ * classes they have.
+*/
 function changeContractType(e) {
 	const payingChecked = inputs.payingContract.checked;
 	const nonPayingChecked = inputs.nonPayingContract.checked;
 	const addendumChecked = inputs.addendum.checked;
-
-	const newContractChecked = payingChecked || nonPayingChecked;
-	const anyChecked = newContractChecked || addendumChecked;
+	const anyChecked = payingChecked || nonPayingChecked || addendumChecked;
 
 	showSwitch(anyChecked, buttons.submit, resetInstruction, ...fieldsets, ...instructionTextElements);
-	showSwitch(newContractChecked, ...newContractOnlyElements);
-	showSwitch(nonPayingChecked, ...nonPayingOnlyElements);
-	showSwitch(payingChecked, ...payingOnlyElements);
-	showSwitch(addendumChecked, ...addendumOnlyElements);
-	showSwitch(true, fieldsets[0])
+	showSwitch(false, ...payingElements, ...nonPayingElements, ...addendumElements);
+
+	if (payingChecked) {
+		showSwitch(true, ...payingElements);
+	} else if (nonPayingChecked) {
+		showSwitch(true, ...nonPayingElements);
+	} else if (addendumChecked) {
+		showSwitch(true, ...addendumElements);
+	}
 
 	inputs.contractNumber.required = addendumChecked;
 	inputs.clientNumber.required = addendumChecked;

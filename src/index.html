@@ -31,7 +31,7 @@
         </div>
       </div>
     </fieldset>
-    <fieldset class="fieldset non-paying-only hidden">
+    <fieldset class="fieldset non-paying hidden">
       <legend>UiTPAS</legend>
       <div class="field-box">
         <label for="uitpas-number">UiTPAS-nummer</label>
@@ -45,7 +45,7 @@
         <input id="uitpas-exception" type="checkbox" name="uitpas-exception">
       </div>
     </fieldset>
-    <fieldset class="fieldset new-contract-only hidden">
+    <fieldset class="fieldset non-paying paying hidden">
       <legend>Persoonsgegevens</legend>
       <div class="field-box">
         <label for="first-name">Voornaam</label>
@@ -69,7 +69,7 @@
         </div>
       </div>
     </fieldset>
-    <fieldset class="fieldset new-contract-only hidden">
+    <fieldset class="fieldset non-paying paying hidden">
       <legend>Adres</legend>
       <fieldset class="fieldsubset">
         <div class="field-box">
@@ -120,7 +120,7 @@
       </div>
       </fieldset>
     </fieldset>
-    <fieldset class="fieldset new-contract-only hidden">
+    <fieldset class="fieldset non-paying paying hidden">
       <legend>Contactgegevens</legend>
       <div class="field-box">
         <label for="email">Email</label>
@@ -137,7 +137,7 @@
         </div> 
       </div>
     </fieldset>
-    <fieldset class="fieldset new-contract-only hidden">
+    <fieldset class="fieldset non-paying paying hidden">
       <legend>Doorverwijzer</legend>
       <div class="field-box">
         <label for="referrer">Doorverwijzer</label>
@@ -147,10 +147,10 @@
         </div> 
       </div>
     </fieldset>
-    <div class="instruction-text new-contract-only hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
+    <div class="instruction-text non-paying paying hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
     <fieldset class="fieldset hidden">
       <legend>Contractgegevens</legend>
-      <div class="checkbox-box new-contract-only">
+      <div class="checkbox-box non-paying paying">
         <label for="is-extension">Dit contract is een verlenging.</label>
         <input id="is-extension" type="checkbox" name="is-extension">
       </div>
@@ -170,7 +170,7 @@
           </div> 
         </div>
       </fieldset>
-      <fieldset class="fieldsubset new-contract-only">
+      <fieldset class="fieldsubset non-paying paying">
         <div class="field-box">
           <label for="signature-date">Tekendatum</label>
           <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
@@ -189,7 +189,7 @@
         </div>
         <div class="field-box">
           <label for="end-date">Einddatum</label>
-          <input type="button" id="auto-end-date" class="non-paying-only" value="&#x1F50E;&#xFE0E;">
+          <input type="button" id="auto-end-date" class="non-paying" value="&#x1F50E;&#xFE0E;">
           <div class="field-box-inner">
             <input id="end-date" type="date" name="start-date" required>
             <div class="error" data-for="end-date"></div>
@@ -197,7 +197,7 @@
         </div>
       </fieldset>
     </fieldset>
-    <fieldset class="fieldset non-paying-only hidden">
+    <fieldset class="fieldset non-paying hidden">
       <legend>Opleidingsmoment</legend>
       <div class="field-box">
         <label for="workshop-date">Datum opleidingsmoment</label>
@@ -206,12 +206,12 @@
           <div class="error" data-for="workshop-date"></div>
         </div> 
       </div>
-      <div class="checkbox-box non-paying-only">
+      <div class="checkbox-box non-paying">
         <label for="workshop-exception">Klant is vrijgesteld van opleidingsmoment door het voltooien van een vaardigheidstest.</label>
         <input id="workshop-exception" type="checkbox" name="workshop-exception">
       </div>
     </fieldset>
-    <fieldset class="fieldset new-contract-only hidden">
+    <fieldset class="fieldset non-paying paying hidden">
       <legend>Apparaat</legend>
       <div class="field-box">
         <label for="asset-tag">Assettag</label>
@@ -254,17 +254,17 @@
           <label for="includes-charger">Inclusief lader</label>
           <input id="includes-charger" type="checkbox" name="includes-charger" checked>
         </div>
-        <div class="checkbox-box non-paying-only">
+        <div class="checkbox-box non-paying">
           <label for="includes-mouse">Inclusief muis</label>
           <input id="includes-mouse" type="checkbox" name="includes-mouse">
         </div>
-        <div class="checkbox-box non-paying-only">
+        <div class="checkbox-box non-paying">
           <label for="includes-smart-card-reader">Inclusief eID-lezer</label>
           <input id="includes-smart-card-reader" type="checkbox" name="includes-smart-card-reader">
         </div>
       </fieldset>
     </fieldset>
-    <fieldset class="fieldset paying-only hidden">
+    <fieldset class="fieldset paying hidden">
       <legend>Betaalgegevens</legend>
       <fieldset class="fieldsubset">
         <div class="field-box payment-field">
@@ -299,7 +299,7 @@
           </div> 
         </div>
       </fieldset>
-      <div class="field-box paying-only">
+      <div class="field-box paying">
         <label for="structured-communication">Gestructureerde mededeling</label>
         <input type="button" id="auto-structured-communication" value="&#x1F50E;&#xFE0E;">
         <div class="field-box-inner">
@@ -308,7 +308,7 @@
         </div> 
       </div>
     </fieldset>
-    <fieldset class="fieldset addendum-only hidden">
+    <fieldset class="fieldset addendum hidden">
       <legend>Type addendum</legend>
       <div class="center-checkboxes">
         <div class="checkbox-box">
@@ -321,7 +321,7 @@
         </div>
       </div>
     </fieldset>
-    <fieldset id="fs-replacement-old" class="fieldset addendum-only hidden">
+    <fieldset id="fs-replacement-old" class="fieldset addendum hidden">
       <legend>Oud toestel</legend>
       <div class="field-box">
         <label for="old-asset-tag">Assettag</label>
@@ -364,17 +364,17 @@
           <label for="old-includes-charger">Inclusief lader</label>
           <input id="old-includes-charger" type="checkbox" name="old-includes-charger" checked>
         </div>
-        <div class="checkbox-box non-paying-only">
+        <div class="checkbox-box">
           <label for="old-includes-mouse">Inclusief muis</label>
           <input id="old-includes-mouse" type="checkbox" name="old-includes-mouse">
         </div>
-        <div class="checkbox-box non-paying-only">
+        <div class="checkbox-box">
           <label for="old-includes-smart-card-reader">Inclusief eID-lezer</label>
           <input id="old-includes-smart-card-reader" type="checkbox" name="old-includes-smart-card-reader">
         </div>
       </fieldset>
     </fieldset>
-    <fieldset id="fs-replacement-new" class="fieldset addendum-only hidden">
+    <fieldset id="fs-replacement-new" class="fieldset addendum hidden">
       <legend>Nieuw toestel</legend>
       <div class="field-box">
         <label for="new-asset-tag">Assettag</label>
@@ -417,17 +417,17 @@
           <label for="new-includes-charger">Inclusief lader</label>
           <input id="new-includes-charger" type="checkbox" name="new-includes-charger" checked>
         </div>
-        <div class="checkbox-box non-paying-only">
+        <div class="checkbox-box">
           <label for="new-includes-mouse"> Inclusief muis</label>
           <input id="new-includes-mouse" type="checkbox" name="new-includes-mouse">
         </div>
-        <div class="checkbox-box non-paying-only">
+        <div class="checkbox-box">
           <label for="new-includes-smart-card-reader">Inclusief eID-lezer</label>
           <input id="new-includes-smart-card-reader" type="checkbox" name="new-includes-smart-card-reader">
         </div>
       </fieldset>
     </fieldset>
-    <fieldset id="fs-replacement-reason" class="fieldset addendum-only hidden">
+    <fieldset id="fs-replacement-reason" class="fieldset addendum hidden">
       <legend>Reden</legend>
       <div class="field-box">
         <label for="replacement-reason">Reden tot vervanging</label>
@@ -437,7 +437,7 @@
         </div> 
       </div>
     </fieldset>
-    <fieldset id="fs-extension" class="fieldset addendum-only hidden">
+    <fieldset id="fs-extension" class="fieldset addendum hidden">
       <legend>Verlenging</legend>
       <div class="field-box">
         <label for="old-end-date">Oude einddatum</label>
