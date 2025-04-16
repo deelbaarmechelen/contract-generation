@@ -25,6 +25,9 @@
   --input-padding: .3em;
   --line-height: 1.2em;
 
+  --checkbox-distance: .4em;
+  --checkbox-size: 1em;
+
   --input-height: calc(2 * var(--border-thickness) + 2 * var(--input-padding) + var(--line-height));
 
   --max-width: 1000px;
@@ -176,18 +179,22 @@ input:not([type="radio"], [type="checkbox"]), select {
 	width: 75px;
 }
 
-.radio-box {
-	width: 100%;
-}
-
 .instruction-text {
 	text-align: center;
 	font-weight: bold;
 }
 
+.select-empty-option {
+	color: var(--font-color-disabled);
+}
+
 .radio-question {
 	text-align: center;
 	margin-bottom: .5em;
+}
+
+.radio-box {
+	width: 100%;
 }
 
 .radio-option-list {
@@ -201,30 +208,28 @@ input:not([type="radio"], [type="checkbox"]), select {
 
 .radio-option {
 	display: flex;
-	row-gap: .5em;
-	column-gap: .25em;
+	column-gap: var(--checkbox-distance);
 	align-items: center;
+    justify-content: center;
 }
 
 .radio-option input {
-	height: 1em;
-	width: 1em;
-}
-
-.select-empty-option {
-	color: var(--font-color-disabled);
+	height: var(--checkbox-size);
+	width: var(--checkbox-size);
+	margin: auto 0;
 }
 
 .checkbox-box {
 	display: flex;
-	row-gap: .5em;
-	column-gap: .25em;
+	column-gap: var(--checkbox-distance);
 	align-items: center;
+    justify-content: center;
 }
 
 .checkbox-box input {
-	height: 1em;
-	width: 1em;
+	height: var(--checkbox-size);
+	width: var(--checkbox-size);
+	margin: auto 0;
 }
 
 .field-notification {
