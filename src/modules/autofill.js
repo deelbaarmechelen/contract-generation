@@ -42,21 +42,22 @@ function calcStructuredCommunication() {
 //// Autofill function factories
 
 /** Function factory to create function that gets device brand and model based on assettag from Snipe-IT inventory. 
- * @param { HTMLElement } assetTag - HTML element with value property representing the assettag.
- * @param { HTMLElement } brand - HTML element with value property representing the brand.
- * @param { HTMLElement } model - HTML element with value property representing the model.
+ * @param { HTMLElement } assetTagEl - HTML element with value property representing the assettag.
+ * @param { HTMLElement } brandEl - HTML element with value property representing the brand.
+ * @param { HTMLElement } modelEl - HTML element with value property representing the model.
  * @returns { Function } Async event listener function to be associated with autoFill buttons for the brand and model.
 */
-function factoryAutoDeviceBrandAndModel(assetTag, brand, model) {
-	const autoDeviceBrandAndModel = async () => {
-		if (!fieldsValid(assetTag)) {
+function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
+	const autoDeviceSpecs = async () => {
+		if (!assetTagEl.value) {
+			fieldsValid(assetTagEl);
 			return
 		}
 
 		showProgressBox("Gegevens over asset aan het opzoeken.", true);
 
 		try {
-			const data = await window.inventoryAPI.getAssetDetails({ assetTag: assetTag.value });
+			const data = await window.inventoryAPI.getAssetDetails({ assetTag: assetTagEl.value });
 
 			console.log(data);
 
@@ -65,30 +66,30 @@ function factoryAutoDeviceBrandAndModel(assetTag, brand, model) {
 				return
 			}
 
-			brand.value = data.asset.brand;
-			model.value = data.asset.model;
+			brandEl.value = data.asset.brand;
+			modelEl.value = data.asset.model;
 
 			hideProgressBox();
 
-			brand.dispatchEvent(new Event("input", { bubbles: true }));
-			model.deviceModel.dispatchEvent(new Event("input", { bubbles: true }));
+			brandEl.dispatchEvent(new Event("input", { bubbles: true }));
+			modelEl.deviceModel.dispatchEvent(new Event("input", { bubbles: true }));
 		} catch (err) {
 			showProgressBox("Fout tijdens het opzoeken van asset.", true);
 			throw err;
 		}
 	};
-	return autoDeviceBrandAndModel
+	return autoDeviceSpecs
 }
 
-const autoDeviceBrandAndModel = factoryAutoDeviceBrandAndModel(
+const autoDeviceSpecs = factoryAutoDeviceSpecs(
 	inputs.assetTag, inputs.deviceBrand, inputs.deviceModel
 );
 
-const autoOldDeviceBrandAndModel = factoryAutoDeviceBrandAndModel(
+const autoOldDeviceSpecs = factoryAutoDeviceSpecs(
 	inputs.oldAssetTag, inputs.oldDeviceBrand, inputs.oldDeviceModel
 );
 
-const autoNewDeviceBrandAndModel = factoryAutoDeviceBrandAndModel(
+const autoNewDeviceSpecs = factoryAutoDeviceSpecs(
 	inputs.newAssetTag, inputs.newDeviceBrand, inputs.newDeviceModel
 );
 
@@ -132,12 +133,12 @@ const autoFill = {
 	
 		inputs.structuredCommunication.dispatchEvent(new Event("input", { bubbles: true }));
 	},
-	deviceBrand: autoDeviceBrandAndModel,
-	deviceModel: autoDeviceBrandAndModel,
-	oldDeviceBrand: autoOldDeviceBrandAndModel,
-	oldDeviceModel: autoOldDeviceBrandAndModel,
-	newDeviceBrand: autoNewDeviceBrandAndModel,
-	newDeviceModel: autoNewDeviceBrandAndModel,
+	deviceBrand: autoDeviceSpecs,
+	deviceModel: autoDeviceSpecs,
+	oldDeviceBrand: autoOldDeviceSpecs,
+	oldDeviceModel: autoOldDeviceSpecs,
+	newDeviceBrand: autoNewDeviceSpecs,
+	newDeviceModel: autoNewDeviceSpecs,
 	monthlyPayment: () => {
 		if (!fieldsValid(inputs.deviceType)) {
 			return
