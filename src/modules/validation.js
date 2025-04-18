@@ -149,31 +149,33 @@ const validate = {
 	}
 }
 
-inputs.birthDate.addEventListener("input", validate.birthDate)
+export function initValidation() {
+	inputs.birthDate.addEventListener("input", validate.birthDate)
 
-// Important principle: If validation depends on a previous field, you need
-// to redo validation once that field changes as well!
-inputs.postalCode.addEventListener("input", validate.postalCode)
-inputs.uitpasException.addEventListener("input", validate.postalCode)
+	// Important principle: If validation depends on a previous field, you need
+	// to redo validation once that field changes as well!
+	inputs.postalCode.addEventListener("input", validate.postalCode)
+	inputs.uitpasException.addEventListener("input", validate.postalCode)
 
-inputs.phoneNumber.addEventListener("input", validate.phoneNumber);
+	inputs.phoneNumber.addEventListener("input", validate.phoneNumber);
 
-inputs.signatureDate.addEventListener("input", validate.signatureDate)
+	inputs.signatureDate.addEventListener("input", validate.signatureDate)
 
-inputs.endDate.addEventListener("input", validate.endDate)
+	inputs.endDate.addEventListener("input", validate.endDate)
 
-inputs.assetTag.addEventListener("input", validate.assetTag);
+	inputs.assetTag.addEventListener("input", validate.assetTag);
 
-inputs.monthlyPayment.addEventListener("input", validate.monthlyPayment);
-inputs.deviceType.addEventListener("input", validate.monthlyPayment);
+	inputs.monthlyPayment.addEventListener("input", validate.monthlyPayment);
+	inputs.deviceType.addEventListener("input", validate.monthlyPayment);
 
-inputs.yearlyPayment.addEventListener("input", validate.yearlyPayment);
-inputs.deviceType.addEventListener("input", validate.yearlyPayment);
+	inputs.yearlyPayment.addEventListener("input", validate.yearlyPayment);
+	inputs.deviceType.addEventListener("input", validate.yearlyPayment);
 
-inputs.circleValue.addEventListener("input", validate.circleValue);
-inputs.deviceType.addEventListener("input", validate.circleValue);
+	inputs.circleValue.addEventListener("input", validate.circleValue);
+	inputs.deviceType.addEventListener("input", validate.circleValue);
 
-inputs.structuredCommunication.addEventListener("input", validate.structuredCommunication)
+	inputs.structuredCommunication.addEventListener("input", validate.structuredCommunication)
+}
 
 /** Executes all validation functions. */
 export function validateAll() {

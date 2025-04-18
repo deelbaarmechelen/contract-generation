@@ -73,26 +73,31 @@ export function hideProgressBox() {
 	main.inert = false;
 }
 
-buttons.warningGenerateAnyway.addEventListener('click', async () => {
-	hideWarning();
-	generateContract();
-})
 
-buttons.warningGoBack.addEventListener('click', async () => {
-	hideWarning();
-	digibankForm.reportValidity(); // Focuses first invalid input in form.
-})
-
-buttons.progressGoBack.addEventListener('click', async () => {
-	hideProgressBox();
-})
-
-buttons.submit.addEventListener('click', async (e) => {
-	if (digibankForm.checkValidity()) {
-		e.preventDefault();
+/** Initializes click events for the buttons in the prompts. */
+export function initPromptButtons() {
+	buttons.warningGenerateAnyway.addEventListener('click', async () => {
+		hideWarning();
 		generateContract();
-	} else {
-		e.preventDefault();
-		showWarning();
-	}
-})
+	})
+	
+	buttons.warningGoBack.addEventListener('click', async () => {
+		hideWarning();
+		digibankForm.reportValidity(); // Focuses first invalid input in form.
+	})
+	
+	buttons.progressGoBack.addEventListener('click', async () => {
+		hideProgressBox();
+	})
+	
+	buttons.submit.addEventListener('click', async (e) => {
+		if (digibankForm.checkValidity()) {
+			e.preventDefault();
+			generateContract();
+		} else {
+			e.preventDefault();
+			showWarning();
+		}
+	})
+
+}

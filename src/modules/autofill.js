@@ -168,7 +168,10 @@ const autoFill = {
 }
 
 export function initAutoFillButtons() {
-    for (const [key, el] of buttons) {
-        el.addEventListener("click", autoFill[key]);
+    for (const [key, el] of Object.entries(buttons.autoFill)) {
+		console.log(key, el);
+		if (el.id.slice(0, 4) == "auto") {
+        	el.addEventListener("click", autoFill[key]);
+		}
     }
 }

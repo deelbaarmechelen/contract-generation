@@ -106,22 +106,22 @@ export const buttons = {
 
 	progressGoBack: document.getElementById("progress-go-back"),
 
-	autoSignatureDate: document.getElementById("auto-signature-date"),
-	autoStartDate: document.getElementById("auto-start-date"),
-	autoEndDate: document.getElementById("auto-end-date"),
+	autoFill: {
+		signatureDate: document.getElementById("auto-signature-date"),
+		startDate: document.getElementById("auto-start-date"),
+		endDate: document.getElementById("auto-end-date"),
 
-	autoContractNumber: document.getElementById("auto-contract-number"),
-	autoDeviceBrand: document.getElementById("auto-device-brand"),
-	autoDeviceModel: document.getElementById("auto-device-model"),
+		deviceBrand: document.getElementById("auto-device-brand"),
+		deviceModel: document.getElementById("auto-device-model"),
 
-	autoMonthlyPayment: document.getElementById("auto-monthly-payment"),
-	autoYearlyPayment: document.getElementById("auto-yearly-payment"),
-	autoCircleValue: document.getElementById("auto-circle-value"),
-	autoStructuredCommunication: document.getElementById("auto-structured-communication"),
+		monthlyPayment: document.getElementById("auto-monthly-payment"),
+		yearlyPayment: document.getElementById("auto-yearly-payment"),
+		circleValue: document.getElementById("auto-circle-value"),
+		structuredCommunication: document.getElementById("auto-structured-communication"),
 
-	autoOldDeviceBrand: document.getElementById("auto-old-device-brand"),
-	autoOldDeviceModel: document.getElementById("auto-old-device-model"),
-
-	autoNewDeviceBrand: document.getElementById("auto-new-device-brand"),
-	autoNewDeviceModel: document.getElementById("auto-new-device-model")
+		oldDeviceBrand: document.getElementById("auto-old-device-brand"),
+		oldDeviceModel: document.getElementById("auto-old-device-model"),
+		newDeviceBrand: document.getElementById("auto-new-device-brand"),
+		newDeviceModel: document.getElementById("auto-new-device-model")
+	}
 }

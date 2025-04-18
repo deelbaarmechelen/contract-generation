@@ -3,7 +3,7 @@ import { buttons } from "./formelements.js";
 import { allFieldsHadInput } from "./validation.js";
 
 /** Helper function for manual testing. */
-function testFill() {
+export function testFill() {
 	// I know just putting this in renderer.js is testing like a cave person.
 	// I'm not figuring out node.js unit testing right now. 
 	// Ooga booga me use developer console.
@@ -33,20 +33,20 @@ function testFill() {
 	inputs.deviceType.value = "laptop-win-10";  // Miracle that this works like that.
 	inputs.includesCharger.checked = true;
 
-	buttons.autoSignatureDate.click();
-	buttons.autoStartDate.click();
+	buttons.autoFill.signatureDate.click();
+	buttons.autoFill.startDate.click();
 
 	if (inputs.nonPayingContract.checked) {
 		inputs.uitpasNumber.value = "1111111111111";
-		buttons.autoEndDate.click();
+		buttons.autoFill.endDate.click();
 		inputs.workshopDate.valueAsDate = new Date();
 	} else if (inputs.payingContract.checked) {
 		const startDate = inputs.startDate.valueAsDate;
 		inputs.endDate.valueAsDate = new Date(startDate.getUTCFullYear() + 1, startDate.getMonth(), startDate.getDate());
-		buttons.autoStructuredCommunication.click();
-		buttons.autoMonthlyPayment.click();
-		buttons.autoYearlyPayment.click();
-		buttons.autoCircleValue.click();
+		buttons.autoFill.structuredCommunication.click();
+		buttons.autoFill.monthlyPayment.click();
+		buttons.autoFill.yearlyPayment.click();
+		buttons.autoFill.circleValue.click();
 		inputs.advancePayment.value = "€ 50";
 	} else {
 		inputs.replacement.checked = true;
@@ -72,5 +72,3 @@ function testFill() {
 
 	allFieldsHadInput();
 }
-
-window.testFill = testFill;
