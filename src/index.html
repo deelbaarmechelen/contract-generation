@@ -148,55 +148,6 @@
       </div>
     </fieldset>
     <div class="instruction-text non-paying paying hidden">Een medewerker van het Digibankatelier zal de rest van het formulier invullen.</div>
-    <fieldset class="fieldset hidden">
-      <legend>Contractgegevens</legend>
-      <div class="checkbox-box non-paying paying">
-        <input id="is-extension" type="checkbox" name="isExtension">
-        <label for="is-extension">Dit contract is een verlenging.</label>
-      </div>
-      <fieldset class="fieldsubset">
-        <div class="field-box">
-          <label for="client-number">Klantnummer</label>
-          <div class="field-box-inner">
-            <input id="client-number" type="text" name="clientNumber" maxlength="40">
-            <div class="error" data-for="client-number"></div>
-          </div> 
-        </div>
-        <div class="field-box">
-          <label for="contract-number">Contractnummer</label>
-          <div class="field-box-inner">
-            <input id="contract-number" type="text" name="contractNumber" maxlength="40">
-            <div class="error" data-for="contract-number"></div>
-          </div> 
-        </div>
-      </fieldset>
-      <fieldset class="fieldsubset">
-        <div class="field-box">
-          <label for="signature-date">Tekendatum</label>
-          <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="signature-date" type="date" name="signatureDate" required>
-            <div class="error" data-for="signature-date"></div>
-          </div> 
-        </div>
-        <div class="field-box non-paying paying">
-          <label for="start-date">Startdatum</label>
-          <input type="button" id="auto-start-date" value="&#x1F50E;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="start-date" type="date" name="startDate" required>
-            <div class="error" data-for="start-date"></div>
-          </div> 
-        </div>
-        <div class="field-box non-paying paying">
-          <label for="end-date">Einddatum</label>
-          <input type="button" id="auto-end-date" class="non-paying" value="&#x1F50E;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="end-date" type="date" name="endDate" required>
-            <div class="error" data-for="end-date"></div>
-          </div> 
-        </div>
-      </fieldset>
-    </fieldset>
     <fieldset class="fieldset non-paying hidden">
       <legend>Opleidingsmoment</legend>
       <div class="field-box">
@@ -261,6 +212,55 @@
         <div class="checkbox-box non-paying">
           <input id="includes-smart-card-reader" type="checkbox" name="includesSmartCardReader">
           <label for="includes-smart-card-reader">Inclusief eID-lezer</label>
+        </div>
+      </fieldset>
+    </fieldset>
+    <fieldset class="fieldset hidden">
+      <legend>Contractgegevens</legend>
+      <div class="checkbox-box non-paying paying">
+        <input id="is-extension" type="checkbox" name="isExtension">
+        <label for="is-extension">Dit contract is een verlenging.</label>
+      </div>
+      <fieldset class="fieldsubset">
+        <div class="field-box">
+          <label for="client-number">Klantnummer</label>
+          <div class="field-box-inner">
+            <input id="client-number" type="text" name="clientNumber" maxlength="40">
+            <div class="error" data-for="client-number"></div>
+          </div> 
+        </div>
+        <div class="field-box">
+          <label for="contract-number">Contractnummer</label>
+          <div class="field-box-inner">
+            <input id="contract-number" type="text" name="contractNumber" maxlength="40">
+            <div class="error" data-for="contract-number"></div>
+          </div> 
+        </div>
+      </fieldset>
+      <fieldset class="fieldsubset">
+        <div class="field-box">
+          <label for="signature-date">Tekendatum</label>
+          <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="signature-date" type="date" name="signatureDate" required>
+            <div class="error" data-for="signature-date"></div>
+          </div> 
+        </div>
+        <div class="field-box non-paying paying">
+          <label for="start-date">Startdatum</label>
+          <input type="button" id="auto-start-date" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="start-date" type="date" name="startDate" required>
+            <div class="error" data-for="start-date"></div>
+          </div> 
+        </div>
+        <div class="field-box non-paying paying">
+          <label for="end-date">Einddatum</label>
+          <input type="button" id="auto-end-date" class="non-paying" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="end-date" type="date" name="endDate" required>
+            <div class="error" data-for="end-date"></div>
+          </div> 
         </div>
       </fieldset>
     </fieldset>
