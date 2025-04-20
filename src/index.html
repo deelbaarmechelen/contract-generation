@@ -215,97 +215,6 @@
         </div>
       </fieldset>
     </fieldset>
-    <fieldset class="fieldset hidden">
-      <legend>Contractgegevens</legend>
-      <fieldset class="fieldsubset">
-        <div class="field-box">
-          <label for="client-number">Klantnummer</label>
-          <input type="button" id="link-client-number" value="&#x1F517;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="client-number" type="text" name="clientNumber" maxlength="40">
-            <div class="error" data-for="client-number"></div>
-          </div> 
-        </div>
-        <div class="field-box">
-          <label for="contract-number">Contractnummer</label>
-          <input type="button" id="link-contract-number" value="&#x1F517;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="contract-number" type="text" name="contractNumber" maxlength="40">
-            <div class="error" data-for="contract-number"></div>
-          </div> 
-        </div>
-      </fieldset>
-      <fieldset class="fieldsubset">
-        <div class="field-box">
-          <label for="signature-date">Tekendatum</label>
-          <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="signature-date" type="date" name="signatureDate" required>
-            <div class="error" data-for="signature-date"></div>
-          </div> 
-        </div>
-        <div class="field-box non-paying paying">
-          <label for="start-date">Startdatum</label>
-          <input type="button" id="auto-start-date" value="&#x1F50E;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="start-date" type="date" name="startDate" required>
-            <div class="error" data-for="start-date"></div>
-          </div> 
-        </div>
-        <div class="field-box non-paying paying">
-          <label for="end-date">Einddatum</label>
-          <input type="button" id="auto-end-date" class="non-paying" value="&#x1F50E;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="end-date" type="date" name="endDate" required>
-            <div class="error" data-for="end-date"></div>
-          </div> 
-        </div>
-      </fieldset>
-    </fieldset>
-    <fieldset class="fieldset paying hidden">
-      <legend>Betaalgegevens</legend>
-      <fieldset class="fieldsubset">
-        <div class="field-box payment-field">
-          <label for="monthly-payment">Maandprijs</label>
-          <input type="button" id="auto-monthly-payment" value="&#x1F50E;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="monthly-payment" type="text" name="monthlyPayment" maxlength="40" required>
-            <div class="error" data-for="monthly-payment"></div>
-          </div> 
-        </div>
-        <div class="field-box payment-field">
-          <label for="yearly-payment">Jaarprijs</label>
-          <input type="button" id="auto-yearly-payment" value="&#x1F50E;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="yearly-payment" type="text" name="yearlyPayment" maxlength="40" required>
-            <div class="error" data-for="yearly-payment"></div>
-          </div> 
-        </div>
-        <div class="field-box payment-field">
-          <label for="circle-value">Cirkelwaarde</label>
-          <input type="button" id="auto-circle-value" value="&#x1F50E;&#xFE0E;">
-          <div class="field-box-inner">
-            <input id="circle-value" type="text" name="circleValue" maxlength="40" required>
-            <div class="error" data-for="circle-value"></div>
-          </div> 
-        </div>
-        <div class="field-box payment-field">
-          <label for="advance-payment">Voorschot</label>
-          <div class="field-box-inner">
-            <input id="advance-payment" type="text" name="advancePayment" maxlength="40" required>
-            <div class="error" data-for="advance-payment"></div>
-          </div> 
-        </div>
-      </fieldset>
-      <div class="field-box paying">
-        <label for="structured-communication">Gestructureerde mededeling</label>
-        <input type="button" id="auto-structured-communication" value="&#x1F50E;&#xFE0E;">
-        <div class="field-box-inner">
-          <input id="structured-communication" type="text" name="structuredCommunication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="21">
-          <div class="error" data-for="structured-communication"></div>
-        </div> 
-      </div>
-    </fieldset>
     <fieldset class="fieldset addendum hidden">
       <legend>Type addendum</legend>
       <div class="center-checkboxes">
@@ -449,6 +358,97 @@
         <div class="field-box-inner">
           <input id="new-end-date" type="date" name="newEndDate" required>
           <div class="error" data-for="start-date"></div>
+        </div> 
+      </div>
+    </fieldset>
+    <fieldset class="fieldset hidden">
+      <legend>Contractgegevens</legend>
+      <fieldset class="fieldsubset">
+        <div class="field-box">
+          <label for="client-number">Klantnummer</label>
+          <input type="button" id="link-client-number" value="&#x1F517;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="client-number" type="text" name="clientNumber" maxlength="40">
+            <div class="error" data-for="client-number"></div>
+          </div> 
+        </div>
+        <div class="field-box">
+          <label for="contract-number">Contractnummer</label>
+          <input type="button" id="link-contract-number" value="&#x1F517;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="contract-number" type="text" name="contractNumber" maxlength="40">
+            <div class="error" data-for="contract-number"></div>
+          </div> 
+        </div>
+      </fieldset>
+      <fieldset class="fieldsubset">
+        <div class="field-box">
+          <label for="signature-date">Tekendatum</label>
+          <input type="button" id="auto-signature-date" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="signature-date" type="date" name="signatureDate" required>
+            <div class="error" data-for="signature-date"></div>
+          </div> 
+        </div>
+        <div class="field-box non-paying paying">
+          <label for="start-date">Startdatum</label>
+          <input type="button" id="auto-start-date" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="start-date" type="date" name="startDate" required>
+            <div class="error" data-for="start-date"></div>
+          </div> 
+        </div>
+        <div class="field-box non-paying paying">
+          <label for="end-date">Einddatum</label>
+          <input type="button" id="auto-end-date" class="non-paying" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="end-date" type="date" name="endDate" required>
+            <div class="error" data-for="end-date"></div>
+          </div> 
+        </div>
+      </fieldset>
+    </fieldset>
+    <fieldset class="fieldset paying hidden">
+      <legend>Betaalgegevens</legend>
+      <fieldset class="fieldsubset">
+        <div class="field-box payment-field">
+          <label for="monthly-payment">Maandprijs</label>
+          <input type="button" id="auto-monthly-payment" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="monthly-payment" type="text" name="monthlyPayment" maxlength="40" required>
+            <div class="error" data-for="monthly-payment"></div>
+          </div> 
+        </div>
+        <div class="field-box payment-field">
+          <label for="yearly-payment">Jaarprijs</label>
+          <input type="button" id="auto-yearly-payment" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="yearly-payment" type="text" name="yearlyPayment" maxlength="40" required>
+            <div class="error" data-for="yearly-payment"></div>
+          </div> 
+        </div>
+        <div class="field-box payment-field">
+          <label for="circle-value">Cirkelwaarde</label>
+          <input type="button" id="auto-circle-value" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="circle-value" type="text" name="circleValue" maxlength="40" required>
+            <div class="error" data-for="circle-value"></div>
+          </div> 
+        </div>
+        <div class="field-box payment-field">
+          <label for="advance-payment">Voorschot</label>
+          <div class="field-box-inner">
+            <input id="advance-payment" type="text" name="advancePayment" maxlength="40" required>
+            <div class="error" data-for="advance-payment"></div>
+          </div> 
+        </div>
+      </fieldset>
+      <div class="field-box paying">
+        <label for="structured-communication">Gestructureerde mededeling</label>
+        <input type="button" id="auto-structured-communication" value="&#x1F50E;&#xFE0E;">
+        <div class="field-box-inner">
+          <input id="structured-communication" type="text" name="structuredCommunication" pattern="^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$" placeholder="+++___/____/_____+++" data-slots="_" required maxlength="21">
+          <div class="error" data-for="structured-communication"></div>
         </div> 
       </div>
     </fieldset>
