@@ -168,7 +168,7 @@ function initChangedListener() {
 function initHyperlinks() {
 	buttons.link.clientNumber.addEventListener("click", () => {
 		let assetTag;
-		if (form.contractType == "addendum") {
+		if (form.contractType.value == "addendum") {
 			assetTag = form.oldAssetTag.value; 
 		} else {
 			assetTag = form.assetTag.value;
