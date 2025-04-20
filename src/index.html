@@ -217,13 +217,10 @@
     </fieldset>
     <fieldset class="fieldset hidden">
       <legend>Contractgegevens</legend>
-      <div class="checkbox-box non-paying paying">
-        <input id="is-extension" type="checkbox" name="isExtension">
-        <label for="is-extension">Dit contract is een verlenging.</label>
-      </div>
       <fieldset class="fieldsubset">
         <div class="field-box">
           <label for="client-number">Klantnummer</label>
+          <input type="button" id="link-client-number" value="&#x1F517;&#xFE0E;">
           <div class="field-box-inner">
             <input id="client-number" type="text" name="clientNumber" maxlength="40">
             <div class="error" data-for="client-number"></div>
@@ -231,6 +228,7 @@
         </div>
         <div class="field-box">
           <label for="contract-number">Contractnummer</label>
+          <input type="button" id="link-contract-number" value="&#x1F517;&#xFE0E;">
           <div class="field-box-inner">
             <input id="contract-number" type="text" name="contractNumber" maxlength="40">
             <div class="error" data-for="contract-number"></div>

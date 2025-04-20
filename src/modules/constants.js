@@ -1,3 +1,8 @@
+export const linkUrls = {
+	contractNumber: "https://ateliermechelen-my.sharepoint.com/:x:/g/personal/admin_ecoso_be/EY1ECrzfjhpFlSSEhrp-RiMBZT3pM4V3VRYmWebgMV8htA?e=91aeJl",
+	clientNumber: "https://inventaris.digibankmechelen.be/hardware/bytag?assetTag="
+}
+
 export const deviceTypes = {
 	"laptop-win-10": {
 		fullName: "Laptop (Windows 10)",

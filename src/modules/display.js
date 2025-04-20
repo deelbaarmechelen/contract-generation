@@ -1,5 +1,6 @@
 import { form, buttons, resetInstruction, fieldsets, instructionTextElements, payingElements, nonPayingElements, addendumElements, fsExtension, fsReplacementNew, fsReplacementOld, fsReplacementReason } from "./formelements.js";
 import { validateAll } from "./validation.js";
+import { linkUrls } from "./constants.js";
 
 
 /** Checks condition and disables elements only if false. 
@@ -68,9 +69,9 @@ function toggleEnabledUitpasNumber() {
 
 /** Do not require workshop if excepted because of skill test or extension. */
 function toggleEnabledWorkshopFields() {
-	form.workshopException.disabled = form.isExtension.checked;
+	// form.workshopException.disabled = form.isExtension.checked;
 	form.workshopDate.disabled = form.workshopException.checked;
-	form.workshopDate.required = !(form.workshopException.checked || form.isExtension.checked);
+	form.workshopDate.required = !(form.workshopException.checked); // || form.isExtension.checked);
 }
 
 
@@ -144,7 +145,7 @@ function initFormTypeListeners() {
 
 	form.uitpasException.addEventListener("input", toggleEnabledUitpasNumber);
 
-	form.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
+	// form.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
 	form.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 
 	form.extension.addEventListener("input", toggleExtension);
@@ -164,9 +165,26 @@ function initChangedListener() {
 	}
 }
 
+function initHyperlinks() {
+	buttons.link.clientNumber.addEventListener("click", () => {
+		let assetTag;
+		if (form.contractType == "addendum") {
+			assetTag = form.oldAssetTag.value; 
+		} else {
+			assetTag = form.assetTag.value;
+		}
+		window.openExternal.openExternal(linkUrls["clientNumber"] + assetTag);
+	})
+	buttons.link.contractNumber.addEventListener("click", () => {
+		window.openExternal.openExternal(linkUrls["contractNumber"]);
+	})
+	
+}
+
 /** Initializes all display listeners. */
 export function initDisplay() {
 	initInputMasks();
 	initFormTypeListeners();
 	initChangedListener();
+	initHyperlinks();
 }
