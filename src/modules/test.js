@@ -1,6 +1,7 @@
 import { form } from "./formelements.js";
 import { buttons } from "./formelements.js";
 import { allFieldsHadInput } from "./validation.js";
+import { dateTimeLocalStr } from "./utility.js";
 
 /** Helper function for manual testing. */
 export function testFill() {
@@ -43,7 +44,7 @@ export function testFill() {
 	if (form.contractType.value == "non-paying") {
 		form.uitpasNumber.value = "1111111111111";
 		buttons.autoFill.endDate.click();
-		form.workshopDate.valueAsDate = new Date();
+		form.workshopDate.value = dateTimeLocalStr(new Date());
 	} else if (form.contractType.value == "paying") {
 		const startDate = form.startDate.valueAsDate;
 		form.endDate.valueAsDate = new Date(startDate.getUTCFullYear() + 1, startDate.getMonth(), startDate.getDate());

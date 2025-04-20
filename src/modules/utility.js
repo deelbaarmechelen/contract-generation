@@ -59,7 +59,7 @@ export function formatDate(date) {
 /** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string.
  * 	Includes weekday and full name of month. */
 export function formatDateLong(date) {
-	return date ? date.toLocaleDateString("nl-BE", { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : "";
+	return date ? date.toLocaleDateString("nl-BE", { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
 }
 
 /** Calculates a person's age according to their birth date. 
@@ -81,4 +81,11 @@ export function isSameDay(a, b) {
 	return a.getFullYear() == b.getFullYear()
 		&& a.getMonth() == b.getMonth()
 		&& a.getDate() == b.getDate();
+}
+
+
+export function dateTimeLocalStr(inDate) {
+	var date = new Date(inDate);
+	date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+	return date.toISOString().slice(0,16);
 }

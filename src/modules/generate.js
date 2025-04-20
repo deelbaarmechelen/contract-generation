@@ -44,7 +44,7 @@ async function collectFormData(pdfPath) {
 			"number": form.uitpasNumber.value,
 			"aptitudeTest": form.workshopException.checked,
 			"courseEnrolment": !form.workshopException.checked,
-			"courseDate": formatDateLong(form.workshopDate.valueAsDate),
+			"courseDate": formatDateLong(new Date(form.workshopDate.value)),
 			"courseNotification": courseNotification
 		},
 		"referrer": form.referrer.value,
