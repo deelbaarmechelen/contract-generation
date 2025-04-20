@@ -51,9 +51,6 @@ function changeContractType() {
 		showSwitch(true, ...addendumElements);
 	}
 
-	form.contractNumber.required = addendumChecked;
-	form.clientNumber.required = addendumChecked;
-
 	toggleReplacement();
 	toggleExtension();
 
