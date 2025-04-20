@@ -1,7 +1,7 @@
 :root {
   --bg-color: white;
  
-  --bg-color-input: var(--bg-color);
+  --bg-color-input: rgb(240, 240, 240);
   --bg-color-disabled: lightgrey;
 
   --bg-color-button: lightgrey;
@@ -18,6 +18,11 @@
   --outline-color-hover: lightgrey;
   --outline-color-focus: grey;
   --outline-color-invalid: red;
+
+  --fieldset-vert-margin: 1.2em;
+  --fieldset-padding: 1.2em;
+  --row-gap: .9em;
+  --column-gap: 1.2em;
 
   --border-thickness: 2px;
   --border-radius: 8px;
@@ -41,8 +46,10 @@
 		--bg-color: #101010;
 
 		--bg-color-disabled: #404040;
+ 
+		--bg-color-input: #202020;
 				
-		--bg-color-button: #404040;
+		--bg-color-button: #606060;
 		--bg-color-button-active: #606060;
 
 		--font-color: lightgrey;
@@ -77,13 +84,13 @@ h1 {
 	font-size: 150%;
 }
 
-fieldset.fieldset:not(.hidden) {
+.fieldset:not(.hidden) {
 	display: flex;
-	column-gap: 1.2em;
-	row-gap: 1.2em;
+	column-gap: var(--column-gap);
+	row-gap: var(--row-gap);
 	flex-wrap: wrap;
-	margin: 1em 0 1em 0;
-	padding: .7em 1.2em 1.2em 1.2em;
+	margin: var(--fieldset-vert-margin) 0;
+	padding: calc(var(--fieldset-padding) - .5em) var(--fieldset-padding) var(--fieldset-padding) var(--fieldset-padding);
 
 	border: var(--border-thickness);
 	border-radius: var(--border-radius);
@@ -91,14 +98,14 @@ fieldset.fieldset:not(.hidden) {
 	border-color: var(--border-color);
 }
 
-fieldset.fieldsubset:not(.hidden) {
+.fieldsubset:not(.hidden) {
 	margin: 0;
 	padding: 0;
 	border: 0;
 
 	display: flex;
-	column-gap: 1.2em;
-	row-gap: 1.2em;
+	column-gap: var(--column-gap);
+	row-gap: var(--row-gap);
 	flex-wrap: wrap;
 	
 	width: 100%;
@@ -106,7 +113,7 @@ fieldset.fieldsubset:not(.hidden) {
 
 .number-and-box-number {
 	display: flex;
-	column-gap: 1.2em;
+	column-gap: var(--column-gap);
 	flex-wrap: wrap;
 	flex-grow: 0;
 }
@@ -200,8 +207,8 @@ input:not([type="radio"], [type="checkbox"]), select {
 .radio-option-list {
 	display: flex;
 	width: 100%;
-	column-gap: 1em;
-	row-gap: 1em;
+	column-gap: var(--column-gap);
+	row-gap: var(--row-gap);
 	align-items: center;
     justify-content: center;
 }
@@ -349,8 +356,8 @@ input[type="button"], input[type="submit"] {
 
 .center-checkboxes:not(.hidden) {
 	display: flex;
-	column-gap: 1.2em;
-	row-gap: 1.2em;
+	column-gap: var(--column-gap);
+	row-gap: var(--row-gap);
 	flex-wrap: wrap;
 	justify-content: center;
 	width: 100%;
