@@ -1,4 +1,4 @@
-import { inputs, buttons } from "./formelements.js";
+import { form, buttons } from "./formelements.js";
 import { deviceTypes } from "./constants.js";
 import { showProgressBox, hideProgressBox } from "./prompts.js";
 import { formatEuro } from "./utility.js";
@@ -21,8 +21,8 @@ function fieldsValid(...prerequisiteFields) {
 //// Autofill calculations
 
 function calcStructuredCommunication() {
-	const signatureDate = inputs.signatureDate.valueAsDate;
-	const assetTag = inputs.assetTag.value;
+	const signatureDate = form.signatureDate.valueAsDate;
+	const assetTag = form.assetTag.value;
 
 	const monthDigits = ('0' + (signatureDate.getMonth() + 1).toString()).slice(-2);
 	const yearDigit = signatureDate.getFullYear().toString().slice(-2);
@@ -82,56 +82,56 @@ function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
 }
 
 const autoDeviceSpecs = factoryAutoDeviceSpecs(
-	inputs.assetTag, inputs.deviceBrand, inputs.deviceModel
+	form.assetTag, form.deviceBrand, form.deviceModel
 );
 
 const autoOldDeviceSpecs = factoryAutoDeviceSpecs(
-	inputs.oldAssetTag, inputs.oldDeviceBrand, inputs.oldDeviceModel
+	form.oldAssetTag, form.oldDeviceBrand, form.oldDeviceModel
 );
 
 const autoNewDeviceSpecs = factoryAutoDeviceSpecs(
-	inputs.newAssetTag, inputs.newDeviceBrand, inputs.newDeviceModel
+	form.newAssetTag, form.newDeviceBrand, form.newDeviceModel
 );
 
 //// Autofill click events
 
 const autoFill = {
 	signatureDate: () => {
-		inputs.signatureDate.valueAsDate = new Date();
+		form.signatureDate.valueAsDate = new Date();
 	
 		// Emulate a user changing the field, which is important for correct display
 		// of invalid inputs.
-		inputs.signatureDate.dispatchEvent(new Event("input", { bubbles: true }));
+		form.signatureDate.dispatchEvent(new Event("input", { bubbles: true }));
 	},
 	startDate: () => {
-		if (!fieldsValid(inputs.signatureDate)) {
+		if (!fieldsValid(form.signatureDate)) {
 			return
 		}
 	
-		inputs.startDate.valueAsDate = inputs.signatureDate.valueAsDate;
+		form.startDate.valueAsDate = form.signatureDate.valueAsDate;
 	
-		inputs.startDate.dispatchEvent(new Event("input", { bubbles: true }));
+		form.startDate.dispatchEvent(new Event("input", { bubbles: true }));
 	},
 	endDate: () => {
-		if (!fieldsValid(inputs.startDate)) {
+		if (!fieldsValid(form.startDate)) {
 			return
 		}
 	
-		const date = inputs.startDate.valueAsDate;
-		inputs.endDate.valueAsDate = new Date(date.getUTCFullYear() + 1,
+		const date = form.startDate.valueAsDate;
+		form.endDate.valueAsDate = new Date(date.getUTCFullYear() + 1,
 			date.getMonth(),
 			date.getDate());
 	
-		inputs.endDate.dispatchEvent(new Event("input", { bubbles: true }));
+		form.endDate.dispatchEvent(new Event("input", { bubbles: true }));
 	},
 	structuredCommunication: () => {
-		if (!fieldsValid(inputs.signatureDate, inputs.assetTag)) {
+		if (!fieldsValid(form.signatureDate, form.assetTag)) {
 			return
 		}
 	
-		inputs.structuredCommunication.value = calcStructuredCommunication();
+		form.structuredCommunication.value = calcStructuredCommunication();
 	
-		inputs.structuredCommunication.dispatchEvent(new Event("input", { bubbles: true }));
+		form.structuredCommunication.dispatchEvent(new Event("input", { bubbles: true }));
 	},
 	deviceBrand: autoDeviceSpecs,
 	deviceModel: autoDeviceSpecs,
@@ -140,39 +140,36 @@ const autoFill = {
 	newDeviceBrand: autoNewDeviceSpecs,
 	newDeviceModel: autoNewDeviceSpecs,
 	monthlyPayment: () => {
-		if (!fieldsValid(inputs.deviceType)) {
+		if (!fieldsValid(form.deviceType)) {
 			return
 		}
 	
-		inputs.monthlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].monthlyPayment);
+		form.monthlyPayment.value = formatEuro(deviceTypes[form.deviceType.value].monthlyPayment);
 	
-		inputs.monthlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
+		form.monthlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
 	},
 	yearlyPayment: () => {
-		if (!fieldsValid(inputs.deviceType)) {
+		if (!fieldsValid(form.deviceType)) {
 			return
 		}
 	
-		inputs.yearlyPayment.value = formatEuro(deviceTypes[inputs.deviceType.value].yearlyPayment);
+		form.yearlyPayment.value = formatEuro(deviceTypes[form.deviceType.value].yearlyPayment);
 	
-		inputs.yearlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
+		form.yearlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
 	},
 	circleValue: () => {
-		if (!fieldsValid(inputs.deviceType)) {
+		if (!fieldsValid(form.deviceType)) {
 			return
 		}
 	
-		inputs.circleValue.value = formatEuro(deviceTypes[inputs.deviceType.value].circleValue);
+		form.circleValue.value = formatEuro(deviceTypes[form.deviceType.value].circleValue);
 	
-		inputs.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
+		form.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
 	}
 }
 
 export function initAutoFillButtons() {
     for (const [key, el] of Object.entries(buttons.autoFill)) {
-		console.log(key, el);
-		if (el.id.slice(0, 4) == "auto") {
-        	el.addEventListener("click", autoFill[key]);
-		}
+		el.addEventListener("click", autoFill[key]);
     }
 }

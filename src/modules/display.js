@@ -1,4 +1,4 @@
-import { inputs, buttons, resetInstruction, fieldsets, instructionTextElements, payingElements, nonPayingElements, addendumElements, fsExtension, fsReplacementNew, fsReplacementOld, fsReplacementReason } from "./formelements.js";
+import { form, buttons, resetInstruction, fieldsets, instructionTextElements, payingElements, nonPayingElements, addendumElements, fsExtension, fsReplacementNew, fsReplacementOld, fsReplacementReason } from "./formelements.js";
 import { validateAll } from "./validation.js";
 
 
@@ -34,9 +34,9 @@ export function showSwitch(condition, ...elements) {
  * classes they have.
 */
 function changeContractType() {
-	const payingChecked = inputs.payingContract.checked;
-	const nonPayingChecked = inputs.nonPayingContract.checked;
-	const addendumChecked = inputs.addendum.checked;
+	const payingChecked = form.contractType.value == "paying";
+	const nonPayingChecked = form.contractType.value == "non-paying";
+	const addendumChecked = form.contractType.value == "addendum";
 	const anyChecked = payingChecked || nonPayingChecked || addendumChecked;
 
 	showSwitch(anyChecked, buttons.submit, resetInstruction, ...fieldsets, ...instructionTextElements);
@@ -50,8 +50,8 @@ function changeContractType() {
 		showSwitch(true, ...addendumElements);
 	}
 
-	inputs.contractNumber.required = addendumChecked;
-	inputs.clientNumber.required = addendumChecked;
+	form.contractNumber.required = addendumChecked;
+	form.clientNumber.required = addendumChecked;
 
 	toggleReplacement();
 	toggleExtension();
@@ -62,32 +62,35 @@ function changeContractType() {
 
 /** Disable uitpasNumber field when the user is excepted from it. */
 function toggleEnabledUitpasNumber() {
-	inputs.uitpasNumber.disabled = inputs.uitpasException.checked;
+	form.uitpasNumber.disabled = form.uitpasException.checked;
 }
 
 
 /** Do not require workshop if excepted because of skill test or extension. */
 function toggleEnabledWorkshopFields() {
-	inputs.workshopException.disabled = inputs.isExtension.checked;
-	inputs.workshopDate.disabled = inputs.workshopException.checked;
-	inputs.workshopDate.required = !(inputs.workshopException.checked || inputs.isExtension.checked);
+	form.workshopException.disabled = form.isExtension.checked;
+	form.workshopDate.disabled = form.workshopException.checked;
+	form.workshopDate.required = !(form.workshopException.checked || form.isExtension.checked);
 }
 
 
 /** Shows extension-type addendum field elements if relevant checkbox checked. */
 function toggleExtension() {
-	showSwitch(inputs.extension.checked, fsExtension);
+	showSwitch(form.extension.checked, fsExtension);
 }
 
 
 /** Shows replacement-type addendum field elements if relevant checkbox checked. */
 function toggleReplacement() {
-	showSwitch(inputs.replacement.checked, fsReplacementOld, fsReplacementNew, fsReplacementReason);
+	showSwitch(form.replacement.checked, fsReplacementOld, fsReplacementNew, fsReplacementReason);
 }
 
 
 /** Enters validation message into error div. */
 export function fillErrorDiv(el) {
+	if (!el.id) {
+		return
+	}
 	const errorDiv = document.querySelector(".error[data-for=" + el.id + "]");
 	if (errorDiv) {
 		errorDiv.innerText = el.validationMessage;
@@ -135,17 +138,17 @@ function initInputMasks() {
 
 /** The values of some fields determine how the rest of the form looks or behaves. This function initializes listeners for that. */
 function initFormTypeListeners() {
-	inputs.payingContract.addEventListener("input", changeContractType);
-	inputs.nonPayingContract.addEventListener("input", changeContractType);
-	inputs.addendum.addEventListener("input", changeContractType);
+	for (const el of form.contractType) {
+		el.addEventListener("input", changeContractType);
+	}
 
-	inputs.uitpasException.addEventListener("input", toggleEnabledUitpasNumber);
+	form.uitpasException.addEventListener("input", toggleEnabledUitpasNumber);
 
-	inputs.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
-	inputs.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
+	form.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
+	form.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
 
-	inputs.extension.addEventListener("input", toggleExtension);
-	inputs.replacement.addEventListener("input", toggleReplacement);
+	form.extension.addEventListener("input", toggleExtension);
+	form.replacement.addEventListener("input", toggleReplacement);
 }
 
 
@@ -153,7 +156,7 @@ function initFormTypeListeners() {
  * The .changed class makes it so invalid inputs are marked in red.
  * You don't want users to be scolded for invalid inputs they didn't even touch. */
 function initChangedListener() {
-	for (const [, el] of Object.entries(inputs)) {
+	for (const el of form) {
 		el.addEventListener("input", () => {
 			el.classList.add("changed");
 			fillErrorDiv(el);

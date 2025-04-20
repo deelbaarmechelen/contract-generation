@@ -1,5 +1,5 @@
 import { formatDate, formatDateLong, formatEuro, formatAddress } from "./utility.js";
-import { inputs } from "./formelements.js";
+import { form } from "./formelements.js";
 import { deviceTypes } from "./constants.js";
 import { showProgressBox } from "./prompts.js";
 
@@ -7,9 +7,9 @@ import { showProgressBox } from "./prompts.js";
 async function collectFormData(pdfPath) {
 	let courseNotification = "";
 
-	if (inputs.workshopException.checked) {
+	if (form.workshopException.checked) {
 		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen door het afleggen van een bekwaamheidstest.";
-	} else if (inputs.isExtension.checked) {
+	} else if (form.isExtension.checked) {
 		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen omdat deze een eerdere klant is.";
 	} else {
 		courseNotification = "De Ontlener is verplicht een gratis opleidingssessie bij te wonen om te verzekeren dat deze met het toestel kan werken."
@@ -20,79 +20,79 @@ async function collectFormData(pdfPath) {
 			"path": pdfPath,
 			"print": true
 		},
-		"contractNumber": inputs.contractNumber.value,
-		"clientNumber": inputs.clientNumber.value,
-		"isExtension": inputs.isExtension.checked,
+		"contractNumber": form.contractNumber.value,
+		"clientNumber": form.clientNumber.value,
+		"isExtension": form.isExtension.checked,
 		"client": {
-			"name": inputs.firstName.value + ' ' + inputs.lastName.value,
-			"birthDate": formatDate(inputs.birthDate.valueAsDate),
-			"address": formatAddress(inputs.streetName.value, inputs.houseNumber.value,
-				inputs.boxNumber.value, inputs.postalCode.value,
-				inputs.municipality.value, inputs.country.value),
-			"phone": await window.libphonenumber.formatPhoneNumber(String(inputs.phoneNumber.value)),
-			"email": inputs.email.value,
+			"name": form.firstName.value + ' ' + form.lastName.value,
+			"birthDate": formatDate(form.birthDate.valueAsDate),
+			"address": formatAddress(form.streetName.value, form.houseNumber.value,
+				form.boxNumber.value, form.postalCode.value,
+				form.municipality.value, form.country.value),
+			"phone": await window.libphonenumber.formatPhoneNumber(String(form.phoneNumber.value)),
+			"email": form.email.value,
 		},
-		"contractType": document.querySelector('input[name="contract-type"]:checked').value,
+		"contractType": form.contractType.value,
 		"subscription": {
-			"structuredReference": inputs.structuredCommunication.value,
-			"monthlyPayment": formatEuro(inputs.monthlyPayment.value),
-			"yearlyPayment": formatEuro(inputs.yearlyPayment.value),
-			"amountPaid": formatEuro(inputs.advancePayment.value),
-			"circleValue": formatEuro(inputs.circleValue.value)
+			"structuredReference": form.structuredCommunication.value,
+			"monthlyPayment": formatEuro(form.monthlyPayment.value),
+			"yearlyPayment": formatEuro(form.yearlyPayment.value),
+			"amountPaid": formatEuro(form.advancePayment.value),
+			"circleValue": formatEuro(form.circleValue.value)
 		},
 		"uitpas": {
-			"applicable": !inputs.uitpasException.checked,
-			"number": inputs.uitpasNumber.value,
-			"aptitudeTest": inputs.workshopException.checked,
-			"courseEnrolment": !inputs.workshopException.checked,
-			"courseDate": formatDateLong(inputs.workshopDate.valueAsDate),
+			"applicable": !form.uitpasException.checked,
+			"number": form.uitpasNumber.value,
+			"aptitudeTest": form.workshopException.checked,
+			"courseEnrolment": !form.workshopException.checked,
+			"courseDate": formatDateLong(form.workshopDate.valueAsDate),
 			"courseNotification": courseNotification
 		},
-		"referer": inputs.referrer.value,
-		"structuredReference": inputs.structuredCommunication.value,
+		"referrer": form.referrer.value,
+		"structuredReference": form.structuredCommunication.value,
 		"item": {
-			"deviceType": inputs.deviceType.value ? deviceTypes[inputs.deviceType.value].fullName : "",
-			"deviceBrand": inputs.deviceBrand.value,
-			"deviceModel": inputs.deviceModel.value,
-			"assetTag": inputs.assetTag.value,
+			"deviceType": form.deviceType.value ? deviceTypes[form.deviceType.value].fullName : "",
+			"deviceBrand": form.deviceBrand.value,
+			"deviceModel": form.deviceModel.value,
+			"assetTag": form.assetTag.value,
 			"accessories": {
-				"charger": inputs.includesCharger.checked,
-				"mouse": inputs.includesMouse.checked,
-				"eIdReader": inputs.includesSmartCardReader.checked
+				"charger": form.includesCharger.checked,
+				"mouse": form.includesMouse.checked,
+				"eIdReader": form.includesSmartCardReader.checked
 			}
 		},
-		"contractDate": formatDate(inputs.signatureDate.valueAsDate),
-		"startDate": formatDate(inputs.startDate.valueAsDate),
-		"endDate": formatDate(inputs.endDate.valueAsDate),
-		"extension": inputs.extension.checked,
-		"replacement": inputs.replacement.checked,
+		"contractDate": formatDate(form.signatureDate.valueAsDate),
+		"startDate": formatDate(form.startDate.valueAsDate),
+		"endDate": formatDate(form.endDate.valueAsDate),
+		"extension": form.extension.checked,
+		"replacement": form.replacement.checked,
 		"oldDevice": {
-			"deviceType": inputs.oldDeviceType.value ? deviceTypes[inputs.oldDeviceType.value].fullName : "",
-			"deviceBrand": inputs.oldDeviceBrand.value,
-			"deviceModel": inputs.oldDeviceModel.value,
-			"assetTag": inputs.oldAssetTag.value,
+			"deviceType": form.oldDeviceType.value ? deviceTypes[form.oldDeviceType.value].fullName : "",
+			"deviceBrand": form.oldDeviceBrand.value,
+			"deviceModel": form.oldDeviceModel.value,
+			"assetTag": form.oldAssetTag.value,
 			"accessories": {
-				"charger": inputs.oldIncludesCharger.checked,
-				"mouse": inputs.oldIncludesMouse.checked,
-				"eIdReader": inputs.oldIncludesSmartCardReader.checked
+				"charger": form.oldIncludesCharger.checked,
+				"mouse": form.oldIncludesMouse.checked,
+				"eIdReader": form.oldIncludesSmartCardReader.checked
 			}
 
 		},
 		"newDevice": {
-			"deviceType": inputs.newDeviceType.value ? deviceTypes[inputs.newDeviceType.value].fullName : "",
-			"deviceBrand": inputs.newDeviceBrand.value,
-			"deviceModel": inputs.newDeviceModel.value,
-			"assetTag": inputs.newAssetTag.value,
+			"deviceType": form.newDeviceType.value ? deviceTypes[form.newDeviceType.value].fullName : "",
+			"deviceBrand": form.newDeviceBrand.value,
+			"deviceModel": form.newDeviceModel.value,
+			"assetTag": form.newAssetTag.value,
 			"accessories": {
-				"charger": inputs.newIncludesCharger.checked,
-				"mouse": inputs.newIncludesMouse.checked,
-				"eIdReader": inputs.newIncludesSmartCardReader.checked
+				"charger": form.newIncludesCharger.checked,
+				"mouse": form.newIncludesMouse.checked,
+				"eIdReader": form.newIncludesSmartCardReader.checked
 			}
 
 		},
-		"replacementReason": inputs.replacementReason.value,
-		"oldEndDate": formatDate(inputs.oldEndDate.valueAsDate),
-		"newEndDate": formatDate(inputs.newEndDate.valueAsDate),
+		"replacementReason": form.replacementReason.value,
+		"oldEndDate": formatDate(form.oldEndDate.valueAsDate),
+		"newEndDate": formatDate(form.newEndDate.valueAsDate),
 	};
 }
 

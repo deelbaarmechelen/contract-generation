@@ -1,12 +1,12 @@
-import { progressBox, warningBox, warningBoxTable, main, buttons, inputs, progressBoxText, digibankForm } from "./formelements.js";
+import { progressBox, warningBox, warningBoxTable, main, buttons, progressBoxText, form } from "./formelements.js";
 import { showSwitch } from "./display.js";
 import { allFieldsHadInput } from "./validation.js";
 import { generateContract } from "./generate.js";
 
 /** Generates an array with the labels and validation messages of invalid inputs. */
-function genWarningBoxTableContent(inputs) {
+function genWarningBoxTableContent(form) {
 	let output = [];
-	for (let [, value] of Object.entries(inputs)) {
+	for (let [, value] of Object.entries(form)) {
 		if (value.validity.valid || (value.closest('[disabled]') != null)) {
 			continue
 		}
@@ -43,7 +43,7 @@ function fillWarningBoxTable(validationReport) {
 function showWarning() {
 	showSwitch(true, warningBox);
 	main.inert = true;
-	fillWarningBoxTable(genWarningBoxTableContent(inputs));
+	fillWarningBoxTable(genWarningBoxTableContent(form));
 
 	// Preferably, we want the user to go back and fix invalid inputs.
 	buttons.warningGoBack.focus({ focusVisible: true });
@@ -83,7 +83,7 @@ export function initPromptButtons() {
 	
 	buttons.warningGoBack.addEventListener('click', async () => {
 		hideWarning();
-		digibankForm.reportValidity(); // Focuses first invalid input in form.
+		form.reportValidity(); // Focuses first invalid input in form.
 	})
 	
 	buttons.progressGoBack.addEventListener('click', async () => {
@@ -91,7 +91,7 @@ export function initPromptButtons() {
 	})
 	
 	buttons.submit.addEventListener('click', async (e) => {
-		if (digibankForm.checkValidity()) {
+		if (form.checkValidity()) {
 			e.preventDefault();
 			generateContract();
 		} else {

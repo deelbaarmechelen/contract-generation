@@ -1,4 +1,4 @@
-import { inputs } from "./formelements.js";
+import { form } from "./formelements.js";
 import { fillErrorDiv } from "./display.js";
 import { getAge, formatPhoneNumber, isSameDay, euroStrToNum } from "./utility.js";
 import { postalCodesMechelen, deviceTypes } from "./constants.js";
@@ -20,24 +20,24 @@ function customValidate(field, condition, invalidMessage) {
 const validate = {
 	/** Validates that customer is at least 18 years of age. */
 	birthDate: () => {
-		const birthDate = inputs.birthDate.valueAsDate;
+		const birthDate = form.birthDate.valueAsDate;
 		const condition = birthDate === null || getAge(birthDate) >= 18; // If `birthDate === null` we want to let normal input validation handle it.
 
 		customValidate(
-			inputs.birthDate, condition,
+			form.birthDate, condition,
 			"Klant is onder 18."
 		);
 	},
 
 	/** Validates postal code. Only Mechelaars can get a non-paying contract, unless they have an exception. */
 	postalCode: () => {
-		const condition = !inputs.nonPayingContract.checked
-			|| inputs.uitpasException.checked
-			|| !inputs.postalCode.value
-			|| postalCodesMechelen.includes(Number(inputs.postalCode.value));
+		const condition = !(form.contractType.value == "non-paying") 
+			|| form.uitpasException.checked
+			|| !form.postalCode.value
+			|| postalCodesMechelen.includes(Number(form.postalCode.value));
 
 		customValidate(
-			inputs.postalCode, condition,
+			form.postalCode, condition,
 			"Niet in Mechelen."
 		);
 	},
@@ -46,30 +46,30 @@ const validate = {
 	phoneNumber: async () => {
 		// Easiest way to do this is to just try to format it, if it fails, it's a bad number.
 		customValidate(
-			inputs.phoneNumber, !inputs.phoneNumber.value || await formatPhoneNumber(inputs.phoneNumber.value),
+			form.phoneNumber, !form.phoneNumber.value || await formatPhoneNumber(form.phoneNumber.value),
 			"Ongeldig telefoonnummer."
 		);
 	},
 
 	/** Validates signature date. The signature date should normally be today. */
 	signatureDate: () => {
-		const signatureDate = inputs.signatureDate.valueAsDate;
+		const signatureDate = form.signatureDate.valueAsDate;
 		const condition = signatureDate === null || isSameDay(signatureDate, new Date());
 
 		customValidate(
-			inputs.signatureDate, condition,
+			form.signatureDate, condition,
 			"Handtekeningdatum hoort vandaag te zijn."
 		);
 	},
 
 	/** Validates end date. End date should always be after start date. */
 	endDate: () => {
-		const condition = inputs.startDate.valueAsDate === null
-			|| inputs.endDate.valueAsDate === null
-			|| inputs.startDate.valueAsDate < inputs.endDate.valueAsDate;
+		const condition = form.startDate.valueAsDate === null
+			|| form.endDate.valueAsDate === null
+			|| form.startDate.valueAsDate < form.endDate.valueAsDate;
 
 		customValidate(
-			inputs.endDate, condition,
+			form.endDate, condition,
 			"Einddatum hoort na startdatum te zijn."
 		);
 	},
@@ -77,7 +77,7 @@ const validate = {
 	/** Validates assetTag. Assettags normally have six digits prepended with some combination of letters. */
 	assetTag: () => {
 		customValidate(
-			inputs.assetTag, !inputs.assetTag.validity.patternMismatch,
+			form.assetTag, !form.assetTag.validity.patternMismatch,
 			"Een assettag heeft gewoonlijk zes cijfers met eventueel een combinatie hoofdletters ervoor. (bv. 'PC250200')."
 		);
 	},
@@ -86,15 +86,15 @@ const validate = {
 	monthlyPayment: () => {
 		let condition = true;
 
-		if (inputs.deviceType.value && inputs.monthlyPayment.value) {
-			const value = inputs.monthlyPayment.value;
+		if (form.deviceType.value && form.monthlyPayment.value) {
+			const value = form.monthlyPayment.value;
 			const euroNum = euroStrToNum(value);
-			const euroNumExpected = deviceTypes[inputs.deviceType.value].monthlyPayment;
+			const euroNumExpected = deviceTypes[form.deviceType.value].monthlyPayment;
 			condition = euroNum == euroNumExpected;
 		}
 
 		customValidate(
-			inputs.monthlyPayment, condition,
+			form.monthlyPayment, condition,
 			"Onverwacht bedrag voor apparaattype."
 		);
 	},
@@ -103,15 +103,15 @@ const validate = {
 	yearlyPayment: () => {
 		let condition = true;
 
-		if (inputs.deviceType.value && inputs.circleValue.value) {
-			const value = inputs.yearlyPayment.value;
+		if (form.deviceType.value && form.circleValue.value) {
+			const value = form.yearlyPayment.value;
 			const euroNum = euroStrToNum(value);
-			const euroNumExpected = deviceTypes[inputs.deviceType.value].yearlyPayment;
+			const euroNumExpected = deviceTypes[form.deviceType.value].yearlyPayment;
 			condition = euroNum == euroNumExpected;
 		}
 
 		customValidate(
-			inputs.yearlyPayment, condition,
+			form.yearlyPayment, condition,
 			"Onverwacht bedrag voor apparaattype."
 		);
 	},
@@ -120,22 +120,22 @@ const validate = {
 	circleValue: () => {
 		let condition = true;
 
-		if (inputs.deviceType.value && inputs.circleValue.value) {
-			const value = inputs.circleValue.value;
+		if (form.deviceType.value && form.circleValue.value) {
+			const value = form.circleValue.value;
 			const euroNum = euroStrToNum(value);
-			const euroNumExpected = deviceTypes[inputs.deviceType.value].circleValue;
+			const euroNumExpected = deviceTypes[form.deviceType.value].circleValue;
 			condition = euroNum == euroNumExpected;
 		}
 
 		customValidate(
-			inputs.circleValue, condition,
+			form.circleValue, condition,
 			"Onverwacht bedrag voor apparaattype."
 		);
 	},
 
 	/** Validates structured communication. The last two digits are determined by the rest of the digits */
 	structuredCommunication: () => {
-		const digits = inputs.structuredCommunication.value.replace(/\D/g, "");
+		const digits = form.structuredCommunication.value.replace(/\D/g, "");
 		const incompleteDigits = parseInt(digits.slice(0, 10));
 		const checksumProvided = parseInt(digits.slice(10, 12));
 
@@ -143,38 +143,29 @@ const validate = {
 		const validChecksum = remainder == 0 ? 97 : remainder;
 
 		customValidate(
-			inputs.structuredCommunication, digits.length < 12 || validChecksum === checksumProvided,
+			form.structuredCommunication, digits.length < 12 || validChecksum === checksumProvided,
 			"Deze gestructureerde mededeling is niet geldig."
 		);
 	}
 }
 
+/** Contains information about what validation functions depend on what prior field values. */
+const validationDependencies = {
+	postalCode: ["uitpasException"],
+	monthlyPayment: ["deviceType"],
+	yearlyPayment: ["deviceType"],
+	circleValue: ["deviceType"]
+}
+
 export function initValidation() {
-	inputs.birthDate.addEventListener("input", validate.birthDate)
-
-	// Important principle: If validation depends on a previous field, you need
-	// to redo validation once that field changes as well!
-	inputs.postalCode.addEventListener("input", validate.postalCode)
-	inputs.uitpasException.addEventListener("input", validate.postalCode)
-
-	inputs.phoneNumber.addEventListener("input", validate.phoneNumber);
-
-	inputs.signatureDate.addEventListener("input", validate.signatureDate)
-
-	inputs.endDate.addEventListener("input", validate.endDate)
-
-	inputs.assetTag.addEventListener("input", validate.assetTag);
-
-	inputs.monthlyPayment.addEventListener("input", validate.monthlyPayment);
-	inputs.deviceType.addEventListener("input", validate.monthlyPayment);
-
-	inputs.yearlyPayment.addEventListener("input", validate.yearlyPayment);
-	inputs.deviceType.addEventListener("input", validate.yearlyPayment);
-
-	inputs.circleValue.addEventListener("input", validate.circleValue);
-	inputs.deviceType.addEventListener("input", validate.circleValue);
-
-	inputs.structuredCommunication.addEventListener("input", validate.structuredCommunication)
+	for (const [key, func] of Object.entries(validate)) {
+		form[key].addEventListener("input", func);
+	}
+	for (const [key, dependencies] of Object.entries(validationDependencies)) {
+		for (const dependency of dependencies) {
+			form[dependency].addEventListener("input", validate[key]);
+		}
+	}
 }
 
 /** Executes all validation functions. */
@@ -186,7 +177,7 @@ export function validateAll() {
 
 /** Executes all validation functions and makes all validation warnings visible. */
 export function allFieldsHadInput() {
-	for (const [, el] of Object.entries(inputs)) {
+	for (const [, el] of Object.entries(form)) {
 		el.dispatchEvent(new Event("input", { bubbles: true }));
 	}
 }
