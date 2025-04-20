@@ -69,9 +69,7 @@ function toggleEnabledUitpasNumber() {
 
 /** Do not require workshop if excepted because of skill test or extension. */
 function toggleEnabledWorkshopFields() {
-	// form.workshopException.disabled = form.isExtension.checked;
-	form.workshopDate.disabled = form.workshopException.checked;
-	form.workshopDate.required = !(form.workshopException.checked); // || form.isExtension.checked);
+	form.workshopDate.required = !(form.workshopException.checked || form.workshopExceptionPriorCustomer.checked);
 }
 
 
@@ -147,6 +145,7 @@ function initFormTypeListeners() {
 
 	// form.isExtension.addEventListener("input", toggleEnabledWorkshopFields);
 	form.workshopException.addEventListener("input", toggleEnabledWorkshopFields);
+	form.workshopExceptionPriorCustomer.addEventListener("input", toggleEnabledWorkshopFields);
 
 	form.extension.addEventListener("input", toggleExtension);
 	form.replacement.addEventListener("input", toggleReplacement);

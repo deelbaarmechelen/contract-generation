@@ -217,7 +217,7 @@ input:not([type="radio"], [type="checkbox"]), select {
 	display: flex;
 	column-gap: var(--checkbox-distance);
 	align-items: center;
-    justify-content: center;
+    justify-content: left;
 }
 
 .radio-option input {
@@ -230,7 +230,7 @@ input:not([type="radio"], [type="checkbox"]), select {
 	display: flex;
 	column-gap: var(--checkbox-distance);
 	align-items: center;
-    justify-content: center;
+    justify-content: left;
 }
 
 .checkbox-box input {
@@ -360,5 +360,9 @@ input[type="button"], input[type="submit"] {
 	row-gap: var(--row-gap);
 	flex-wrap: wrap;
 	justify-content: center;
+	width: 100%;
+}
+
+.full-width {
 	width: 100%;
 }
