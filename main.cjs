@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const https = require('https');
 const path = require('path');
 const carbone = require('carbone');
@@ -95,7 +95,7 @@ function formatPhoneNumber(e, rawPhoneNumber) {
 
   try {
     phoneNumber = phoneUtil.parse(rawPhoneNumber, 'BE');
-  } catch (error) {
+  } catch {
     return ""
   }
 
@@ -190,11 +190,17 @@ function fetchInventoryData(assetTag) {
   });
 }
 
+async function openExternal(e, url) {
+  console.log(url);
+  shell.openExternal(url);
+}
+
 app.whenReady().then(() => {
   ipcMain.handle('dialog:openFile', handleFileOpen);
   ipcMain.handle('generatePdf', handleRenderPdf);
   ipcMain.handle('getAsset', handleGetAsset)
   ipcMain.handle('formatPhoneNumber', formatPhoneNumber);
+  ipcMain.handle('openExternal', openExternal)
   createWindow();
 
   app.on('activate', () => {

@@ -17,3 +17,7 @@ contextBridge.exposeInMainWorld('inventoryAPI', {
 contextBridge.exposeInMainWorld('libphonenumber', {
 	formatPhoneNumber: (data) => ipcRenderer.invoke('formatPhoneNumber', data)
 })
+
+contextBridge.exposeInMainWorld('openExternal', {
+	openExternal: (url) => ipcRenderer.invoke('openExternal', url)
+})
