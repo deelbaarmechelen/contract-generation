@@ -9,7 +9,7 @@ async function collectFormData(pdfPath) {
 
 	if (form.workshopException.checked) {
 		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen door het afleggen van een bekwaamheidstest.";
-	} else if (form.isExtension.checked) {
+	} else if (form.workshopExceptionPriorCustomer.checked) {
 		courseNotification = "De Ontlener is vrijgesteld van de verplichting een gratis opleidingssessie te volgen omdat deze een eerdere klant is.";
 	} else {
 		courseNotification = "De Ontlener is verplicht een gratis opleidingssessie bij te wonen om te verzekeren dat deze met het toestel kan werken."
@@ -22,7 +22,6 @@ async function collectFormData(pdfPath) {
 		},
 		"contractNumber": form.contractNumber.value,
 		"clientNumber": form.clientNumber.value,
-		"isExtension": form.isExtension.checked,
 		"client": {
 			"name": form.firstName.value + ' ' + form.lastName.value,
 			"birthDate": formatDate(form.birthDate.valueAsDate),
