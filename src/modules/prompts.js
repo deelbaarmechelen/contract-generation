@@ -105,10 +105,16 @@ export function initPromptButtons() {
 export class Prompt {
 	#content;
 	#buttons;
+	#onShow;
+	#onClose;
+
+	static #currentPrompt; 
 
 	constructor(promptObject) {
 		this.content = promptObject.content;
 		this.#buttons = promptObject.buttons;
+		this.#onShow = promptObject.onShow ? promptObject.onShow.bind(this) : undefined;
+		this.#onClose = promptObject.onClose ? promptObject.onClose.bind(this) : undefined;
 	}
 
 	set content(x) {
@@ -134,7 +140,9 @@ export class Prompt {
 		for (const buttonInfo of this.#buttons) {
 			let button = document.createElement("button");
 			button.name = buttonInfo.name;
-			promptContent.appendChild(button);
+			button.innerText = buttonInfo.text;
+			button.addEventListener("click", buttonInfo.onClick);
+			promptButtons.appendChild(button);
 		}
 	}
 
@@ -145,10 +153,58 @@ export class Prompt {
 
 	show() {
 		this.#fill();
+
+		if ( this.#onShow ) {
+			this.#onShow();
+		}
+
 		prompt.showModal();
+
+		Prompt.#currentPrompt = this;
+	}
+
+	static close() {
+		prompt.close();
+	}
+
+	static onClose() {
+		if ( Prompt.#currentPrompt && Prompt.#currentPrompt.#onClose ) {
+			Prompt.#currentPrompt.#onClose();
+		}
+
+		Prompt.#currentPrompt = undefined;
+
+		promptContent.innerHTML = "";
+		promptButtons.innerHTML = "";
 	}
 
 	close() {
-		prompt.close();
+		Prompt.close();
 	}
+}
+
+(new Prompt({
+	content: "abcdefghijklmnop abcdefghijklmnop abcdefghijklmnop",
+	buttons: [
+		{
+			name: "test",
+			text: "test",
+			onClick: Prompt.close
+		},
+		{
+			name: "test",
+			text: "test",
+			onClick: Prompt.close
+		}
+	],
+	onShow: () => {
+		console.log("Properly opened");
+	},
+	onClose: () => {
+		console.log("Properly closed");
+	}
+})).show();
+
+export function initPrompt() {
+	prompt.addEventListener("close", Prompt.onClose);
 }

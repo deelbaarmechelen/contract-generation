@@ -6,6 +6,7 @@ import * as autoFill from "./modules/autofill.js";
 
 display.initDisplay();
 prompts.initPromptButtons();
+prompts.initPrompt();
 autoFill.initAutoFillButtons();
 validation.initValidation();
 
