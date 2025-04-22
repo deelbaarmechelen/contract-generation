@@ -23,6 +23,7 @@ function enableSwitch(condition, ...elements) {
 
 /** Checks condition and shows elements only if true. */
 export function showSwitch(condition, ...elements) {
+	console.log(elements)
 	elements.map((el) => el.classList.toggle("hidden", !condition));
 	enableSwitch(condition, ...elements);
 }
@@ -72,13 +73,13 @@ function toggleEnabledWorkshopFields() {
 
 /** Shows extension-type addendum field elements if relevant checkbox checked. */
 function toggleExtension() {
-	showSwitch(form.extension.checked, fsExtension);
+	showSwitch(form.extension.checked && form.contractType.value == "addendum", fsExtension);
 }
 
 
 /** Shows replacement-type addendum field elements if relevant checkbox checked. */
 function toggleReplacement() {
-	showSwitch(form.replacement.checked, fsReplacementOld, fsReplacementNew, fsReplacementReason);
+	showSwitch(form.replacement.checked && form.contractType.value == "addendum", fsReplacementOld, fsReplacementNew, fsReplacementReason);
 }
 
 
