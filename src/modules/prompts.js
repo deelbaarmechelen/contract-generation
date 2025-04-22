@@ -1,4 +1,4 @@
-import { progressBox, warningBox, warningBoxTable, main, buttons, progressBoxText, form } from "./formelements.js";
+import { progressBox, warningBox, warningBoxTable, main, buttons, progressBoxText, form, prompt, promptContent, promptButtons } from "./formelements.js";
 import { showSwitch } from "./display.js";
 import { allFieldsHadInput } from "./validation.js";
 import { generateContract } from "./generate.js";
@@ -100,4 +100,55 @@ export function initPromptButtons() {
 		}
 	})
 
+}
+
+export class Prompt {
+	#content;
+	#buttons;
+
+	constructor(promptObject) {
+		this.content = promptObject.content;
+		this.#buttons = promptObject.buttons;
+	}
+
+	set content(x) {
+		if ( !(x instanceof HTMLElement) ) {
+			let p = document.createElement("p");
+			p.innerText = x;
+			x = p;
+		} 
+		this.#content = x;
+	}
+
+	get content() {
+		return this.#content;
+	}
+
+	#fillContent() {
+		promptContent.innerHTML = "";
+		promptContent.appendChild(this.#content);
+	}
+
+	#fillButtons() {
+		promptButtons.innerHTML = "";
+		for (const buttonInfo of this.#buttons) {
+			let button = document.createElement("button");
+			button.name = buttonInfo.name;
+			promptContent.appendChild(button);
+		}
+	}
+
+	#fill() {
+		this.#fillContent();
+		this.#fillButtons();
+	}
+
+	show() {
+		this.#fill();
+		prompt.showModal();
+	}
+
+	close() {
+		prompt.close();
+	}
 }
