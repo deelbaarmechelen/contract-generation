@@ -72,7 +72,7 @@ function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
 			hideProgressBox();
 
 			brandEl.dispatchEvent(new Event("input", { bubbles: true }));
-			modelEl.deviceModel.dispatchEvent(new Event("input", { bubbles: true }));
+			modelEl.dispatchEvent(new Event("input", { bubbles: true }));
 		} catch (err) {
 			showProgressBox("Fout tijdens het opzoeken van asset.", true);
 			throw err;
