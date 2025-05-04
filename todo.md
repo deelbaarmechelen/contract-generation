@@ -23,6 +23,11 @@ Necessary:
 - Detect if structured communication is empty, give different message
 - Find better way to deal with repeat customers. (may involve light company policy change)
 - Clarify meaning of advance payment to user
+- Add final screen with reminders and links to Beego + Digisnacks
+- Field 'organisation'
+- Fix text on exceptions
+- Make signaturedate more explicit on addendum
+- Fix weird font in addendum on Windows 
 
 Luxuries:
 
