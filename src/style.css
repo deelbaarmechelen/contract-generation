@@ -36,6 +36,8 @@
   --input-height: calc(2 * var(--border-thickness) + 2 * var(--input-padding) + var(--line-height));
 
   --max-width: 1000px;
+	--max-width-prompt: calc(var(--max-width) * 3/4);
+
   --min-width: 400px;
 }
 
@@ -326,7 +328,7 @@ input[type="button"], input[type="submit"], button {
 	margin: 1em 0 1em 0;
 	padding: 1em 1em 1em 1em;
 
-	max-width: var(--max-width);
+	max-width: var(--max-width-prompt);
 
 	position: fixed;
 	top: 50%;
