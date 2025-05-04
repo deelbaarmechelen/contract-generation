@@ -6,14 +6,13 @@
   <title>Uitleningsformulier Digibankatelier Mechelen</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com" />
+    content="default-src 'self'; script-src 'self'" />
   <meta name="description" content="" />
   <link rel="stylesheet" type="text/css" href="style.css" />
   <link rel="icon" href="favicon.png">
 </head>
 
 <body>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.90/pdf.js"></script>
   <h1>Uitleningsformulier Digibankatelier Mechelen</h1>
   <main>
     <form id="digibank-form" name="digibankForm" action="#" autocomplete="off">
@@ -469,36 +468,11 @@
       </div>
     </form>
   </main>
-  <div id="warning-box" class="pop-up-box hidden">
-    <p id="warning-box-text">Een aantal velden zijn mogelijk verkeerd ingevuld:</p>
-    <div class="warning-box-table-container">
-      <table id="warning-box-table">
-        <thead>
-          <tr>
-            <th scope="col">Veldlabel</th>
-            <th scope="col">Validatiebericht</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <div class="pop-up-box-buttons">
-      <input type="button" class="float-left" id="warning-generate-anyway" value="Genereer toch">
-      <input type="button" class="float-right" id="warning-go-back" value="Ga terug">
-    </div>
-  </div>
-  <div id="progress-box" class="pop-up-box hidden">
-    <p id="progress-box-text"></p>
-    <div class="pop-up-box-buttons">
-      <input type="button" id="progress-go-back" value="Ga terug">
-    </div>
-  </div>
-  <dialog id="prompt" class="prompt">
+  <div id="prompt" class="prompt hidden">
     <div id="prompt-content" class="prompt-content"></div>
     <div id="prompt-buttons" class="prompt-buttons"></div>
-  </dialog>
+  </div>
   <script src="apikey.js"></script>
   <script src="renderer.js" type="module"></script>
 </body>
-
 </html>

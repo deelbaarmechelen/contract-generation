@@ -269,58 +269,6 @@ input[type="button"], input[type="submit"], button {
 	}
 }
 
-.pop-up-box {
-	background-color: var(--bg-color);
-
-	border: var(--border-thickness);
-	border-radius: var(--border-radius);
-	border-style: solid;
-	border-color: var(--border-color);
-
-	margin: 1em 0 1em 0;
-	padding: 1em 1em 1em 1em;
-
-	max-width: var(--max-width);
-
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	margin-right: -50%;
-	transform: translate(-50%, -50%);
-}
-
-.pop-up-box p {
-	margin: 0 0 .75em 0;
-}
-
-#warning-box-table {
-	margin: 0 auto 0 auto;
-}
-
-.warning-box-table-container {
-	max-height: 250px;
-	display: block;
-	overflow-y: auto;
-	margin: 0 0 .75em 0;
-	scrollbar-width: thin;
-}
-
-#warning-box-table td, #warning-box-table th {
-	padding: 2px 4px 2px 4px;
-}
-
-.pop-up-box-buttons {
-	width: 100%;
-}
-
-.float-left {
-	float: left;
-}
-
-.float-right {
-	float: right;
-}
-
 #final-form-controls {
 	width: 100%;
 	position: relative;
@@ -392,8 +340,12 @@ input[type="button"], input[type="submit"], button {
 	column-gap: var(--column-gap);
 	row-gap: var(--row-gap);
 	flex-wrap: wrap;
-	justify-content: center;
+	justify-content: space-between;
 	width: 100%;
+}
+
+.prompt-buttons:has(> :last-child:nth-child(1)) {
+	justify-content: center;
 }
 
 .prompt-content {
@@ -404,6 +356,6 @@ input[type="button"], input[type="submit"], button {
 	margin: 0;
 }
 
-.prompt-content p + p {
+.prompt-content p + * {
 	margin-top: var(--row-gap);
 }

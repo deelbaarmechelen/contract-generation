@@ -1,6 +1,6 @@
 import { form, buttons } from "./formelements.js";
 import { deviceTypes } from "./constants.js";
-import { showProgressBox, hideProgressBox } from "./prompts.js";
+import { Prompt } from "./prompts.js";
 import { formatEuro } from "./utility.js";
 
 function fieldsValid(...prerequisiteFields) {
@@ -54,7 +54,7 @@ function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
 			return
 		}
 
-		showProgressBox("Gegevens over asset aan het opzoeken.", true);
+		Prompt.createProgressPrompt("Gegevens over asset aan het opzoeken.", false).show();
 
 		try {
 			const data = await window.inventoryAPI.getAssetDetails({ assetTag: assetTagEl.value });
@@ -62,19 +62,19 @@ function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
 			console.log(data);
 
 			if (!data.success) {
-				showProgressBox("Fout tijdens het opzoeken van asset:\n\"" + data.error + "\"", true);
+				Prompt.createProgressPrompt("Fout tijdens het opzoeken van asset:\n\"" + data.error + "\"", true).show();
 				return
 			}
 
 			brandEl.value = data.asset.brand;
 			modelEl.value = data.asset.model;
 
-			hideProgressBox();
+			Prompt.close();
 
 			brandEl.dispatchEvent(new Event("input", { bubbles: true }));
 			modelEl.deviceModel.dispatchEvent(new Event("input", { bubbles: true }));
 		} catch (err) {
-			showProgressBox("Fout tijdens het opzoeken van asset.", true);
+			Prompt.createProgressPrompt("Fout tijdens het opzoeken van asset.", true).show();
 			throw err;
 		}
 	};
