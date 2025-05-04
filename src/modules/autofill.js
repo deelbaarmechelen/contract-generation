@@ -1,6 +1,6 @@
 import { form, buttons } from "./formelements.js";
 import { deviceTypes } from "./constants.js";
-import { showProgressBox, hideProgressBox } from "./prompts.js";
+import { Prompt } from "./prompts.js";
 import { formatEuro } from "./utility.js";
 
 function fieldsValid(...prerequisiteFields) {
@@ -54,7 +54,7 @@ function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
 			return
 		}
 
-		showProgressBox("Gegevens over asset aan het opzoeken.", true);
+		Prompt.createProgressPrompt("Gegevens over asset aan het opzoeken.", false).show();
 
 		try {
 			const data = await window.inventoryAPI.getAssetDetails({ assetTag: assetTagEl.value });
@@ -62,19 +62,19 @@ function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
 			console.log(data);
 
 			if (!data.success) {
-				showProgressBox("Fout tijdens het opzoeken van asset:\n\"" + data.error + "\"", true);
+				Prompt.createProgressPrompt("Fout tijdens het opzoeken van asset:\n\"" + data.error + "\"", true).show();
 				return
 			}
 
 			brandEl.value = data.asset.brand;
 			modelEl.value = data.asset.model;
 
-			hideProgressBox();
+			Prompt.close();
 
 			brandEl.dispatchEvent(new Event("input", { bubbles: true }));
 			modelEl.dispatchEvent(new Event("input", { bubbles: true }));
 		} catch (err) {
-			showProgressBox("Fout tijdens het opzoeken van asset.", true);
+			Prompt.createProgressPrompt("Fout tijdens het opzoeken van asset.", true).show();
 			throw err;
 		}
 	};
@@ -96,14 +96,14 @@ const autoNewDeviceSpecs = factoryAutoDeviceSpecs(
 //// Autofill click events
 
 const autoFill = {
-	signatureDate: () => {
+	signatureDate () {
 		form.signatureDate.valueAsDate = new Date();
 	
 		// Emulate a user changing the field, which is important for correct display
 		// of invalid inputs.
 		form.signatureDate.dispatchEvent(new Event("input", { bubbles: true }));
 	},
-	startDate: () => {
+	startDate () {
 		if (!fieldsValid(form.signatureDate)) {
 			return
 		}
@@ -112,7 +112,7 @@ const autoFill = {
 	
 		form.startDate.dispatchEvent(new Event("input", { bubbles: true }));
 	},
-	endDate: () => {
+	endDate () {
 		if (!fieldsValid(form.startDate)) {
 			return
 		}
@@ -124,7 +124,7 @@ const autoFill = {
 	
 		form.endDate.dispatchEvent(new Event("input", { bubbles: true }));
 	},
-	structuredCommunication: () => {
+	structuredCommunication () {
 		if (!fieldsValid(form.signatureDate, form.assetTag)) {
 			return
 		}
@@ -139,7 +139,7 @@ const autoFill = {
 	oldDeviceModel: autoOldDeviceSpecs,
 	newDeviceBrand: autoNewDeviceSpecs,
 	newDeviceModel: autoNewDeviceSpecs,
-	monthlyPayment: () => {
+	monthlyPayment () {
 		if (!fieldsValid(form.deviceType)) {
 			return
 		}
@@ -148,7 +148,7 @@ const autoFill = {
 	
 		form.monthlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
 	},
-	yearlyPayment: () => {
+	yearlyPayment () {
 		if (!fieldsValid(form.deviceType)) {
 			return
 		}
@@ -157,7 +157,7 @@ const autoFill = {
 	
 		form.yearlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
 	},
-	circleValue: () => {
+	circleValue () {
 		if (!fieldsValid(form.deviceType)) {
 			return
 		}

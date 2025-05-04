@@ -33,8 +33,8 @@ export function showSwitch(condition, ...elements) {
  * Form elements by default show for all contract types,
  * except if they have the class corresponding to a contract type,
  * then they will only show for contract types corresponding to the 
- * classes they have.
-*/
+ * classes they have. 
+ */
 function changeContractType() {
 	const payingChecked = form.contractType.value == "paying";
 	const nonPayingChecked = form.contractType.value == "non-paying";
@@ -51,6 +51,8 @@ function changeContractType() {
 	} else if (addendumChecked) {
 		showSwitch(true, ...addendumElements);
 	}
+
+	showSwitch(true, fieldsets[0]);
 
 	toggleReplacement();
 	toggleExtension();

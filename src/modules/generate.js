@@ -1,7 +1,7 @@
 import { formatDate, formatDateLong, formatEuro, formatAddress } from "./utility.js";
 import { form } from "./formelements.js";
 import { deviceTypes } from "./constants.js";
-import { showProgressBox } from "./prompts.js";
+import { Prompt } from "./prompts.js";
 
 /** Does final pre-processing of form data, and collects it into object. */
 async function collectFormData(pdfPath) {
@@ -97,7 +97,7 @@ async function collectFormData(pdfPath) {
 
 /** Performs final steps of contract generation while showing feedback. */
 export async function generateContract() {
-	showProgressBox("Kies een locatie voor het PDF bestand.", false);
+	Prompt.createProgressPrompt("Kies een locatie voor het PDF bestand.", false).show();
 
 	let pdfPath = "";
 
@@ -107,15 +107,15 @@ export async function generateContract() {
 			throw new Error("No PDF path received from user.");
 		}
 	} catch (error) {
-		showProgressBox("Er is iets mis gegaan in het bepalen van de PDF locatie. Probeer het opnieuw.", true);
+		Prompt.createProgressPrompt("Er is iets mis gegaan in het bepalen van de PDF locatie. Probeer het opnieuw.", true).show();
 		throw error;
 	}
 
-	showProgressBox("Gegevens uit contract aan het ophalen.", false);
+	Prompt.createProgressPrompt("Gegevens uit contract aan het ophalen.", false).show();
 
 	let data = await collectFormData(pdfPath);
 
-	showProgressBox("PDF aan het genereren.", false);
+	Prompt.createProgressPrompt("PDF aan het genereren.", false).show();
 
 	try {
 		console.log('Generating PDF with data:', data);
@@ -127,13 +127,13 @@ export async function generateContract() {
 
 		console.log('url: ' + fileUrl);
 
-		showProgressBox("PDF aan het openen.", false);
+		Prompt.createProgressPrompt("PDF aan het openen.", false);
 
 		window.open(fileUrl, '_blank', 'top=0,left=0,frame=true,toolbar=true,menubar=true,scrollbars=true,resizable=true');
 
-		showProgressBox("Klaar met genereren van PDF.", true);
+		Prompt.createProgressPrompt("Klaar met genereren van PDF.", true).show();
 	} catch (error) {
-		showProgressBox("Er ging iets mis tijdens het genereren van de PDF. Probeer het opnieuw.", true);
+		Prompt.createProgressPrompt("Er ging iets mis tijdens het genereren van de PDF. Probeer het opnieuw.", true).show();
 		console.error('Error generating PDF:', error);
 	}
 }

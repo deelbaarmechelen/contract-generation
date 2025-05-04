@@ -19,7 +19,7 @@ function customValidate(field, condition, invalidMessage) {
 /** Contains all field validation functions. */
 const validate = {
 	/** Validates that customer is at least 18 years of age. */
-	birthDate: () => {
+	birthDate () {
 		const birthDate = form.birthDate.valueAsDate;
 		const condition = birthDate === null || getAge(birthDate) >= 18; // If `birthDate === null` we want to let normal input validation handle it.
 
@@ -30,7 +30,7 @@ const validate = {
 	},
 
 	/** Validates postal code. Only Mechelaars can get a non-paying contract, unless they have an exception. */
-	postalCode: () => {
+	postalCode () {
 		const condition = !(form.contractType.value == "non-paying") 
 			|| form.uitpasException.checked
 			|| !form.postalCode.value
@@ -43,7 +43,7 @@ const validate = {
 	},
 
 	/** Validates that phone number could be real. */
-	phoneNumber: async () => {
+	async phoneNumber () {
 		// Easiest way to do this is to just try to format it, if it fails, it's a bad number.
 		customValidate(
 			form.phoneNumber, !form.phoneNumber.value || await formatPhoneNumber(form.phoneNumber.value),
@@ -52,7 +52,7 @@ const validate = {
 	},
 
 	/** Validates signature date. The signature date should normally be today. */
-	signatureDate: () => {
+	signatureDate () {
 		const signatureDate = form.signatureDate.valueAsDate;
 		const condition = signatureDate === null || isSameDay(signatureDate, new Date());
 
@@ -63,7 +63,7 @@ const validate = {
 	},
 
 	/** Validates end date. End date should always be after start date. */
-	endDate: () => {
+	endDate () {
 		const condition = form.startDate.valueAsDate === null
 			|| form.endDate.valueAsDate === null
 			|| form.startDate.valueAsDate < form.endDate.valueAsDate;
@@ -75,7 +75,7 @@ const validate = {
 	},
 
 	/** Validates assetTag. Assettags normally have six digits prepended with some combination of letters. */
-	assetTag: () => {
+	assetTag () {
 		customValidate(
 			form.assetTag, !form.assetTag.validity.patternMismatch,
 			"Een assettag heeft gewoonlijk zes cijfers met eventueel een combinatie hoofdletters ervoor. (bv. 'PC250200')."
@@ -83,7 +83,7 @@ const validate = {
 	},
 
 	/** Warns user if the monthly payment is different from expected for device type. */
-	monthlyPayment: () => {
+	monthlyPayment () {
 		let condition = true;
 
 		if (form.deviceType.value && form.monthlyPayment.value) {
@@ -100,7 +100,7 @@ const validate = {
 	},
 
 	/** Warns user if the yearly payment is different from expected for device type. */
-	yearlyPayment: () => {
+	yearlyPayment () {
 		let condition = true;
 
 		if (form.deviceType.value && form.circleValue.value) {
@@ -117,7 +117,7 @@ const validate = {
 	},
 
 	/** Warns user if the circle value is different from expected for device type. */
-	circleValue: () => {
+	circleValue () {
 		let condition = true;
 
 		if (form.deviceType.value && form.circleValue.value) {
@@ -134,7 +134,7 @@ const validate = {
 	},
 
 	/** Validates structured communication. The last two digits are determined by the rest of the digits */
-	structuredCommunication: () => {
+	structuredCommunication () {
 		const digits = form.structuredCommunication.value.replace(/\D/g, "");
 		const incompleteDigits = parseInt(digits.slice(0, 10));
 		const checksumProvided = parseInt(digits.slice(10, 12));

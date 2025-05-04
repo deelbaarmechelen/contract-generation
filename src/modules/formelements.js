@@ -16,18 +16,12 @@ export const fsExtension = document.getElementById("fs-extension");
 export const instructionTextElements = main.getElementsByClassName("instruction-text");  // Really just the text that the _Digibankmedewerker_ will take it from here.
 export const resetInstruction = document.getElementById("reset-instruction");
 
-export const warningBox = document.getElementById("warning-box");
-export const warningBoxTable = document.getElementById("warning-box-table");
-export const progressBox = document.getElementById("progress-box");
-export const progressBoxText = document.getElementById("progress-box-text")
+export const prompt = document.getElementById("prompt");
+export const promptContent = document.getElementById("prompt-content");
+export const promptButtons = document.getElementById("prompt-buttons");
 
 export const buttons = {
 	submit: document.getElementById("submit"),
-
-	warningGenerateAnyway: document.getElementById("warning-generate-anyway"),
-	warningGoBack: document.getElementById("warning-go-back"),
-
-	progressGoBack: document.getElementById("progress-go-back"),
 
 	link: {
 		clientNumber: document.getElementById("link-client-number"),
