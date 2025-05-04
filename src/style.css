@@ -359,3 +359,18 @@ input[type="button"], input[type="submit"], button {
 .prompt-content p + * {
 	margin-top: var(--row-gap);
 }
+
+#warning-box-table {
+	margin: 0 auto 0 auto;
+}
+
+.warning-box-table-container {
+	max-height: 250px;
+	display: block;
+	overflow-y: auto;
+	scrollbar-width: thin;
+}
+
+#warning-box-table td, #warning-box-table th {
+	padding: 2px 4px 2px 4px;
+}
