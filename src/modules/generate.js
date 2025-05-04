@@ -1,6 +1,6 @@
 import { formatDate, formatDateLong, formatEuro, formatAddress } from "./utility.js";
 import { form } from "./formelements.js";
-import { deviceTypes } from "./constants.js";
+import { deviceTypes, linkUrls } from "./constants.js";
 import { Prompt } from "./prompts.js";
 
 /** Does final pre-processing of form data, and collects it into object. */
@@ -95,6 +95,33 @@ async function collectFormData(pdfPath) {
 	};
 }
 
+function showFinalPrompt() {
+	(new Prompt({
+		content: "Contract succesvol gegenereerd.",
+		buttons: [
+			{
+				text: "\u{1F517}\uFE0E BEEGO",
+				onClick() {
+					window.openExternal.openExternal(linkUrls['beego']);
+				}
+			},
+			{
+				text: "\u{1F517}\uFE0E Digisnacks",
+				onClick() {
+					window.openExternal.openExternal(linkUrls['digisnacks']);
+				}
+			},
+			{
+				text: "Ga terug",
+				onClick() {
+					Prompt.close();
+				},
+				autofocus: true
+			}
+		]
+	})).show();
+}
+
 /** Performs final steps of contract generation while showing feedback. */
 export async function generateContract() {
 	Prompt.createProgressPrompt("Kies een locatie voor het PDF bestand.", false).show();
@@ -131,9 +158,10 @@ export async function generateContract() {
 
 		window.open(fileUrl, '_blank', 'top=0,left=0,frame=true,toolbar=true,menubar=true,scrollbars=true,resizable=true');
 
-		Prompt.createProgressPrompt("Klaar met genereren van PDF.", true).show();
+		showFinalPrompt();
 	} catch (error) {
 		Prompt.createProgressPrompt("Er ging iets mis tijdens het genereren van de PDF. Probeer het opnieuw.", true).show();
 		console.error('Error generating PDF:', error);
 	}
 }
+
