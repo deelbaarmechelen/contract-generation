@@ -21,3 +21,7 @@ contextBridge.exposeInMainWorld('libphonenumber', {
 contextBridge.exposeInMainWorld('openExternal', {
 	openExternal: (url) => ipcRenderer.invoke('openExternal', url)
 })
+
+contextBridge.exposeInMainWorld('contractData', {
+	get: () => ipcRenderer.invoke('getContractData')
+})

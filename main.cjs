@@ -48,38 +48,62 @@ async function handleFileOpen() {
     return filePaths[0];
   }
 }
+
 const renderAsync = util.promisify(carbone.render);
 
-async function handleRenderPdf(event, data) {
-  log.info('Rendering PDF with data:', data);
-  const extension = 'pdf';
-  // const extension = 'odt'
-  var options = {
-    convertTo: extension,
-  };
-  var templateName = data.contractType == 'addendum' ? 'template-addendum.odt' : 'template-ontlening.odt';
-  var templatePath = path.join(__dirname, 'resources', templateName);
-  // template file path input
-  try {
-    const result = await renderAsync(templatePath, data, options);
-    const pathDirectory = data.generationInfo.path.trim().length === 0 ? '.' : data.generationInfo.path;
-    let fileName = data.contractNumber.trim().length === 0 ? 'contract' : data.contractNumber;
-    if (data.contractType == 'addendum') {
-     const today = new Date();
-     const formattedDate = formatDateYYYYMMDD(today);
-     fileName += '-addendum-' + formattedDate;
-    }
-    fileName += '.' + extension;
-    const filePath = path.join(pathDirectory, fileName);
-    fs.writeFileSync(filePath, result);
-    const fileUrl = url.pathToFileURL(filePath);
-    log.info('path: ' + url.fileURLToPath(fileUrl));
-    return fileUrl.href;
-  } catch (err) {
-    log.error('Error generating PDF:', err);
-    throw err;
-  }
+let contractData;
+
+async function getContractData(event) {
+  return contractData;
 }
+
+async function handleRenderPdf(event, data) {
+  contractData = data;
+  
+  const win = new BrowserWindow({
+    width: 1280,
+    height: 720,
+    autoHideMenuBar: true,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
+
+  win.loadFile('src/contract/contract.html');
+}
+
+// async function handleRenderPdf(event, data) {
+//   log.info('Rendering PDF with data:', data);
+//   const extension = 'pdf';
+//   // const extension = 'odt'
+//   var options = {
+//     convertTo: extension,
+//   };
+//   var templateName = data.contractType == 'addendum' ? 'template-addendum.odt' : 'template-ontlening.odt';
+//   var templatePath = path.join(__dirname, 'resources', templateName);
+//   // template file path input
+//   try {
+//     const result = await renderAsync(templatePath, data, options);
+//     const pathDirectory = data.generationInfo.path.trim().length === 0 ? '.' : data.generationInfo.path;
+//     let fileName = data.contractNumber.trim().length === 0 ? 'contract' : data.contractNumber;
+//     if (data.contractType == 'addendum') {
+//      const today = new Date();
+//      const formattedDate = formatDateYYYYMMDD(today);
+//      fileName += '-addendum-' + formattedDate;
+//     }
+//     fileName += '.' + extension;
+//     const filePath = path.join(pathDirectory, fileName);
+//     fs.writeFileSync(filePath, result);
+//     const fileUrl = url.pathToFileURL(filePath);
+//     log.info('path: ' + url.fileURLToPath(fileUrl));
+//     return fileUrl.href;
+//   } catch (err) {
+//     log.error('Error generating PDF:', err);
+//     throw err;
+//   }
+// }
 
 function formatDateYYYYMMDD(date) {
   const year = date.getFullYear();
@@ -198,9 +222,10 @@ async function openExternal(e, url) {
 app.whenReady().then(() => {
   ipcMain.handle('dialog:openFile', handleFileOpen);
   ipcMain.handle('generatePdf', handleRenderPdf);
-  ipcMain.handle('getAsset', handleGetAsset)
+  ipcMain.handle('getAsset', handleGetAsset);
   ipcMain.handle('formatPhoneNumber', formatPhoneNumber);
-  ipcMain.handle('openExternal', openExternal)
+  ipcMain.handle('openExternal', openExternal);
+  ipcMain.handle('getContractData', getContractData);
   createWindow();
 
   app.on('activate', () => {

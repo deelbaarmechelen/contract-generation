@@ -1,0 +1,101 @@
+:root {
+  --padding: .33em;
+  --margin: .67em;
+  --margin-tight: .25em;
+  --margin-list: .33em;
+}
+
+@page {
+  margin: 2.5cm;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@media screen {
+  body {
+    background-color: gray;
+  }
+
+  .page {
+    background-color: white;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 2.5cm;
+    margin: 1.25cm auto;
+    box-sizing: border-box;
+  }
+}
+
+.left {
+  flex: 1;
+  margin: 0;
+}
+
+.right {
+  flex: 1;
+  margin: 0;
+}
+
+.digibank-info .left img {
+  width: 100%;
+  margin: 0 0 0 0;
+}
+
+.digibank-info .right {
+  margin: 0 var(--margin);
+}
+
+.digibank-info .right p {
+  margin: 0 0 0 0;
+}
+
+.digibank-info, .identifiers {
+  display: flex;
+  align-items: center;
+}
+
+.signatures {
+  display: flex;
+  align-items: top;
+  height: 9em;
+  padding: var(--padding) 0;
+
+  border-width: 2px 0 2px 0;
+  border-style: solid;
+}
+
+h1 {
+  text-align: center;
+  margin: var(--margin-tight) 0 var(--margin) 0;
+  padding: var(--padding) 0;
+  font-size: 20pt;
+
+  border-width: 2px 0 2px 0;
+  border-style: solid;
+}
+
+h2 {
+  font-size: 16pt;
+}
+
+p, h2, ul {
+  margin: var(--margin) 0;
+}
+
+li, li ul {
+  margin: var(--margin-list) 0;
+}
+
+.page {
+  break-after: page;
+}
+
+.top-margin {
+  margin-top: calc(var(--margin));
+}
+
+.big-top-margin {
+  margin-top: calc(var(--margin) * 1.5);
+}
