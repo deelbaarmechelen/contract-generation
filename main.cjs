@@ -1,10 +1,6 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const https = require('https');
 const path = require('path');
-const carbone = require('carbone');
-const fs = require('fs');
-const util = require('util');
-const url = require('url');
 const converter = require('./node_modules/carbone/lib/converter');
 //const converter = require('./carbone-converter.cjs');
 const log = require ('electron-log');
@@ -49,11 +45,9 @@ async function handleFileOpen() {
   }
 }
 
-const renderAsync = util.promisify(carbone.render);
-
 let contractData;
 
-async function getContractData(event) {
+async function getContractData() {
   return contractData;
 }
 
@@ -72,44 +66,6 @@ async function handleRenderPdf(event, data) {
   });
 
   win.loadFile('src/contract/contract.html');
-}
-
-// async function handleRenderPdf(event, data) {
-//   log.info('Rendering PDF with data:', data);
-//   const extension = 'pdf';
-//   // const extension = 'odt'
-//   var options = {
-//     convertTo: extension,
-//   };
-//   var templateName = data.contractType == 'addendum' ? 'template-addendum.odt' : 'template-ontlening.odt';
-//   var templatePath = path.join(__dirname, 'resources', templateName);
-//   // template file path input
-//   try {
-//     const result = await renderAsync(templatePath, data, options);
-//     const pathDirectory = data.generationInfo.path.trim().length === 0 ? '.' : data.generationInfo.path;
-//     let fileName = data.contractNumber.trim().length === 0 ? 'contract' : data.contractNumber;
-//     if (data.contractType == 'addendum') {
-//      const today = new Date();
-//      const formattedDate = formatDateYYYYMMDD(today);
-//      fileName += '-addendum-' + formattedDate;
-//     }
-//     fileName += '.' + extension;
-//     const filePath = path.join(pathDirectory, fileName);
-//     fs.writeFileSync(filePath, result);
-//     const fileUrl = url.pathToFileURL(filePath);
-//     log.info('path: ' + url.fileURLToPath(fileUrl));
-//     return fileUrl.href;
-//   } catch (err) {
-//     log.error('Error generating PDF:', err);
-//     throw err;
-//   }
-// }
-
-function formatDateYYYYMMDD(date) {
-  const year = date.getFullYear();
-  const month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed
-  const day = ('0' + date.getDate()).slice(-2); // Add leading zero if needed
-  return `${year}${month}${day}`;
 }
 
 /** Validates and formats phone numbers, according to standard Belgian formatting.
