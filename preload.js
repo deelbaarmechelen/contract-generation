@@ -23,5 +23,7 @@ contextBridge.exposeInMainWorld('openExternal', {
 })
 
 contextBridge.exposeInMainWorld('contractData', {
-	get: () => ipcRenderer.invoke('getContractData')
+	get: () => ipcRenderer.invoke('getContractData'),
+  documentProcessed: () => ipcRenderer.invoke('document-processed'),
+  documentError: (error) => ipcRenderer.invoke('document-processing-error', error)
 })

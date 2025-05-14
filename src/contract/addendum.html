@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="nl-BE">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Uitleningsovereenkomst Digibankatelier Mechelen</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'" />
+  <meta name="description" content="" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="icon" href="favicon.png">
+</head>
+
+<body>
+  <div class="page">
+    <div class="digibank-info">
+      <div class="left">
+        <img class="digibank-banner" src="digibanken-banner.jpg" alt="banner van de Digibank">
+      </div>
+      <div class="right">
+        <p>Digibankatelier Mechelen</p>
+        <p>Battelsesteenweg 48</p>
+        <p>2800 Mechelen</p>
+        <p>015 44 41 47</p>
+        <p>info@digibankmechelen.be</p>
+      </div>
+    </div>
+    <div class="identifiers top-margin">
+      <div class="left">Klantnummer: <span data-fill="clientNumber"></span></div>
+      <div class="right">Contractnummer: <span data-fill="contractNumber"></span></div>
+    </div>
+    <h1>Addendum voor een ontlening</h1>
+    <p>De ondergetekenden, zijnde het Digiatelier en de Ontlener, verklaren dat ze volgende wijzigingen brengen aan het contract met bovenstaand contract nummer:</p>
+    <section data-visibility="replacement">
+      <h2>Wijziging ontleende materialen</h2>
+      <table class="replacement-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th scope="col">Vorig toestel</td>
+            <th scope="col">Nieuw toestel</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Model</td>
+            <td data-fill="oldDeviceBrand,oldDeviceModel"></td>
+            <td data-fill="newDeviceBrand,newDeviceModel"></td>
+          </tr>
+          <tr>
+            <th scope="row">T-nummer</td>
+            <td data-fill="oldAssetTag"></td>
+            <td data-fill="newAssetTag"></td>
+          </tr>
+          <tr>
+            <th scope="row">Accessoires</td>
+            <td><span data-fill="oldIncludesCharger, oldIncludesMouse, oldIncludesSmartCardReader|mask(lader, muis, eID-lezer)|joincomma|capitalize"></span></td>
+            <td><span data-fill="newIncludesCharger, newIncludesMouse, newIncludesSmartCardReader|mask(lader, muis, eID-lezer)|joincomma|capitalize"></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><b></b>Reden wijziging:</b> <span data-fill="replacementReason"></span></p>
+    </section>
+    <section data-visibility="extension">
+      <h2>Wijziging einddatum</h2>
+      <div class="row">
+        <div class="left">Oude einddatum: <span data-fill="oldEndDate"></span></div>
+        <div class="right"> Nieuwe einddatum: <span data-fill="newEndDate"></span></div>
+      </div>
+    </section>
+    <section>
+      <p class="big-top-margin">Deze afspraken werden gemaakt op: <span data-fill="signatureDate|date"></span></p>
+      <div class="signatures">
+        <div class="left">Naam en handtekening<br>Verantwoordelijke Digibankatelier</div>
+        <div class="right">Naam en handtekening<br>Ontlener</div>
+      </div>
+    </section>
+  </div>
+  <script src="contract.js" type="module"></script>
+</body>
+</html>
