@@ -80,7 +80,7 @@ async function handleRenderPdf(event, data) {
         const pathDirectory = pdfPath.trim().length === 0 ? '.' : pdfPath;
 
         let fileName = data.contractNumber.trim().length === 0 ? 'contract' : data.contractNumber;
-        if (data.isExtension) {
+        if (data.contractType == 'addendum') {
           const today = new Date();
           const formattedDate = formatDateYYYYMMDD(today);
           fileName += '-addendum-' + formattedDate;
