@@ -1,6 +1,6 @@
-## Custom HTML attribute
+## Custom HTML attributes
 
-In contract.html, I made two custom HTML attribute, to avoid having to hardcode what data goes in what field and when certain elements are visible. These are:
+In contract.html, I made two custom HTML attributes, to avoid having to hardcode what data goes in what field and when certain elements are visible. These are:
 
 * `data-visibility`: Determines whether an element should be visible depending on data from form.
 * `data-fill`: Automatically fills content of field with data from form.
