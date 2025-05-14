@@ -29,7 +29,6 @@ export function testFill() {
 
 	form.referrer.value = "Sinterklaas";
 
-	form.contractNumber.value = "C-B-25-100000";
 	form.clientNumber.value = "1000001";
 
 	form.assetTag.value = "PC990200";
@@ -42,10 +41,12 @@ export function testFill() {
 	buttons.autoFill.startDate.click();
 
 	if (form.contractType.value == "non-paying") {
+		form.contractNumber.value = "C-NB-25-100000";
 		form.uitpasNumber.value = "1111111111111";
 		buttons.autoFill.endDate.click();
 		form.workshopDate.value = dateTimeLocalStr(new Date());
 	} else if (form.contractType.value == "paying") {
+		form.contractNumber.value = "C-B-25-100001";
 		const startDate = form.startDate.valueAsDate;
 		form.endDate.valueAsDate = new Date(startDate.getUTCFullYear() + 1, startDate.getMonth(), startDate.getDate());
 		buttons.autoFill.structuredCommunication.click();
@@ -54,6 +55,7 @@ export function testFill() {
 		buttons.autoFill.circleValue.click();
 		form.advancePayment.value = "€ 50";
 	} else if (form.contractType.value == "addendum") {
+		form.contractNumber.value = "C-B-25-100002";
 		form.replacement.checked = true;
 		form.extension.checked = true;
 
