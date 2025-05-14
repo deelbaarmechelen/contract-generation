@@ -53,6 +53,10 @@ formatterRegister.register("checkbox", ([toFormat]) => {
 });
 
 formatterRegister.register("address", ([streetName, houseNumber, boxNumber, postalCode, municipality, country]) => {
+  if (!streetName && !municipality) {
+    return '';
+  }
+
 	let streetLine = '';
 	streetLine += streetName;
 	streetLine += (streetLine.length == 0 || houseNumber.length == 0) ? '' : ' ';
