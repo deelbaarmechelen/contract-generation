@@ -1,5 +1,5 @@
 :root {
-  --padding: .1em;
+  --padding: .15em;
   --page-margin: 2cm;
   --margin: .5em;
   --margin-tight: .2em;
@@ -121,9 +121,10 @@ h1 {
 h2 {
   font-size: 12pt;
   text-transform: uppercase;
+  margin: calc(var(--margin) * 1.33) 0 var(--margin) 0;
 }
 
-p, h2, ul, ol {
+p, ul, ol {
   margin: var(--margin) 0;
 }
 
