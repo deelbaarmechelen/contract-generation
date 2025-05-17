@@ -370,7 +370,8 @@
         </div>
       </fieldset>
       <fieldset class="fieldset hidden">
-        <legend>Contractgegevens</legend>
+        <legend class="addendum">Addendumgegevens</legend>
+        <legend class="non-paying paying">Contractgegevens</legend>
         <fieldset class="fieldsubset">
           <div class="field-box">
             <label for="client-number">Klantnummer</label>
@@ -415,6 +416,12 @@
             </div>
           </div>
         </fieldset>
+        <div class="field-box payment-field">
+          <label for="monthly-payment">Opmerking</label>
+          <div class="field-box-inner">
+            <input id="comment" type="text" name="comment">
+          </div>
+        </div>
       </fieldset>
       <fieldset class="fieldset paying hidden">
         <legend>Betaalgegevens</legend>
