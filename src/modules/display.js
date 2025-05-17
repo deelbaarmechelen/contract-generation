@@ -41,8 +41,8 @@ function changeContractType() {
 	const anyChecked = payingChecked || nonPayingChecked || addendumChecked;
 
 	showSwitch(anyChecked, buttons.submit, resetInstruction, ...fieldsets, ...instructionTextElements);
-	showSwitch(false, ...payingElements, ...nonPayingElements, ...addendumElements);
 
+	showSwitch(false, ...payingElements, ...nonPayingElements, ...addendumElements);
 	if (payingChecked) {
 		showSwitch(true, ...payingElements);
 	} else if (nonPayingChecked) {
