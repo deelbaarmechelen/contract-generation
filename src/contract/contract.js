@@ -1,5 +1,5 @@
-import * as visibility from "./modules/visibility.js";
-import * as filler from "./modules/filler.js";
+import * as visibility from "../modules/visibility.js";
+import * as filler from "../modules/filler.js";
 
 window.addEventListener("load", async () => {
   try {

@@ -42,17 +42,17 @@
       <li>E-mailadres: <span data-fill="email"></span></li>
     </ul>
     </section>
-    <section data-visibility="contractType=non-paying">
+    <section data-visible="contractType=non-paying">
       <h2>Contract informatie</h2>
       <ul>
-        <li data-visibility="!uitpasException">UiTPAS-nummer: <span data-fill="uitpasNumber"></span></li>
+        <li data-visible="!uitpasException">UiTPAS-nummer: <span data-fill="uitpasNumber"></span></li>
         <li>Datum van gratis opleiding: <span data-fill="workshopDate|datetime"></span></li>
       </ul>
-      <p data-visibility="!workshopException !workshopExceptionPriorCustomer" class="warning">Deelname aan de gratis opleiding is verplicht.</p>
-      <p data-visibility="workshopException">Ontlener is vrijgesteld van de voorwaarde aan de gratis opleiding deel te nemen door het afleggen van een vaardigheidstest.</p>
-      <p data-visibility="workshopExceptionPriorCustomer !workshopException">Ontlener is vrijgesteld van de voorwaarde aan de gratis opleiding deel te nemen omdat deze een terugkerende klant is.</p>
+      <p data-visible="!workshopException !workshopExceptionPriorCustomer" class="warning">Deelname aan de gratis opleiding is verplicht.</p>
+      <p data-visible="workshopException">Ontlener is vrijgesteld van de voorwaarde aan de gratis opleiding deel te nemen door het afleggen van een vaardigheidstest.</p>
+      <p data-visible="workshopExceptionPriorCustomer !workshopException">Ontlener is vrijgesteld van de voorwaarde aan de gratis opleiding deel te nemen omdat deze een terugkerende klant is.</p>
     </section>
-    <section data-visibility="contractType=paying">
+    <section data-visible="contractType=paying">
       <h2>Betalingsinformatie</h2>
       <ul>
         <li>Maandelijks verschuldigde bedrag: <span data-fill="monthlyPayment|euro"></span></li>
@@ -85,16 +85,20 @@
       <div class="right"><ul class="no-margin"><li>Einddatum: <span data-fill="endDate|date"></span></li></ul></div>
       </div>
     </section>
+    <section data-visible="comment">
+      <h2>Opmerking</h2>
+      <p data-fill="comment"></p>
+    </section>
     <section>
       <h2>Voorwaarden en afspraken</h2>
       <p>De ondergetekenden, zijnde het Digiatelier en de Ontlener, gaan akkoord:</p>
       <ul>
         <li>De Ontlener is minimaal 18 jaar oud bij het tekenen van de overeenkomst.</li>
-        <li data-visibility="contractType=non-paying !workshopException !workshopExceptionPriorCustomer">De Ontlener neemt deel aan een gratis opleiding digitale vaardigheden.</li>
-        <li data-visibility="contractType=non-paying">De Ontlener ontleent het toestel voor een periode van maximaal een jaar.</li>
-        <li data-visibility="contractType=paying">De Ontlener ontleent het toestel voor een periode van minimaal een maand.</li>
-        <li data-visibility="contractType=non-paying !uitpasException">De Ontlener is inwoner van de gemeente Mechelen en heeft een UiTpas met kansenstatuut.</li>
-        <li data-visibility="contractType=non-paying uitpasException">De Ontlener heeft bijzondere toelating gekregen van de leidinggevenden van de Digibanken Mechelen bij het Sociaal Huis Mechelen.</li>
+        <li data-visible="contractType=non-paying !workshopException !workshopExceptionPriorCustomer">De Ontlener neemt deel aan een gratis opleiding digitale vaardigheden.</li>
+        <li data-visible="contractType=non-paying">De Ontlener ontleent het toestel voor een periode van maximaal een jaar.</li>
+        <li data-visible="contractType=paying">De Ontlener ontleent het toestel voor een periode van minimaal een maand.</li>
+        <li data-visible="contractType=non-paying !uitpasException">De Ontlener is inwoner van de gemeente Mechelen en heeft een UiTpas met kansenstatuut.</li>
+        <li data-visible="contractType=non-paying uitpasException">De Ontlener heeft bijzondere toelating gekregen van de leidinggevenden van de Digibanken Mechelen bij het Sociaal Huis Mechelen.</li>
         <li>Het ontleende toestel is en blijft eigendom van het Digibankatelier.</li>
         <li>De Ontlener geeft toestemming om zijn gegevens te bewaren in functie van de ontlening. De Ontlener en het Digibankatelier houden deze gegevens accuraat.</li>
         <li>De Ontlener draagt zorg voor het apparaat, en <b>eet of drinkt niet</b> tijdens het gebruikt hiervan.</li>
@@ -105,7 +109,7 @@
           </ul>
         </li>
         <li>De Ontlener meldt schade of defect zo vlug als mogelijk aan het Digibankatelier.</li>
-        <li data-visibility="contractType=paying">Betalingen:
+        <li data-visible="contractType=paying">Betalingen:
           <ul>
             <li>De Ontlener betaalt het jaarlijkse bedrag als deze meteen een ontlening voor een jaar aangaat, anders betaalt deze het maandelijkse bedrag.</li>
             <li>De Ontlener betaalt de afgesproken cirkelwaarde. Bij het binnenbrengen van het apparaat krijgt de Ontlener de cirkelwaarde terug.</li>

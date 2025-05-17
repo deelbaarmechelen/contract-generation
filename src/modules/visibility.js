@@ -1,3 +1,7 @@
+/** Manages visibility of elements in printed contracts.
+ * Implements a custom HTML attribute data-visible
+ */
+
 function defaultAtomParser(atom) {
   if (atom == "true") {
     return true;
@@ -141,12 +145,12 @@ function showSwitch(condition, ...elements) {
 }
 
 export function checkVisibility(data) {
-  const elementsWithVisibility = document.querySelectorAll("[data-visibility]");
+  const elementsWithVisibility = document.querySelectorAll("[data-visible]");
 
   const visibilityParser = new BoolAlg(dataParserFactory(data));
 
   for (const el of elementsWithVisibility) {
-      const visibility = visibilityParser.parse(el.getAttribute("data-visibility"));
+      const visibility = visibilityParser.parse(el.getAttribute("data-visible"));
       showSwitch(visibility, el);
   }
 }

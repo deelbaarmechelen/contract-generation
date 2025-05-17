@@ -31,8 +31,8 @@
       <div class="right">Contractnummer: <span data-fill="contractNumber"></span></div>
     </div>
     <h1>Addendum voor een ontlening</h1>
-    <p>De ondergetekenden, zijnde het Digiatelier en de Ontlener, verklaren dat ze volgende wijzigingen brengen aan het contract met bovenstaand contract nummer:</p>
-    <section data-visibility="replacement">
+    <p>De ondergetekenden, zijnde het Digiatelier en de Ontlener, verklaren dat ze volgende wijzigingen brengen aan het contract met bovenstaand contractnummer:</p>
+    <section data-visible="replacement">
       <h2>Wijziging ontleende materialen</h2>
       <table class="replacement-table">
         <thead>
@@ -62,12 +62,16 @@
       </table>
       <p><b></b>Reden wijziging:</b> <span data-fill="replacementReason"></span></p>
     </section>
-    <section data-visibility="extension">
+    <section data-visible="extension">
       <h2>Wijziging einddatum</h2>
       <div class="row">
         <div class="left">Oude einddatum: <span data-fill="oldEndDate"></span></div>
         <div class="right"> Nieuwe einddatum: <span data-fill="newEndDate"></span></div>
       </div>
+    </section>
+    <section data-visible="comment">
+      <h2>Opmerking</h2>
+      <p data-fill="comment"></p>
     </section>
     <section>
       <p class="big-top-margin">Deze afspraken werden gemaakt op: <span data-fill="signatureDate|date"></span></p>
