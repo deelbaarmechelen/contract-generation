@@ -1,7 +1,6 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const https = require('https');
 const path = require('path');
-const converter = require('./node_modules/carbone/lib/converter');
 //const converter = require('./carbone-converter.cjs');
 const log = require('electron-log');
 const fs = require('node:fs');
@@ -262,21 +261,4 @@ app.whenReady().then(() => {
     log.info('activate event triggered');
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
-});
-
-app.on('window-all-closed', () => {
-  // FIXME: when converting to PDF, a 'busy' error is thrown at exit (probably from libreoffice?)
-  //process.exit(); // to kill automatically LibreOffice workers
-
-  if (process.platform !== 'darwin') {
-    try {
-      converter.exit(() => {
-        log.info('Carbone converter exited');
-        log.info('Quitting contract generator');
-        app.quit();
-      });
-    } catch (err) {
-      log.error('Error closing Carbone:', err);
-    }
-  }
 });
