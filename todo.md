@@ -19,19 +19,17 @@ Done:
 - Add addendums for extension and replacement.
 - Find better way to deal with repeat customers. (may involve light company policy change)
 - Validate API key is available in distributable -> not the case
-
-Necessary:
-- Show birthDate on contract
-- Detect if structured communication is empty, give different message
 - Find better way to deal with repeat customers. (may involve light company policy change)
-- Clarify meaning of advance payment to user
-- Add final screen with reminders and links to Beego + Digisnacks
-- Field 'organisation'
 - Fix text on exceptions
+- Show birthDate on contract
 - Make signaturedate more explicit on addendum
 - Fix weird font in addendum on Windows 
-- Clarify meaning of advance payment to user (exclusief cirkelwaarde)
 - Free comment field
+- Add final screen with reminders and links to Beego + Digisnacks
+
+Necessary:
+
+- Field 'organisation'
 
 Luxuries:
 
