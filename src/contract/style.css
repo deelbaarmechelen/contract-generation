@@ -1,7 +1,7 @@
 :root {
   --padding: .15em;
   --page-margin: 2cm;
-  --margin: .5em;
+  --margin: .3em;
   --margin-tight: .2em;
   --margin-list: .25em;
 }
@@ -154,4 +154,8 @@ li {
 
 .warning {
   color: red;
+}
+
+.bold {
+  font-weight: bold;
 }
