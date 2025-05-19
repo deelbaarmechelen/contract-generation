@@ -29,7 +29,7 @@ async function parseFillAttr(data, fillAttr) {
     values = (typeof result === 'string' || result instanceof String) ? [result] : result;
   }
 
-  return values.join(' ');
+  return values.join(' ').trim();
 }
 
 export async function fillFields(data) {
