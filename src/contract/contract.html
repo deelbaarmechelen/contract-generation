@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="nl-BE">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Uitleningsovereenkomst Digibankatelier Mechelen</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'" />
+  <meta name="description" content="" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="icon" href="favicon.png">
+</head>
+
+<body>
+  <div class="page"><table>
+    <tbody><tr><td>
+      <div class="digibank-info">
+        <div class="left">
+          <img class="digibank-banner" src="digibanken-banner.jpg" alt="banner van de Digibank">
+        </div>
+        <div class="right">
+          <p>Digibankatelier Mechelen</p>
+          <p>Battelsesteenweg 48</p>
+          <p>2800 Mechelen</p>
+          <p>015 44 41 47</p>
+          <p>info@digibankmechelen.be</p>
+        </div>
+      </div>
+      <div class="identifiers top-margin">
+        <div class="left">Klantnummer: <span data-fill="clientNumber"></span></div>
+        <div class="right">Contractnummer: <span data-fill="contractNumber"></span></div>
+      </div>
+      <h1>Overeenkomst voor een <span id="contract-type"></span> ontlening</h1>
+      <p>De ondergetekenden, zijnde het Digiatelier en de Ontlener, verklaren het volgende overeen te komen:</p>
+      <section>
+      <h2>Gegevens ontlener</h2>
+      <ul>
+        <li>Voornaam en famillienaam: <span data-fill="firstName,lastName"></span></li>
+        <li>Geboortedatum: <span data-fill="birthDate|date"></span></li>
+        <li>Adres: <span data-fill="streetName,houseNumber,boxNumber,postalCode,municipality,country|address"></span></li>
+        <li class="big-top-margin">Telefoonnummer: <span data-fill="phoneNumber|telephone"></span></li>
+        <li>E-mailadres: <span data-fill="email"></span></li>
+      </ul>
+      </section>
+      <section data-visible="contractType=non-paying">
+        <h2>Contractinformatie</h2>
+        <p><span data-visible="!uitpasException">☑ </span><span data-visible="uitpasException">☐ </span>GRATIS ONTLENING MET EEN UITPAS</p>
+        <ul>
+          <li>UiTPAS-nummer: <span data-fill="uitpasNumber"></span></li>
+        </ul>
+        <p><span data-visible="!uitpasException">☐ </span><span data-visible="uitpasException">☑ </span> DOORVERWEZEN DOOR HET SOCIAAL HUIS</p>
+        <p data-visible="!workshopException !workshopExceptionPriorCustomer" class="warning">Deelname aan een gratis opleiding is verplicht.</p>
+        <p data-visible="workshopException">Ontlener is vrijgesteld van de voorwaarde aan de gratis opleiding deel te nemen door het afleggen van een vaardigheidstest.</p>
+        <p data-visible="workshopExceptionPriorCustomer !workshopException">Ontlener is vrijgesteld van de voorwaarde aan de gratis opleiding deel te nemen omdat deze een terugkerende klant is.</p>
+        <ul>
+          <li>De eerstvolgende opleidingsdatum: <span data-fill="workshopDate|datetime"></span></li>
+        </ul>
+      </section>
+      <section data-visible="contractType=paying">
+        <h2>Betalingsinformatie</h2>
+        <p>De ontlener betaalt een bedrag van <span data-fill="monthlyPayment|euro"></span> per maand, of <span data-fill="yearlyPayment|euro"></span> per jaar indien de ontlener onmiddelijk voor dit jaar betaald</p>
+        <p><b>REKENINGNUMMER:</b> BE40 7330 6948 4463</p>
+        <p>GESTRUCTUREERDE MEDEDELING: <span class="warning" data-fill="structuredCommunication"></span></p>
+        <p>REEDS VOLDAAN BEDRAG IN DE WINKEL: <span data-fill="advancePayment|euro"></span></p>
+        <p><b><span data-fill="circleValue|euro"></span> CIRKELWAARDE</b> TE BETALEN</p>
+        <p class="warning">2 weken voor de afloop van het contract wordt de klant gecontacteerd om het toestel terug te brengen of het contract te verlengen. Bij geen reactie wordt het contract automatisch stilzwijgend verlengd voor de duur waarvoor het contract oorspronkelijk is opgesteld</p>
+      </section>
+      <section>
+        <h2>Doorverwijzer</h2>
+        <p>Doorverwijzer: <span data-fill="referrer"></span></p>
+      </section>
+      <section>
+        <h2>Wat wordt er ontleend:</h2>
+        <span class="bold" data-fill="deviceType|fulldevicename"></span>
+        <ul>
+          <li>Merk: <span data-fill="deviceBrand,deviceModel"></span></li>
+          <li>T-nummer: <span data-fill="assetTag"></span></li>
+          <li>Accessoires: <span data-fill="includesCharger|checkbox"></span> Inclusief lader<span data-visibility="contractType=non-paying"> ; <span data-fill="includesMouse|checkbox"></span> Inclusief muis ; <span data-fill="includesSmartCardReader|checkbox"></span> Inclusief eID lezer</span></li>
+        </ul>
+      </section>
+      <section>
+        <h2>Data:</h2>
+        <p>Datum waarop de ontlener het toestel meekrijgt: <span data-fill="startDate|date"></span></span></p>
+        <p>Einddatum van de ontlening: <span data-fill="endDate|date" class="warning"></span></span></p>
+      </section>
+      <section data-visible="comment">
+        <h2>Opmerking</h2>
+        <p data-fill="comment"></p>
+      </section>
+      <section>
+        <h2>Voorwaarden en afspraken</h2>
+        <p>De ondergetekenden, zijnde het Digiatelier en de Ontlener, gaan akkoord:</p>
+        <ul>
+          <li>De Ontlener ontleent het toestel voor minimaal <b>1 maand</b></li>
+          <li data-visible="contractType=non-paying">Een van de volgende twee zaken is waar op het moment van het tekenen van de overeenkomst:
+            <ul>
+              <li>De Ontlener is inwoner van de gemeente Mechelen en heeft een UiTpas met kansenstatuut.</li>
+              <li>De Ontlener heeft bijzondere toelating gekregen van de leidinggevenden van de Digibanken Mechelen bij het Sociaal Huis Mechelen.</li>
+            </ul>
+          </li>
+          <li>Het ontleende toestel is en blijft eigendom van het Digibankatelier.</li>
+          <li>De Ontlener geeft toestemming om zijn gegevens te bewaren in functie van de ontlening.</li>
+          <li>De Ontlener <b>draagt zorg</b> voor het apparaat, en <b>eet of drinkt niet</b> tijdens het gebruikt hiervan.</li>
+          <li><b>Diefstal:</b>
+            <ul>
+              <li>De Ontlener meldt diefstal <b>onmiddellijk</b> aan de verantwoordelijke van de Digibank.</li>
+              <li>De Ontlener doet aangifte bij de politie en bezorgt <b>een kopie van het Proces-Verbaal (PV)</b> aan de Digibank.</li>
+            </ul>
+          </li>
+          <li><b>Schade of defect:</b>
+            <ul>
+              <li>De Ontlener meldt schade of defect zo vlug als mogelijk aan het Digibankatelier.</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <p class="big-top-margin bold">Deze afspraken werden gemaakt op: <span data-fill="signatureDate|date"></span></p>
+        <div class="signatures">
+          <div class="left bold">Naam en handtekening<br>Verantwoordelijke Digibankatelier</div>
+          <div class="right bold">Naam en handtekening<br>Ontlener</div>
+        </div>
+      </section>
+    </td></tr></tbody>
+    <tfoot><tr><td><footer class="page-footer">
+      <img src="mechelen.png">
+      <img src="ecoso.png">
+      <img src="eu.png">
+    </footer></td></tr></tfoot>
+  </table></div>
+  <script src="contract.js" type="module"></script>
+</body>
+</html>

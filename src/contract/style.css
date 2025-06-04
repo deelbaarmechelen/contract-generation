@@ -1,0 +1,201 @@
+:root {
+  --padding: .15em;
+  --page-margin: 2cm;
+  --margin: .3em;
+  --margin-tight: .2em;
+  --margin-list: .25em;
+  --footer-height: 3em;
+}
+
+@page {
+  size: A4;
+  margin: var(--page-margin);
+}
+
+@media print {
+  body, html, .page {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.page > table {
+  border-spacing: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12pt;
+  word-break: break-word;
+}
+
+[data-fill] {
+  font-family: Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+span[data-fill]:empty {
+  display: inline-block;
+  width: 4em; 
+  border-width: 0 0 1px 0;
+  border-color: black;
+  border-style: dashed;
+}
+
+@media screen {
+  body {
+    background-color: gray;
+  }
+
+  .page {
+    background-color: white;
+    width: 210mm;
+    min-height: 297mm;
+    padding: var(--page-margin);
+    margin: 1.25cm auto;
+    box-sizing: border-box;
+  }
+}
+
+section {	
+  break-inside: avoid-page;
+}
+
+.page > table > tfoot {
+  height: calc(var(--footer-height) + var(--margin));
+}
+
+@media print {
+  .page > table > tfoot > tr > td > footer {
+    position: fixed;
+    bottom: 0;
+  }
+}
+
+.page > table > tfoot > tr > td > footer {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.page > table > tfoot > tr > td > footer > img {
+  height: var(--footer-height);
+  width: auto;
+}
+
+.hidden {
+	display: none;
+}
+
+.left {
+  flex: 1;
+  margin: 0;
+}
+
+.right {
+  flex: 1;
+  margin: 0;
+}
+
+.digibank-info .left {
+  flex: 1;
+}
+
+.digibank-info .left img {
+  width: 100%;
+  margin: 0 0 0 0;
+}
+
+.digibank-info .right {
+  margin: 0 var(--margin);
+}
+
+.digibank-info .right p {
+  margin: 0 0 0 0;
+}
+
+.digibank-info, .identifiers, .row {
+  display: flex;
+  align-items: center;
+}
+
+.replacement-table {
+  border-collapse: collapse;
+  empty-cells: hide;
+
+  width: 100%;
+}
+
+.replacement-table td, .replacement-table th {
+  border: solid;
+  border-width: 1px;
+
+  padding: 4px;
+}
+
+.replacement-table th:empty {
+  border: 0;
+}
+
+.signatures {
+  display: flex;
+  align-items: top;
+  height: 9em;
+  padding: var(--padding) 0;
+
+  border-width: 1px 0 1px 0;
+  border-style: solid;
+}
+
+h1 {
+  text-align: center;
+  margin: var(--margin-tight) 0 var(--margin) 0;
+  padding: var(--padding) 0;
+  font-size: 20pt;
+  text-transform: uppercase;
+
+  border-width: 1px 0 1px 0;
+  border-style: solid;
+}
+
+h2 {
+  font-size: 12pt;
+  text-transform: uppercase;
+  margin: calc(var(--margin) * 1.33) 0 var(--margin) 0;
+}
+
+p, ul, ol {
+  margin: var(--margin) 0;
+}
+
+.no-margin, .no-margin li {
+  margin: 0;
+}
+
+ul, ol {
+  padding-left: 1.5rem;
+}
+
+li {
+  margin: var(--margin-list) 0;
+}
+
+.page {
+  break-after: page;
+}
+
+.top-margin {
+  margin-top: var(--margin);
+}
+
+.big-top-margin {
+  margin-top: calc(var(--margin) * 1.33);
+}
+
+.warning {
+  color: red;
+}
+
+.bold {
+  font-weight: bold;
+}

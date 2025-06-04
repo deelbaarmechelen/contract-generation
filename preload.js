@@ -17,3 +17,13 @@ contextBridge.exposeInMainWorld('inventoryAPI', {
 contextBridge.exposeInMainWorld('libphonenumber', {
 	formatPhoneNumber: (data) => ipcRenderer.invoke('formatPhoneNumber', data)
 })
+
+contextBridge.exposeInMainWorld('openExternal', {
+	openExternal: (url) => ipcRenderer.invoke('openExternal', url)
+})
+
+contextBridge.exposeInMainWorld('contractData', {
+	get: () => ipcRenderer.invoke('getContractData'),
+  documentProcessed: () => ipcRenderer.invoke('document-processed'),
+  documentError: (error) => ipcRenderer.invoke('document-processing-error', error)
+})
