@@ -88,7 +88,7 @@ async function handleRenderPdf(event, data) {
         fileName += '.' + extension;
         const filePath = path.join(pathDirectory, fileName);
 
-        const pdfData = await win.webContents.printToPDF({});
+        const pdfData = await win.webContents.printToPDF({"pageSize": "A4"});
         await fs.promises.writeFile(filePath, pdfData);
 
         console.log(`Wrote PDF successfully to ${filePath}`);
