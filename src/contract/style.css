@@ -25,6 +25,7 @@ span[data-fill]:empty {
   display: inline-block;
   width: 4em; 
   border-width: 0 0 1px 0;
+  border-color: black;
   border-style: dashed;
 }
 
