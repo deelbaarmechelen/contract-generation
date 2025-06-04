@@ -27,10 +27,6 @@ Done:
 - Free comment field
 - Add final screen with reminders and links to Beego + Digisnacks
 
-Necessary:
+Todo:
 
-- Field 'organisation'
-
-Luxuries:
-
-- Add retrieval of contractnumber from SharePoint
+- Add retrieval of personal data from eID
