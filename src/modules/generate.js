@@ -13,9 +13,9 @@ function showFinalPrompt() {
 				}
 			},
 			{
-				text: "\u{1F517}\uFE0E Digisnacks",
+				text: "\u{1F517}\uFE0E Lend Engine",
 				onClick() {
-					window.openExternal.openExternal(linkUrls['digisnacks']);
+					window.openExternal.openExternal(linkUrls['lendengine']);
 				}
 			},
 			{

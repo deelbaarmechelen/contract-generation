@@ -2,7 +2,7 @@ export const linkUrls = {
 	contractNumber: "https://ateliermechelen-my.sharepoint.com/:x:/g/personal/admin_ecoso_be/EY1ECrzfjhpFlSSEhrp-RiMBZT3pM4V3VRYmWebgMV8htA?e=91aeJl",
 	clientNumber: "https://inventaris.digibankmechelen.be/",
 	beego: "https://platform.digi-portaal.be/login",
-	digisnacks: "https://forms.office.com/pages/responsepage.aspx?id=k_fs9SkJW02pGE7dVSzQQLapRYTgZXBBlIkiK8uAtfxUODdUVTgySjNMSEpFVUZRWElMVDNFM0Y3RS4u"
+	lendengine: "https://shop.digibankmechelen.be/admin/"
 }
 
 export const deviceTypes = {
