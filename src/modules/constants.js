@@ -6,8 +6,8 @@ export const linkUrls = {
 }
 
 export const deviceTypes = {
-	"laptop-win-10": {
-		fullName: "Laptop (Windows 10)",
+	"laptop-linux": {
+		fullName: "Laptop (Linux)",
 		monthlyPayment: 10,
 		yearlyPayment: 100,
 		circleValue: 50
@@ -16,7 +16,7 @@ export const deviceTypes = {
 		fullName: "Laptop (Windows 11)",
 		monthlyPayment: 15,
 		yearlyPayment: 150,
-		circleValue: 75
+		circleValue: 50
 	}
 }
 
