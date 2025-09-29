@@ -4,6 +4,9 @@ const path = require('path');
 //const converter = require('./carbone-converter.cjs');
 const log = require('electron-log');
 const fs = require('node:fs');
+const Store = require('electron-store');
+
+const store = new Store();
 
 // Require `PhoneNumberFormat`.
 const PNF = require('google-libphonenumber').PhoneNumberFormat;
@@ -41,6 +44,10 @@ const createWindow = () => {
   // Open the DevTools.
   // win.webContents.openDevTools();
 };
+
+async function setSnipeApiKey(event, snipeitApiKey) {
+  store.set('snipeit-api-key', snipeitApiKey)
+}
 
 async function handleFileOpen() {
   const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory'] });
@@ -173,7 +180,7 @@ async function handleGetAsset(event, data) {
     }
   }
 
-  if (!process.env.INVENTORY_API_KEY) {
+  if (!store.has('snipeit-api-key')) {
     return {
       success: false,
       error: 'Please configure API key'
@@ -205,13 +212,13 @@ async function handleGetAsset(event, data) {
 function fetchInventoryData(assetTag) {
   return new Promise((resolve, reject) => {
     const options = {
-      hostname: process.env.INVENTORY_API_HOST,
+      hostname: "inventaris.digibankmechelen.be",
       path: '/api/v1/hardware/bytag/' + assetTag,
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + process.env.INVENTORY_API_KEY,
+        'Authorization': 'Bearer ' + store.get('snipeit-api-key'),
       }
     };
 
@@ -255,6 +262,7 @@ app.whenReady().then(() => {
   ipcMain.handle('formatPhoneNumber', formatPhoneNumber);
   ipcMain.handle('openExternal', openExternal);
   ipcMain.handle('getContractData', getContractData);
+  ipcMain.handle('setSnipeApiKey', setSnipeApiKey);
   createWindow();
 
   app.on('activate', () => {

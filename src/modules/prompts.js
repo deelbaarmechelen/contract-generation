@@ -38,6 +38,26 @@ function fillWarningBoxTable(validationReport) {
 	}
 }
 
+
+/**
+ * @typedef {Object} PromptConfig
+ * @property {Node[] | Node | String} content - 
+ * @property {PromptButtonConfig[]} [buttons=[]] - 
+ * @property {Function} [onShow] - Function called immediately after the prompt has been filled and before it is shown.
+ *   If the Prompt.show(...args) method is used, the args arguments of this method are passed into this function.  
+ * @property {Function} [onClose] - Function called immediately after the prompt has been hidden.
+ *   If the Prompt.close(...args) or Prompt.requestClose(...args) method is used, the args arguments of this method are passed into this function.  
+ * @property {Boolean} [canCancel=true] - Determines if it is possible to cancel through regular means, e.g. by pressing esc.
+ */
+
+/**
+ * @typedef {Object} PromptButtonConfig
+ * @property {String} name - Name attribute of button.
+ * @property {String} text - Determines the text displayed on the button.
+ * @property {Boolean} autofocus - Determines if the function is focused upon opening the prompt.
+ * @property {Function} onClick - Function called when button is clicked.
+ */
+
 export class Prompt {
 	#content;
 	buttons;
@@ -48,12 +68,16 @@ export class Prompt {
 	static #currentPrompt; 
 	static #nextPrompt; 
 
-	constructor(promptObject) {
-		this.content = promptObject.content;
-		this.buttons = promptObject.buttons ? promptObject.buttons : [];
-		this.onShow = promptObject.onShow;
-		this.onClose = promptObject.onClose;
-		this.canCancel = promptObject.canCancel != undefined ? promptObject.canCancel : true 
+	/**
+     * Create a prompt.
+     * @param {PromptConfig} promptConfig - Configuration object for prompt.
+     */
+	constructor(promptConfig) {
+		this.content = promptConfig.content;
+		this.buttons = promptConfig.buttons ? promptConfig.buttons : [];
+		this.onShow = promptConfig.onShow;
+		this.onClose = promptConfig.onClose;
+		this.canCancel = promptConfig.canCancel != undefined ? promptConfig.canCancel : true 
 	}
 
 	set onShow(x) {
@@ -140,7 +164,7 @@ export class Prompt {
 		Prompt.#currentPrompt = this;
 	}
 
-	static close() {
+	static close(...args) {
 		if (!Prompt.#currentPrompt) {
 			return
 		}
@@ -148,7 +172,7 @@ export class Prompt {
 		main.inert = false;
 	
 		if ( Prompt.#currentPrompt.onClose ) {
-			Prompt.#currentPrompt.onClose();
+			Prompt.#currentPrompt.onClose(...args);
 		}
 
 		Prompt.#currentPrompt = undefined;
@@ -159,9 +183,9 @@ export class Prompt {
 		}
 	}
 
-	static requestClose() {
+	static requestClose(...args) {
 		if (Prompt.#currentPrompt?.canCancel) {
-			Prompt.close();
+			Prompt.close(...args);
 		}
 	}
 
