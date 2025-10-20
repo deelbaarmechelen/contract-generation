@@ -7,8 +7,3 @@ To start application run:
 * npm install
 * npm start
 * npm run make (to build executable)
-
-Generating pdfs requires LibreOffice to be installed
-
-To run tests:
-* npx electron-mocha test/main.test.js
