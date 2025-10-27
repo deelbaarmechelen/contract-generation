@@ -165,17 +165,7 @@ function initChangedListener() {
 
 function initHyperlinks() {
 	buttons.link.clientNumber.addEventListener("click", () => {
-		let assetTag;
-		
-		if ( form.contractType.value == "addendum" ) {
-			if ( form.replacement.checked == true ) {
-				assetTag = form.oldAssetTag.value;
-			} 
-		} else {
-			assetTag = form.assetTag.value;
-		}
-
-		window.openExternal.openExternal(linkUrls["clientNumber"] + (assetTag ? "hardware/bytag?assetTag=" + assetTag : ""));
+		window.openExternal.openExternal(linkUrls["clientNumber"]);
 	})
 	buttons.link.contractNumber.addEventListener("click", () => {
 		window.openExternal.openExternal(linkUrls["contractNumber"]);
