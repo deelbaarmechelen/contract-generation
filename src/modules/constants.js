@@ -17,6 +17,12 @@ export const deviceTypes = {
 		monthlyPayment: 15,
 		yearlyPayment: 150,
 		circleValue: 50
+	},
+	"laptop-win-10": {
+		fullName: "Laptop (Windows 10)",
+		monthlyPayment: 10,
+		yearlyPayment: 100,
+		circleValue: 50
 	}
 }
 
