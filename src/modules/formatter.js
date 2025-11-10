@@ -128,3 +128,8 @@ formatterRegister.register("capitalize", async ([toFormat]) => {
   console.log(toFormat);
   return toFormat.charAt(0).toUpperCase() + toFormat.slice(1);
 });
+
+
+formatterRegister.register("iban", async ([toFormat]) => {
+  return await window.ibantools.formatIbanNumber(String(toFormat));
+});

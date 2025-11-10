@@ -50,6 +50,11 @@ export async function formatPhoneNumber(phoneNumber) {
 	return await window.libphonenumber.formatPhoneNumber(String(phoneNumber));
 }
 
+/** Formats a phone number. */
+export async function extractIbanNumber(ibanNumber) {
+	return await window.ibantools.extractIbanNumber(String(ibanNumber));
+}
+
 /** Checks if a date is passed, if so, formats it according to Flemish conventions, else, returns empty string.
  *  Short numeric date. */
 export function formatDate(date) {

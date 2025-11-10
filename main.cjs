@@ -13,6 +13,8 @@ const PNF = require('google-libphonenumber').PhoneNumberFormat;
 // Get an instance of `PhoneNumberUtil`.
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
+const ibantools = require('ibantools');
+
 require('dotenv').config();
 
 const debugging = false;
@@ -170,6 +172,18 @@ function formatPhoneNumber(e, rawPhoneNumber) {
   }
 }
 
+function extractIbanNumber(e, rawIbanNumber) {
+  return ibantools.extractIBAN(rawIbanNumber)
+}
+
+function formatIbanNumber(e, rawIbanNumber) {
+  let extraction = ibantools.extractIBAN(rawIbanNumber); 
+  if (!extraction.valid) {
+    return ""
+  }
+  return ibantools.friendlyFormatIBAN(extraction.iban)
+}
+
 async function handleGetAsset(event, data) {
   console.log('Fetching asset data for tag:', data.assetTag);
 
@@ -260,6 +274,8 @@ app.whenReady().then(() => {
   ipcMain.handle('generatePdf', handleRenderPdf);
   ipcMain.handle('getAsset', handleGetAsset);
   ipcMain.handle('formatPhoneNumber', formatPhoneNumber);
+  ipcMain.handle('extractIbanNumber', extractIbanNumber);
+  ipcMain.handle('formatIbanNumber', formatIbanNumber);
   ipcMain.handle('openExternal', openExternal);
   ipcMain.handle('getContractData', getContractData);
   ipcMain.handle('setSnipeApiKey', setSnipeApiKey);

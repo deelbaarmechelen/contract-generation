@@ -19,6 +19,11 @@ contextBridge.exposeInMainWorld('libphonenumber', {
 	formatPhoneNumber: (data) => ipcRenderer.invoke('formatPhoneNumber', data)
 })
 
+contextBridge.exposeInMainWorld('ibantools', {
+	extractIbanNumber: (data) => ipcRenderer.invoke('extractIbanNumber', data),
+	formatIbanNumber: (data) => ipcRenderer.invoke('formatIbanNumber', data)
+})
+
 contextBridge.exposeInMainWorld('openExternal', {
 	openExternal: (url) => ipcRenderer.invoke('openExternal', url)
 })

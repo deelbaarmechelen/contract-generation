@@ -1,6 +1,6 @@
 import { form } from "./formelements.js";
 import { fillErrorDiv } from "./display.js";
-import { getAge, formatPhoneNumber, isSameDay, euroStrToNum } from "./utility.js";
+import { getAge, formatPhoneNumber, extractIbanNumber, isSameDay, euroStrToNum } from "./utility.js";
 import { postalCodesMechelen, deviceTypes } from "./constants.js";
 
 /** Applies custom validity message to field if condition fails. */
@@ -145,6 +145,14 @@ const validate = {
 		customValidate(
 			form.structuredCommunication, digits.length < 12 || validChecksum === checksumProvided,
 			"Deze gestructureerde mededeling is niet geldig."
+		);
+	},
+
+	/** Validates structured communication. The last two digits are determined by the rest of the digits */
+	async ibanNumber () {
+		customValidate(
+			form.ibanNumber, !form.ibanNumber.value || (await extractIbanNumber(form.ibanNumber.value)).valid,
+			"Ongeldig IBAN-nummer."
 		);
 	}
 }

@@ -36,6 +36,7 @@
     "electron-log": "^5.4.0",
     "electron-squirrel-startup": "^1.0.1",
     "google-libphonenumber": "^3.2.40",
-    "electron-store": "^8.0.1"
+    "electron-store": "^8.0.1",
+    "ibantools": "^4.5.1"
   }
 }
