@@ -41,7 +41,7 @@ function calcStructuredCommunication() {
 
 //// Autofill function factories
 
-/** Function factory to create function that gets device brand and model based on assettag from Snipe-IT inventory. 
+/** Function factory to create function that gets device brand and model based on assettag from the Lend Engine inventory.
  * @param { HTMLElement } assetTagEl - HTML element with value property representing the assettag.
  * @param { HTMLElement } brandEl - HTML element with value property representing the brand.
  * @param { HTMLElement } modelEl - HTML element with value property representing the model.

@@ -22,6 +22,9 @@ require('dotenv').config();
 
 const debugging = false;
 
+/** Lend Engine instance the inventory lookup talks to. */
+const LENDENGINE_HOST = 'digi-mee.denideal.be';
+
 // Optional, initialize the logger for any renderer process
 log.initialize();
 
@@ -50,8 +53,8 @@ const createWindow = () => {
   // win.webContents.openDevTools();
 };
 
-async function setSnipeApiKey(event, snipeitApiKey) {
-  store.set('snipeit-api-key', snipeitApiKey)
+async function setSnipeApiKey(event, apiToken) {
+  store.set('lendengine-api-token', apiToken)
 }
 
 async function handleFileOpen() {
@@ -187,6 +190,21 @@ function formatIbanNumber(e, rawIbanNumber) {
   return ibantools.friendlyFormatIBAN(extraction.iban)
 }
 
+/** Lend Engine stores translatable strings as `{ "nl": "..." }` objects rather than
+ * plain strings. Picks the Dutch value, then any other locale, so a device with only
+ * an English name still fills in rather than rendering "[object Object]". */
+function localisedString(value) {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (value && typeof value === 'object') {
+    const candidates = [value.nl, ...Object.values(value)];
+    const found = candidates.find((v) => typeof v === 'string' && v.trim().length > 0);
+    return found || '';
+  }
+  return '';
+}
+
 async function handleGetAsset(event, data) {
   console.log('Fetching asset data for tag:', data.assetTag);
 
@@ -197,7 +215,7 @@ async function handleGetAsset(event, data) {
     }
   }
 
-  if (!store.has('snipeit-api-key')) {
+  if (!store.has('lendengine-api-token')) {
     return {
       success: false,
       error: 'Please configure API key'
@@ -205,15 +223,15 @@ async function handleGetAsset(event, data) {
   }
 
   return fetchInventoryData(data.assetTag)
-    .then((data) => {
-      console.log('Inventory data:', data);
+    .then((item) => {
+      console.log('Inventory data:', item);
       return {
         success: true,
         asset: {
-          asset_tag: data.asset_tag,
-          brand: data.manufacturer.name,
-          model: data.model_number,
-          serial: data.serial,
+          asset_tag: item.sku,
+          brand: item.brand || '',
+          model: localisedString(item.name),
+          serial: item.serial || '',
         }
       };
     })
@@ -226,16 +244,18 @@ async function handleGetAsset(event, data) {
     });
 }
 
+/** Looks an asset up in Lend Engine by its SKU (the asset tag printed on the device).
+ * The collection endpoint returns a Hydra collection, so a hit is `hydra:member[0]`
+ * and an unknown tag is an empty collection rather than a 404. */
 function fetchInventoryData(assetTag) {
   return new Promise((resolve, reject) => {
     const options = {
-      hostname: "inventaris.digibankmechelen.be",
-      path: '/api/v1/hardware/bytag/' + assetTag,
+      hostname: LENDENGINE_HOST,
+      path: '/api/2/items?sku=' + encodeURIComponent(assetTag),
       method: 'GET',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + store.get('snipeit-api-key'),
+        'Accept': 'application/ld+json',
+        'Authorization': 'Bearer ' + store.get('lendengine-api-token'),
       }
     };
 
@@ -249,13 +269,31 @@ function fetchInventoryData(assetTag) {
 
       // The whole response has been received.
       res.on('end', () => {
-        if (res.statusCode === 200) {
-          resolve(JSON.parse(data));
-        } else if (res.statusCode === 404) {
-          reject(new Error('Asset not found'));
-        } else {
-          reject(new Error(`Request failed with status code ${res.statusCode}`));
+        if (res.statusCode === 401 || res.statusCode === 403) {
+          reject(new Error('API key rejected. It may have expired.'));
+          return;
         }
+
+        if (res.statusCode !== 200) {
+          reject(new Error(`Request failed with status code ${res.statusCode}`));
+          return;
+        }
+
+        let parsed;
+        try {
+          parsed = JSON.parse(data);
+        } catch {
+          reject(new Error('Could not read the response from Lend Engine'));
+          return;
+        }
+
+        const members = parsed['hydra:member'] || [];
+        if (members.length === 0) {
+          reject(new Error('Asset not found'));
+          return;
+        }
+
+        resolve(members[0]);
       });
     });
 

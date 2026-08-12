@@ -61,6 +61,73 @@ describe('IBAN formatting', function () {
 	});
 });
 
+describe('Lend Engine asset lookup', function () {
+	// Mirrors the response handling in main.cjs. The sample below is a real
+	// (trimmed) response from the Digi-Mee Lend Engine instance.
+	function localisedString(value) {
+		if (typeof value === 'string') {
+			return value;
+		}
+		if (value && typeof value === 'object') {
+			const candidates = [value.nl, ...Object.values(value)];
+			const found = candidates.find((v) => typeof v === 'string' && v.trim().length > 0);
+			return found || '';
+		}
+		return '';
+	}
+
+	function toAsset(parsed) {
+		const members = parsed['hydra:member'] || [];
+		if (members.length === 0) {
+			return null;
+		}
+		const item = members[0];
+		return {
+			asset_tag: item.sku,
+			brand: item.brand || '',
+			model: localisedString(item.name),
+			serial: item.serial || '',
+		};
+	}
+
+	const sampleResponse = {
+		'hydra:member': [{
+			id: 532,
+			sku: 'PC250213',
+			name: { nl: 'DELL Latitude 5400 Win10' },
+			brand: 'Dell',
+			serial: '77TGP13',
+		}],
+		'hydra:totalItems': 1,
+	};
+
+	it('maps a real Lend Engine item onto the asset shape the form expects', function () {
+		expect(toAsset(sampleResponse)).to.deep.equal({
+			asset_tag: 'PC250213',
+			brand: 'Dell',
+			model: 'DELL Latitude 5400 Win10',
+			serial: '77TGP13',
+		});
+	});
+
+	it('treats an empty collection as "not found"', function () {
+		expect(toAsset({ 'hydra:member': [] })).to.equal(null);
+	});
+
+	it('unwraps the localised name object rather than stringifying it', function () {
+		expect(localisedString({ nl: 'Laptop' })).to.equal('Laptop');
+	});
+
+	it('falls back to another locale when Dutch is missing', function () {
+		expect(localisedString({ nl: null, en: 'English only' })).to.equal('English only');
+	});
+
+	it('returns an empty string when no name is set', function () {
+		expect(localisedString({ nl: null })).to.equal('');
+		expect(localisedString(undefined)).to.equal('');
+	});
+});
+
 describe('openExternal protocol guard', function () {
 	// Mirrors the guard in main.cjs: only http(s) may reach the OS handler.
 	let opened;

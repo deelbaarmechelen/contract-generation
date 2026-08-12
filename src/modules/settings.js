@@ -5,7 +5,7 @@ let apiKeyPrompt = new Prompt({
 		let p1 = document.createElement("p");
 		p1.innerText = "U heeft het API-key beheer venster geopend.";
 		let p2 = document.createElement("p");
-		p2.innerText = "Gelieve de API key voor Snipe-IT in te geven:";
+		p2.innerText = "Gelieve de API key voor Lend Engine in te geven:";
 		let apiKeyInput = document.createElement("input");
         apiKeyInput.id = "api-key-input";
         return [p1, p2, apiKeyInput]
