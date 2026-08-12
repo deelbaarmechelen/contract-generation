@@ -23,11 +23,6 @@ export const promptButtons = document.getElementById("prompt-buttons");
 export const buttons = {
 	submit: document.getElementById("submit"),
 
-	link: {
-		clientNumber: document.getElementById("link-client-number"),
-		contractNumber: document.getElementById("link-contract-number"),
-	},
-
 	autoFill: {
 		signatureDate: document.getElementById("auto-signature-date"),
 		startDate: document.getElementById("auto-start-date"),

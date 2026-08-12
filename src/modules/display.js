@@ -1,6 +1,5 @@
 import { form, buttons, resetInstruction, fieldsets, instructionTextElements, payingElements, nonPayingElements, addendumElements, fsExtension, fsReplacementNew, fsReplacementOld, fsReplacementReason } from "./formelements.js";
 import { validateAll } from "./validation.js";
-import { linkUrls } from "./constants.js";
 
 
 /** Checks condition and disables elements only if false. 
@@ -169,22 +168,11 @@ function initChangedListener() {
 	}
 }
 
-function initHyperlinks() {
-	buttons.link.clientNumber.addEventListener("click", () => {
-		window.openExternal.openExternal(linkUrls["clientNumber"]);
-	})
-	buttons.link.contractNumber.addEventListener("click", () => {
-		window.openExternal.openExternal(linkUrls["contractNumber"]);
-	})
-	
-}
-
 /** Initializes all display listeners. */
 export function initDisplay() {
 	initInputMasks();
 	initFormTypeListeners();
 	initChangedListener();
-	initHyperlinks();
 
 	// The contract type is preselected in the markup rather than chosen by the
 	// user, so apply its consequences once at startup.
