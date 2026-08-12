@@ -34,12 +34,12 @@
     "dotenv": "^16.5.0",
     "electron-log": "^5.4.4",
     "electron-squirrel-startup": "^1.0.1",
-    "electron-store": "^8.0.1",
+    "electron-store": "^11.0.2",
     "google-libphonenumber": "^3.2.46",
     "ibantools": "^4.5.4"
   },
   "comments": {
-    "electron-store": "Pinned to v8: v9+ is pure ESM and main.cjs is CommonJS. No advisory affects v8.",
+    "electron-store": "v11 is ESM-only; main.cjs reaches it via require('electron-store').default, which works because Electron 43 bundles Node 24. Requires Electron >=37 (Node >=22.12) -- do not downgrade Electron without converting main.cjs to ESM.",
     "overrides": "Patched-up transitive deps inside the electron-forge build toolchain. Build-time only; none of these ship in the packaged app. Revisit when forge updates its own dependencies."
   },
   "overrides": {

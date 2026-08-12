@@ -4,7 +4,10 @@ const path = require('path');
 //const converter = require('./carbone-converter.cjs');
 const log = require('electron-log');
 const fs = require('node:fs');
-const Store = require('electron-store');
+// electron-store is ESM-only from v9 onwards. Electron 43 bundles Node 24, which
+// can require() an ES module, but hands back the module namespace rather than the
+// class itself -- hence the `.default`.
+const Store = require('electron-store').default;
 
 const store = new Store();
 
