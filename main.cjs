@@ -53,8 +53,97 @@ const createWindow = () => {
   // win.webContents.openDevTools();
 };
 
-async function setSnipeApiKey(event, apiToken) {
-  store.set('lendengine-api-token', apiToken)
+async function setSnipeApiKey(event, refreshToken) {
+  store.set('lendengine-refresh-token', refreshToken)
+  // A new refresh token invalidates whatever access token we were holding.
+  accessToken = null;
+  accessTokenExpiry = 0;
+}
+
+/** Lend Engine issues short-lived access tokens (about an hour) from a longer
+ * lived refresh token (about a month). Only the refresh token is stored; access
+ * tokens are fetched as needed and kept in memory for the rest of the session. */
+let accessToken = null;
+let accessTokenExpiry = 0;
+
+/** Reads the expiry out of a JWT payload. Returns 0 when it cannot be read, so
+ * the caller simply treats the token as already expired. */
+function readTokenExpiry(token) {
+  try {
+    const payload = token.split('.')[1];
+    const decoded = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
+    return typeof decoded.exp === 'number' ? decoded.exp * 1000 : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** Exchanges the stored refresh token for a fresh access token. */
+function requestAccessToken() {
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify({ refresh_token: store.get('lendengine-refresh-token') });
+
+    const req = https.request({
+      hostname: LENDENGINE_HOST,
+      path: '/api/2/token/refresh',
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
+      }
+    }, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        if (res.statusCode === 401 || res.statusCode === 403) {
+          reject(new Error('De API-sleutel is verlopen of ongeldig. Geef een nieuwe in met Ctrl + ,'));
+          return;
+        }
+        if (res.statusCode !== 200) {
+          reject(new Error(`Kon geen toegang krijgen tot Lend Engine (foutcode ${res.statusCode}).`));
+          return;
+        }
+
+        let parsed;
+        try {
+          parsed = JSON.parse(data);
+        } catch {
+          reject(new Error('Onleesbaar antwoord van Lend Engine bij het vernieuwen van de sleutel.'));
+          return;
+        }
+
+        if (!parsed.token) {
+          reject(new Error('Lend Engine gaf geen toegangssleutel terug.'));
+          return;
+        }
+
+        // Lend Engine rotates the refresh token on each use, so keep the new one.
+        if (parsed.refresh_token) {
+          store.set('lendengine-refresh-token', parsed.refresh_token);
+        }
+
+        resolve(parsed.token);
+      });
+    });
+
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
+
+/** Returns a usable access token, refreshing it when it is missing or about to
+ * expire. The minute of slack avoids a token expiring mid-request. */
+async function getAccessToken(forceRefresh = false) {
+  const stillValid = accessToken && Date.now() < accessTokenExpiry - 60000;
+  if (stillValid && !forceRefresh) {
+    return accessToken;
+  }
+
+  accessToken = await requestAccessToken();
+  accessTokenExpiry = readTokenExpiry(accessToken);
+  return accessToken;
 }
 
 async function handleFileOpen() {
@@ -225,45 +314,54 @@ async function handleGetAsset(event, data) {
     }
   }
 
-  if (!store.has('lendengine-api-token')) {
+  if (!store.has('lendengine-refresh-token')) {
     return {
       success: false,
-      error: 'Please configure API key'
+      error: 'Geen API-sleutel ingesteld. Geef er een in met Ctrl + ,'
     }
   }
 
-  return fetchInventoryData(data.assetTag)
-    .then((item) => {
-      console.log('Inventory data:', item);
-      return {
-        success: true,
-        asset: {
-          asset_tag: item.sku,
-          brand: item.brand || '',
-          model: localisedString(item.name),
-          serial: item.serial || '',
-          // Lend Engine is the source of truth for pricing. Sent through as
-          // numbers (the API returns decimal strings like "60.00"); null means
-          // the item has no price set, which the renderer reports rather than
-          // silently filling in a zero.
-          loanFee: parseAmount(item.loanFee),
-          depositAmount: parseAmount(item.depositAmount),
-        }
-      };
-    })
-    .catch((error) => {
-      console.error('Error fetching inventory data:', error);
-      return {
-        success: false,
-        error: error.message
+  try {
+    let item;
+    try {
+      item = await fetchInventoryData(data.assetTag, await getAccessToken());
+    } catch (error) {
+      if (!error.unauthorized) {
+        throw error;
       }
-    });
+      // The cached access token was rejected: refresh once and try again.
+      item = await fetchInventoryData(data.assetTag, await getAccessToken(true));
+    }
+
+    console.log('Inventory data:', item);
+    return {
+      success: true,
+      asset: {
+        asset_tag: item.sku,
+        brand: item.brand || '',
+        model: localisedString(item.name),
+        serial: item.serial || '',
+        // Lend Engine is the source of truth for pricing. Sent through as
+        // numbers (the API returns decimal strings like "60.00"); null means
+        // the item has no price set, which the renderer reports rather than
+        // silently filling in a zero.
+        loanFee: parseAmount(item.loanFee),
+        depositAmount: parseAmount(item.depositAmount),
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching inventory data:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
 }
 
 /** Looks an asset up in Lend Engine by its SKU (the asset tag printed on the device).
  * The collection endpoint returns a Hydra collection, so a hit is `hydra:member[0]`
  * and an unknown tag is an empty collection rather than a 404. */
-function fetchInventoryData(assetTag) {
+function fetchInventoryData(assetTag, token) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: LENDENGINE_HOST,
@@ -271,7 +369,7 @@ function fetchInventoryData(assetTag) {
       method: 'GET',
       headers: {
         'Accept': 'application/ld+json',
-        'Authorization': 'Bearer ' + store.get('lendengine-api-token'),
+        'Authorization': 'Bearer ' + token,
       }
     };
 
@@ -286,7 +384,10 @@ function fetchInventoryData(assetTag) {
       // The whole response has been received.
       res.on('end', () => {
         if (res.statusCode === 401 || res.statusCode === 403) {
-          reject(new Error('API key rejected. It may have expired.'));
+          // Flagged so the caller can retry once with a freshly refreshed token.
+          const error = new Error('Toegang geweigerd door Lend Engine.');
+          error.unauthorized = true;
+          reject(error);
           return;
         }
 

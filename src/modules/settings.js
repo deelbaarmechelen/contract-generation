@@ -3,9 +3,9 @@ import { Prompt } from "./prompts.js";
 let apiKeyPrompt = new Prompt({
     content: (() => {
 		let p1 = document.createElement("p");
-		p1.innerText = "U heeft het API-key beheer venster geopend.";
+		p1.innerText = "U heeft het API-sleutel beheer venster geopend.";
 		let p2 = document.createElement("p");
-		p2.innerText = "Gelieve de API key voor Lend Engine in te geven:";
+		p2.innerText = "Geef hier de refresh token van Lend Engine in. Deze blijft ongeveer een maand geldig; de app vernieuwt zelf de tijdelijke sleutels.";
 		let apiKeyInput = document.createElement("input");
         apiKeyInput.id = "api-key-input";
         return [p1, p2, apiKeyInput]
