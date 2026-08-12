@@ -1,6 +1,11 @@
 import { form, buttons } from "./formelements.js";
 import { Prompt } from "./prompts.js";
 import { formatEuro } from "./utility.js";
+import { loadOrganisatie } from "./organisatie.js";
+
+// The form lives in src/, the contract templates in src/contract/, so each needs
+// its own relative path to the settings file.
+const ORGANISATIE_PAD = "../instellingen/organisatie.json";
 
 function fieldsValid(...prerequisiteFields) {
 	let fieldsValid = true;
@@ -35,38 +40,34 @@ async function autoPricing() {
 			return
 		}
 
-		const { loanFee, depositAmount } = data.asset;
+		const { loanFee } = data.asset;
 
-		if (loanFee === null && depositAmount === null) {
+		// The cirkelwaarde is a fixed amount that Digi-Mee publishes, so it comes
+		// from instellingen/organisatie.json. Lend Engine's depositAmount is left
+		// alone: most items have no value set and the CRUD screen shows a default
+		// of 50, which would put an outdated amount on a signed contract.
+		const { cirkelwaarde } = await loadOrganisatie(ORGANISATIE_PAD);
+		if (cirkelwaarde !== undefined && cirkelwaarde !== null && cirkelwaarde !== "") {
+			form.circleValue.value = formatEuro(cirkelwaarde);
+			form.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
+		}
+
+		if (loanFee === null) {
 			Prompt.createProgressPrompt(
-				"Voor dit toestel staat geen prijs in Lend Engine. Gelieve de prijs handmatig in te vullen.",
+				"Voor dit toestel staat geen prijs in Lend Engine. Gelieve de prijs per 6 maanden handmatig in te vullen.",
 				true
 			).show();
 			return
 		}
 
-		if (loanFee !== null) {
-			// Sociaal tarief: one third of the normal price, per Digi-Mee's published
-			// pricing. Rounded to whole euros to keep the contract amounts tidy.
-			// The cirkelwaarde is a fixed one-off and is not discounted.
-			const payable = form.socialTariff.checked ? Math.round(loanFee / 3) : loanFee;
-			form.semesterPayment.value = formatEuro(payable);
-			form.semesterPayment.dispatchEvent(new Event("input", { bubbles: true }));
-		}
-
-		if (depositAmount !== null) {
-			form.circleValue.value = formatEuro(depositAmount);
-			form.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
-		}
+		// Sociaal tarief: one third of the normal price, per Digi-Mee's published
+		// pricing. Rounded to whole euros to keep the contract amounts tidy.
+		// The cirkelwaarde is not discounted.
+		const payable = form.socialTariff.checked ? Math.round(loanFee / 3) : loanFee;
+		form.semesterPayment.value = formatEuro(payable);
+		form.semesterPayment.dispatchEvent(new Event("input", { bubbles: true }));
 
 		Prompt.close();
-
-		if (loanFee === null || depositAmount === null) {
-			Prompt.createProgressPrompt(
-				"Niet alle prijsgegevens staan in Lend Engine. Gelieve het ontbrekende bedrag handmatig te controleren.",
-				true
-			).show();
-		}
 	} catch (err) {
 		Prompt.createProgressPrompt("Fout tijdens het opzoeken van de prijs.", true).show();
 		throw err;

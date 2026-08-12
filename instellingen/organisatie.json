@@ -4,7 +4,8 @@
     "Pas hier de naam, het adres of het rekeningnummer aan; je hoeft de contracten zelf niet te wijzigen.",
     "Let op de opmaak: elke regel staat tussen \"aanhalingstekens\" en eindigt op een komma, behalve de laatste van een blok.",
     "Als het bestand een fout bevat, toont de app een foutmelding bij het genereren van een contract.",
-    "adresregels: elke regel verschijnt onder elkaar in de hoofding van het contract."
+    "adresregels: elke regel verschijnt onder elkaar in de hoofding van het contract.",
+    "cirkelwaarde: het bedrag in euro dat de klant eenmalig betaalt en terugkrijgt. Wordt niet uit Lend Engine gehaald."
   ],
 
   "dienstNaam": "Digi-Mee",
@@ -20,5 +21,7 @@
 
   "rekeningnummer": "BExx xxxx xxxx xxxx",
 
-  "ondertekenaar": "Verantwoordelijke Digi-Mee"
+  "ondertekenaar": "Verantwoordelijke Digi-Mee",
+
+  "cirkelwaarde": 60
 }
