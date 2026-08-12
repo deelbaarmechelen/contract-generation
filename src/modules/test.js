@@ -50,9 +50,10 @@ export function testFill() {
 		const startDate = form.startDate.valueAsDate;
 		form.endDate.valueAsDate = new Date(startDate.getUTCFullYear() + 1, startDate.getMonth(), startDate.getDate());
 		buttons.autoFill.structuredCommunication.click();
-		buttons.autoFill.monthlyPayment.click();
-		buttons.autoFill.yearlyPayment.click();
-		buttons.autoFill.circleValue.click();
+		// Prices come from Lend Engine, so fill them in directly rather than
+		// clicking the autofill buttons (which would need a live API lookup).
+		form.semesterPayment.value = "€ 60";
+		form.circleValue.value = "€ 60";
 		form.advancePayment.value = "€ 50";
 	} else if (form.contractType.value == "addendum") {
 		form.contractNumber.value = "C-B-25-100002";

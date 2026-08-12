@@ -36,8 +36,7 @@ export const buttons = {
 		deviceBrand: document.getElementById("auto-device-brand"),
 		deviceModel: document.getElementById("auto-device-model"),
 
-		monthlyPayment: document.getElementById("auto-monthly-payment"),
-		yearlyPayment: document.getElementById("auto-yearly-payment"),
+		semesterPayment: document.getElementById("auto-semester-payment"),
 		circleValue: document.getElementById("auto-circle-value"),
 		structuredCommunication: document.getElementById("auto-structured-communication"),
 

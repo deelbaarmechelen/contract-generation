@@ -1,5 +1,4 @@
 import { form, buttons } from "./formelements.js";
-import { deviceTypes } from "./constants.js";
 import { Prompt } from "./prompts.js";
 import { formatEuro } from "./utility.js";
 
@@ -16,6 +15,58 @@ function fieldsValid(...prerequisiteFields) {
 		}
 	}
 	return fieldsValid
+}
+
+/** Fills the semester price and circle value from the Lend Engine record for the
+ * asset tag on the form. Lend Engine is the source of truth for pricing, so both
+ * fields come from the same lookup rather than from a table in the app. */
+async function autoPricing() {
+	if (!fieldsValid(form.assetTag)) {
+		return
+	}
+
+	Prompt.createProgressPrompt("Prijsgegevens aan het opzoeken.", false).show();
+
+	try {
+		const data = await window.inventoryAPI.getAssetDetails({ assetTag: form.assetTag.value });
+
+		if (!data.success) {
+			Prompt.createProgressPrompt("Fout tijdens het opzoeken van de prijs:\n\"" + data.error + "\"", true).show();
+			return
+		}
+
+		const { loanFee, depositAmount } = data.asset;
+
+		if (loanFee === null && depositAmount === null) {
+			Prompt.createProgressPrompt(
+				"Voor dit toestel staat geen prijs in Lend Engine. Gelieve de prijs handmatig in te vullen.",
+				true
+			).show();
+			return
+		}
+
+		if (loanFee !== null) {
+			form.semesterPayment.value = formatEuro(loanFee);
+			form.semesterPayment.dispatchEvent(new Event("input", { bubbles: true }));
+		}
+
+		if (depositAmount !== null) {
+			form.circleValue.value = formatEuro(depositAmount);
+			form.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
+		}
+
+		Prompt.close();
+
+		if (loanFee === null || depositAmount === null) {
+			Prompt.createProgressPrompt(
+				"Niet alle prijsgegevens staan in Lend Engine. Gelieve het ontbrekende bedrag handmatig te controleren.",
+				true
+			).show();
+		}
+	} catch (err) {
+		Prompt.createProgressPrompt("Fout tijdens het opzoeken van de prijs.", true).show();
+		throw err;
+	}
 }
 
 //// Autofill calculations
@@ -139,33 +190,8 @@ const autoFill = {
 	oldDeviceModel: autoOldDeviceSpecs,
 	newDeviceBrand: autoNewDeviceSpecs,
 	newDeviceModel: autoNewDeviceSpecs,
-	monthlyPayment () {
-		if (!fieldsValid(form.deviceType)) {
-			return
-		}
-	
-		form.monthlyPayment.value = formatEuro(deviceTypes[form.deviceType.value].monthlyPayment);
-	
-		form.monthlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
-	},
-	yearlyPayment () {
-		if (!fieldsValid(form.deviceType)) {
-			return
-		}
-	
-		form.yearlyPayment.value = formatEuro(deviceTypes[form.deviceType.value].yearlyPayment);
-	
-		form.yearlyPayment.dispatchEvent(new Event("input", { bubbles: true }));
-	},
-	circleValue () {
-		if (!fieldsValid(form.deviceType)) {
-			return
-		}
-	
-		form.circleValue.value = formatEuro(deviceTypes[form.deviceType.value].circleValue);
-	
-		form.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
-	}
+	semesterPayment: autoPricing,
+	circleValue: autoPricing
 }
 
 export function initAutoFillButtons() {

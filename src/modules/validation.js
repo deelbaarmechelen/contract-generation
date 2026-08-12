@@ -1,7 +1,7 @@
 import { form } from "./formelements.js";
 import { fillErrorDiv } from "./display.js";
 import { getAge, formatPhoneNumber, extractIbanNumber, isSameDay, euroStrToNum } from "./utility.js";
-import { postalCodesMechelen, deviceTypes } from "./constants.js";
+import { postalCodesMechelen } from "./constants.js";
 
 /** Applies custom validity message to field if condition fails. */
 function customValidate(field, condition, invalidMessage) {
@@ -82,54 +82,27 @@ const validate = {
 		);
 	},
 
-	/** Warns user if the monthly payment is different from expected for device type. */
-	monthlyPayment () {
-		let condition = true;
-
-		if (form.deviceType.value && form.monthlyPayment.value) {
-			const value = form.monthlyPayment.value;
-			const euroNum = euroStrToNum(value);
-			const euroNumExpected = deviceTypes[form.deviceType.value].monthlyPayment;
-			condition = euroNum == euroNumExpected;
-		}
+	/** Warns the user if the amount does not look like a euro amount. Prices come
+	 * from Lend Engine rather than a table in this app, so there is no fixed
+	 * expected amount to check against -- only that what is typed parses. */
+	semesterPayment () {
+		const value = form.semesterPayment.value;
+		const condition = value.trim().length === 0 || !Number.isNaN(euroStrToNum(value));
 
 		customValidate(
-			form.monthlyPayment, condition,
-			"Onverwacht bedrag voor apparaattype."
+			form.semesterPayment, condition,
+			"Onleesbaar bedrag."
 		);
 	},
 
-	/** Warns user if the yearly payment is different from expected for device type. */
-	yearlyPayment () {
-		let condition = true;
-
-		if (form.deviceType.value && form.circleValue.value) {
-			const value = form.yearlyPayment.value;
-			const euroNum = euroStrToNum(value);
-			const euroNumExpected = deviceTypes[form.deviceType.value].yearlyPayment;
-			condition = euroNum == euroNumExpected;
-		}
-
-		customValidate(
-			form.yearlyPayment, condition,
-			"Onverwacht bedrag voor apparaattype."
-		);
-	},
-
-	/** Warns user if the circle value is different from expected for device type. */
+	/** Warns the user if the circle value does not look like a euro amount. */
 	circleValue () {
-		let condition = true;
-
-		if (form.deviceType.value && form.circleValue.value) {
-			const value = form.circleValue.value;
-			const euroNum = euroStrToNum(value);
-			const euroNumExpected = deviceTypes[form.deviceType.value].circleValue;
-			condition = euroNum == euroNumExpected;
-		}
+		const value = form.circleValue.value;
+		const condition = value.trim().length === 0 || !Number.isNaN(euroStrToNum(value));
 
 		customValidate(
 			form.circleValue, condition,
-			"Onverwacht bedrag voor apparaattype."
+			"Onleesbaar bedrag."
 		);
 	},
 
@@ -159,10 +132,7 @@ const validate = {
 
 /** Contains information about what validation functions depend on what prior field values. */
 const validationDependencies = {
-	postalCode: ["uitpasException"],
-	monthlyPayment: ["deviceType"],
-	yearlyPayment: ["deviceType"],
-	circleValue: ["deviceType"]
+	postalCode: ["uitpasException"]
 }
 
 export function initValidation() {

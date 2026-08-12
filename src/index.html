@@ -420,7 +420,7 @@
           </div>
         </fieldset>
         <div class="field-box payment-field">
-          <label for="monthly-payment">Opmerking</label>
+          <label for="comment">Opmerking</label>
           <div class="field-box-inner">
             <input id="comment" type="text" name="comment">
           </div>
@@ -430,19 +430,11 @@
         <legend>Betaalgegevens</legend>
         <fieldset class="fieldsubset">
           <div class="field-box payment-field">
-            <label for="monthly-payment">Maandprijs</label>
-            <input type="button" id="auto-monthly-payment" value="&#x1F50E;&#xFE0E;">
+            <label for="semester-payment">Prijs per 6 maanden</label>
+            <input type="button" id="auto-semester-payment" value="&#x1F50E;&#xFE0E;">
             <div class="field-box-inner">
-              <input id="monthly-payment" type="text" name="monthlyPayment" maxlength="40" required>
-              <div class="error" data-for="monthly-payment"></div>
-            </div>
-          </div>
-          <div class="field-box payment-field">
-            <label for="yearly-payment">Jaarprijs</label>
-            <input type="button" id="auto-yearly-payment" value="&#x1F50E;&#xFE0E;">
-            <div class="field-box-inner">
-              <input id="yearly-payment" type="text" name="yearlyPayment" maxlength="40" required>
-              <div class="error" data-for="yearly-payment"></div>
+              <input id="semester-payment" type="text" name="semesterPayment" maxlength="40" required>
+              <div class="error" data-for="semester-payment"></div>
             </div>
           </div>
           <div class="field-box payment-field">

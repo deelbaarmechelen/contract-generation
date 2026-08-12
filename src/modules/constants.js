@@ -5,24 +5,18 @@ export const linkUrls = {
 	lendengine: "https://shop.digibankmechelen.be/admin/"
 }
 
+// Prices are no longer held here: Lend Engine is the source of truth, and the
+// contract fills them from the item record for the asset tag (loanFee and
+// depositAmount). Keeping a price table in the app meant it silently went stale.
 export const deviceTypes = {
 	"laptop-linux": {
-		fullName: "Laptop (Linux)",
-		monthlyPayment: 10,
-		yearlyPayment: 100,
-		circleValue: 50
+		fullName: "Laptop (Linux)"
 	},
 	"laptop-win-11": {
-		fullName: "Laptop (Windows 11)",
-		monthlyPayment: 15,
-		yearlyPayment: 150,
-		circleValue: 50
+		fullName: "Laptop (Windows 11)"
 	},
 	"laptop-win-10": {
-		fullName: "Laptop (Windows 10)",
-		monthlyPayment: 10,
-		yearlyPayment: 100,
-		circleValue: 50
+		fullName: "Laptop (Windows 10)"
 	}
 }
 

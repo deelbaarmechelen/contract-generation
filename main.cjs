@@ -205,6 +205,16 @@ function localisedString(value) {
   return '';
 }
 
+/** Lend Engine returns money as decimal strings ("60.00"). Returns null for
+ * absent or unparseable values so callers can tell "no price set" apart from 0. */
+function parseAmount(value) {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+  const amount = Number(value);
+  return Number.isFinite(amount) ? amount : null;
+}
+
 async function handleGetAsset(event, data) {
   console.log('Fetching asset data for tag:', data.assetTag);
 
@@ -232,6 +242,12 @@ async function handleGetAsset(event, data) {
           brand: item.brand || '',
           model: localisedString(item.name),
           serial: item.serial || '',
+          // Lend Engine is the source of truth for pricing. Sent through as
+          // numbers (the API returns decimal strings like "60.00"); null means
+          // the item has no price set, which the renderer reports rather than
+          // silently filling in a zero.
+          loanFee: parseAmount(item.loanFee),
+          depositAmount: parseAmount(item.depositAmount),
         }
       };
     })
