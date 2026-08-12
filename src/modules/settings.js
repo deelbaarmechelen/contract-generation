@@ -32,7 +32,10 @@ let apiKeyPrompt = new Prompt({
 })
 
 function document_keyUp(e) {
-    if (e.ctrlKey && e.code === 'Comma') {
+    // `e.key` is het getypte teken, `e.code` de fysieke toets. Op AZERTY zit op
+    // de fysieke Comma-positie een puntkomma, waardoor de sneltoets daar op
+    // Ctrl + ; uitkwam. Met `e.key` werkt Ctrl + , op elke toetsenbordindeling.
+    if (e.ctrlKey && e.key === ',') {
         apiKeyPrompt.show();
     }
 }
