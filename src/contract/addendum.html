@@ -19,12 +19,12 @@
         <div class="left">
           <img class="org-logo" src="denideal-logo-hz.png" alt="logo van Den Ideal">
         </div>
+        <!-- These details come from organisatie.json. -->
         <div class="right">
-          <p>Digi-Mee</p>
-          <p>Den Ideal vzw</p>
-          <p>Potterijstraat 5</p>
-          <p>2800 Mechelen</p>
-          <p>info@denideal.be</p>
+          <p data-org="dienstNaam"></p>
+          <p data-org="organisatieNaam"></p>
+          <div data-org="adresregels"></div>
+          <p data-org="email"></p>
         </div>
       </div>
       <div class="identifiers top-margin">
@@ -32,7 +32,7 @@
         <div class="right">Contractnummer: <span data-fill="contractNumber"></span></div>
       </div>
       <h1>Addendum voor een ontlening</h1>
-      <p>De ondergetekenden, zijnde Digi-Mee en de Ontlener, verklaren dat ze volgende wijzigingen brengen aan het contract met bovenstaand contractnummer:</p>
+      <p>De ondergetekenden, zijnde <span data-org="dienstNaam"></span> en de Ontlener, verklaren dat ze volgende wijzigingen brengen aan het contract met bovenstaand contractnummer:</p>
       <section data-visible="replacement">
         <h2>Wijziging ontleende materialen</h2>
         <table class="replacement-table">
@@ -77,7 +77,7 @@
       <section>
         <p class="big-top-margin">Deze afspraken werden gemaakt op: <span data-fill="signatureDate|date"></span></p>
         <div class="signatures">
-          <div class="left">Naam en handtekening<br>Verantwoordelijke Digi-Mee</div>
+          <div class="left">Naam en handtekening<br><span data-org="ondertekenaar"></span></div>
           <div class="right">Naam en handtekening<br>Ontlener</div>
         </div>
       </section>

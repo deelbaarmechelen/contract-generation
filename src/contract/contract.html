@@ -19,12 +19,12 @@
         <div class="left">
           <img class="org-logo" src="denideal-logo-hz.png" alt="logo van Den Ideal">
         </div>
+        <!-- These details come from organisatie.json. -->
         <div class="right">
-          <p>Digi-Mee</p>
-          <p>Den Ideal vzw</p>
-          <p>Potterijstraat 5</p>
-          <p>2800 Mechelen</p>
-          <p>info@denideal.be</p>
+          <p data-org="dienstNaam"></p>
+          <p data-org="organisatieNaam"></p>
+          <div data-org="adresregels"></div>
+          <p data-org="email"></p>
         </div>
       </div>
       <div class="identifiers">
@@ -32,7 +32,7 @@
         <div class="right">Contractnummer: <span data-fill="contractNumber"></span></div>
       </div>
       <h1>Overeenkomst voor een <span id="contract-type"></span> ontlening</h1>
-      <p>De ondergetekenden, zijnde Digi-Mee en de Ontlener, verklaren het volgende overeen te komen:</p>
+      <p>De ondergetekenden, zijnde <span data-org="dienstNaam"></span> en de Ontlener, verklaren het volgende overeen te komen:</p>
       <section>
       <h2>Gegevens ontlener</h2>
       <ul>
@@ -47,7 +47,7 @@
         <h2>Betalingsinformatie</h2>
         <p>De ontlener betaalt een bedrag van <span data-fill="semesterPayment|euro"></span> per periode van 6 maanden.<span data-visible="socialTariff"> Dit bedrag is het sociaal tarief, één derde van de normale prijs.</span></p>
         <p>Rekeningnummer Ontlener: <span data-fill="ibanNumber|iban"></span></p>
-        <p>Rekeningnummer Digi-Mee: <span class="warning">BE40 7330 6948 4463</span></p>
+        <p>Rekeningnummer <span data-org="dienstNaam"></span>: <span class="warning" data-org="rekeningnummer"></span></p>
         <p>Gestructureerde mededeling: <span class="warning" data-fill="structuredCommunication"></span></p>
         <p>Bedrag voldaan in winkel: <span data-fill="advancePayment|euro"></span></p>
         <p><span data-fill="circleValue|euro"></span> cirkelwaarde te betalen.</p>
@@ -80,7 +80,7 @@
       <section>
         <p class="bold">Deze afspraken werden gemaakt op: <span data-fill="signatureDate|date"></span></p>
         <div class="signatures">
-          <div class="left bold">Naam en handtekening<br>Verantwoordelijke Digi-Mee</div>
+          <div class="left bold">Naam en handtekening<br><span data-org="ondertekenaar"></span></div>
           <div class="right bold">Naam en handtekening<br>Ontlener</div>
         </div>
       </section>

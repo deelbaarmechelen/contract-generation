@@ -1,0 +1,24 @@
+{
+  "_instructies": [
+    "Dit bestand bevat de gegevens van de organisatie die op de contracten komen.",
+    "Pas hier de naam, het adres of het rekeningnummer aan; je hoeft de contracten zelf niet te wijzigen.",
+    "Let op de opmaak: elke regel staat tussen \"aanhalingstekens\" en eindigt op een komma, behalve de laatste van een blok.",
+    "Als het bestand een fout bevat, toont de app een foutmelding bij het genereren van een contract.",
+    "adresregels: elke regel verschijnt onder elkaar in de hoofding van het contract."
+  ],
+
+  "dienstNaam": "Digi-Mee",
+  "organisatieNaam": "Den Ideal vzw",
+
+  "adresregels": [
+    "Potterijstraat 5",
+    "2800 Mechelen"
+  ],
+
+  "email": "info@denideal.be",
+  "telefoon": "",
+
+  "rekeningnummer": "BE40 7330 6948 4463",
+
+  "ondertekenaar": "Verantwoordelijke Digi-Mee"
+}

@@ -115,7 +115,7 @@ export async function fillMarkdownSections() {
 			el.innerHTML = renderMarkdown(await response.text());
 		} catch (error) {
 			console.error(`Could not load markdown file "${source}":`, error);
-			throw new Error(`Kon het tekstbestand "${source}" niet laden.`);
+			throw new Error(`Kon het tekstbestand "${source}" niet laden.`, { cause: error });
 		}
 	}
 }

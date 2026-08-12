@@ -61,6 +61,42 @@ describe('IBAN formatting', function () {
 	});
 });
 
+describe('organisatie.json', function () {
+	const fs = require('fs');
+	const path = require('path');
+	const configPath = path.join(__dirname, '..', 'src', 'contract', 'organisatie.json');
+
+	it('is valid JSON', function () {
+		expect(() => JSON.parse(fs.readFileSync(configPath, 'utf8'))).to.not.throw();
+	});
+
+	it('carries every field the contracts reference', function () {
+		const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+		for (const field of ['dienstNaam', 'organisatieNaam', 'adresregels', 'email', 'rekeningnummer', 'ondertekenaar']) {
+			expect(config[field], field).to.not.be.undefined;
+			expect(config[field], field).to.not.equal('');
+		}
+	});
+
+	it('keeps the address as a list of lines', function () {
+		const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+		expect(config.adresregels).to.be.an('array').that.is.not.empty;
+	});
+
+	it('has a data-org placeholder in the contract for each field used', function () {
+		const contract = fs.readFileSync(
+			path.join(__dirname, '..', 'src', 'contract', 'contract.html'), 'utf8'
+		);
+		const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+		const used = [...contract.matchAll(/data-org="([^"]+)"/g)].map((m) => m[1]);
+		expect(used).to.not.be.empty;
+		// Every placeholder must correspond to a real field, or it renders blank.
+		for (const key of used) {
+			expect(config, `contract references "${key}"`).to.have.property(key);
+		}
+	});
+});
+
 describe('markdown rendering for the terms file', function () {
 	// The renderer is an ES module and these tests run as CommonJS, so it is
 	// loaded dynamically.
