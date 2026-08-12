@@ -30,27 +30,30 @@ vervangen. Je API-sleutel en instellingen blijven behouden.
 
 ## De API-sleutel instellen
 
-De app haalt gegevens over toestellen op uit Lend Engine. Daarvoor is één keer
-een API-sleutel nodig. Zonder sleutel werkt de app verder gewoon, alleen de
+De app haalt gegevens over toestellen op uit Lend Engine. Daarvoor is een
+**refresh token** nodig. Zonder token werkt de app verder gewoon, alleen de
 knoppen met het vergrootglas (🔎) kunnen dan niets opzoeken.
 
-**De sleutel invoeren:**
+**De token invoeren:**
 
 1. Start de app.
 2. Druk op **Ctrl** + **,** (de komma-toets). Er verschijnt een venster met de
-   titel *"U heeft het API-key beheer venster geopend."*
-3. Plak de sleutel in het invoerveld.
+   titel *"U heeft het API-sleutel beheer venster geopend."*
+3. Plak de refresh token in het invoerveld.
 4. Klik op **Accepteren**.
 
-De sleutel wordt bewaard op de computer zelf en hoef je maar één keer in te
-geven. Wil je hem later wijzigen, doorloop dan dezelfde stappen opnieuw.
+De token wordt bewaard op de computer zelf. Lend Engine geeft twee soorten
+sleutels: een *access token* die ongeveer een uur geldig is, en een
+*refresh token* die ongeveer een maand meegaat. **Geef de refresh token in** —
+de app haalt daarmee zelf telkens een verse access token op.
 
-**Een sleutel aanmaken:** dat gebeurt in Lend Engine zelf, onder
+**Een token aanmaken:** dat gebeurt in Lend Engine zelf, onder
 `https://digi-mee.denideal.be/admin` bij de API-instellingen. Vraag dit aan
 iemand met beheerdersrechten.
 
-> Krijg je de melding *"API key rejected. It may have expired."*? Dan is de
-> sleutel verlopen of ingetrokken. Maak een nieuwe aan en voer die opnieuw in.
+> Krijg je de melding *"De API-sleutel is verlopen of ongeldig"*? Dan is de
+> refresh token ouder dan een maand of ingetrokken. Maak een nieuwe aan en voer
+> die opnieuw in. Reken erop dat dit ongeveer maandelijks nodig is.
 
 ---
 

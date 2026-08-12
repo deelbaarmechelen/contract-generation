@@ -61,6 +61,49 @@ describe('IBAN formatting', function () {
 	});
 });
 
+describe('Lend Engine token handling', function () {
+	// Mirrors readTokenExpiry in main.cjs. Access tokens live about an hour, so
+	// the app reads their expiry to know when to refresh from the (month-long)
+	// refresh token.
+	function readTokenExpiry(token) {
+		try {
+			const payload = token.split('.')[1];
+			const decoded = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
+			return typeof decoded.exp === 'number' ? decoded.exp * 1000 : 0;
+		} catch {
+			return 0;
+		}
+	}
+
+	function jwtWithExpiry(secondsFromNow) {
+		const exp = Math.floor(Date.now() / 1000) + secondsFromNow;
+		return 'x.' + Buffer.from(JSON.stringify({ exp })).toString('base64') + '.y';
+	}
+
+	it('reads the expiry out of a token', function () {
+		const expiry = readTokenExpiry(jwtWithExpiry(3600));
+		expect(expiry).to.be.closeTo(Date.now() + 3600000, 5000);
+	});
+
+	it('treats an unreadable token as expired', function () {
+		expect(readTokenExpiry('not-a-jwt')).to.equal(0);
+		expect(readTokenExpiry('')).to.equal(0);
+		expect(readTokenExpiry('x.' + Buffer.from('{}').toString('base64') + '.y')).to.equal(0);
+	});
+
+	it('refreshes a token that is inside the one minute safety margin', function () {
+		// The app refreshes when Date.now() >= expiry - 60s, so a token with 30
+		// seconds left must not be reused.
+		const expiry = readTokenExpiry(jwtWithExpiry(30));
+		expect(Date.now() < expiry - 60000).to.be.false;
+	});
+
+	it('reuses a token that is still comfortably valid', function () {
+		const expiry = readTokenExpiry(jwtWithExpiry(3600));
+		expect(Date.now() < expiry - 60000).to.be.true;
+	});
+});
+
 describe('organisatie.json', function () {
 	const fs = require('fs');
 	const path = require('path');
