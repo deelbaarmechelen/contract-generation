@@ -40,7 +40,11 @@ function changeContractType() {
 	const addendumChecked = form.contractType.value == "addendum";
 	const anyChecked = payingChecked || nonPayingChecked || addendumChecked;
 
-	showSwitch(anyChecked, buttons.submit, resetInstruction, ...fieldsets, ...instructionTextElements);
+	// fieldsets[0] is the contract type selector, which stays hidden while only
+	// paying contracts are issued -- so it is left out of the switch below.
+	const switchableFieldsets = [...fieldsets].slice(1);
+
+	showSwitch(anyChecked, buttons.submit, resetInstruction, ...switchableFieldsets, ...instructionTextElements);
 
 	showSwitch(false, ...payingElements, ...nonPayingElements, ...addendumElements);
 	if (payingChecked) {
@@ -51,7 +55,9 @@ function changeContractType() {
 		showSwitch(true, ...addendumElements);
 	}
 
-	showSwitch(true, fieldsets[0]);
+	// fieldsets[0] is the contract type selector. It is hidden while Digi-Mee
+	// only issues paying contracts, so leave its visibility as the markup set it
+	// rather than forcing it back on.
 
 	toggleReplacement();
 	toggleExtension();
@@ -179,4 +185,8 @@ export function initDisplay() {
 	initFormTypeListeners();
 	initChangedListener();
 	initHyperlinks();
+
+	// The contract type is preselected in the markup rather than chosen by the
+	// user, so apply its consequences once at startup.
+	changeContractType();
 }

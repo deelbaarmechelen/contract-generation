@@ -61,6 +61,30 @@ describe('IBAN formatting', function () {
 	});
 });
 
+describe('sociaal tarief discount', function () {
+	// Mirrors the calculation in autofill.js: people with a verhoogde
+	// tegemoetkoming pay one third of the normal price. The cirkelwaarde is a
+	// fixed one-off and is never discounted.
+	function payable(loanFee, socialTariff) {
+		return socialTariff ? Math.round(loanFee / 3) : loanFee;
+	}
+
+	it('charges a third for each published price tier', function () {
+		expect(payable(30, true)).to.equal(10);
+		expect(payable(60, true)).to.equal(20);
+		expect(payable(90, true)).to.equal(30);
+		expect(payable(120, true)).to.equal(40);
+	});
+
+	it('leaves the price untouched without the social tariff', function () {
+		expect(payable(60, false)).to.equal(60);
+	});
+
+	it('rounds to whole euros for prices that do not divide evenly', function () {
+		expect(payable(50, true)).to.equal(17);
+	});
+});
+
 describe('Lend Engine asset lookup', function () {
 	// Mirrors the response handling in main.cjs. The sample below is a real
 	// (trimmed) response from the Digi-Mee Lend Engine instance.

@@ -16,7 +16,12 @@
   <h1>Uitleningsformulier Digi-Mee Mechelen</h1>
   <main>
     <form id="digibank-form" name="digibankForm" action="#" autocomplete="off">
-      <fieldset class="fieldset">
+      <!-- Digi-Mee only issues paying contracts: the niet-betalende (UiTPAS)
+           pipeline and the addendum are no longer in use. The radios are kept
+           (hidden, with "paying" preselected) because the rest of the form still
+           keys its visibility off contractType. To bring a type back, remove the
+           "hidden" class below and drop the checked attribute. -->
+      <fieldset class="fieldset hidden">
         <legend>Type contract</legend>
         <div class="radio-option-list">
           <div class="radio-option">
@@ -24,7 +29,7 @@
             <label for="non-paying-contract">Niet-betalend contract</label>
           </div>
           <div class="radio-option">
-            <input id="paying-contract" type="radio" name="contractType" required value="paying">
+            <input id="paying-contract" type="radio" name="contractType" required value="paying" checked>
             <label for="paying-contract">Betalend contract</label>
           </div>
           <div class="radio-option">
@@ -428,6 +433,10 @@
       </fieldset>
       <fieldset class="fieldset paying hidden">
         <legend>Betaalgegevens</legend>
+        <div class="checkbox-box paying full-width">
+          <input id="social-tariff" type="checkbox" name="socialTariff">
+          <label for="social-tariff">Sociaal tarief (één derde van de normale prijs)</label>
+        </div>
         <fieldset class="fieldsubset">
           <div class="field-box payment-field">
             <label for="semester-payment">Prijs per 6 maanden</label>

@@ -55,7 +55,7 @@
     <section data-visible="contractType=paying">
       <h2>Betalingsinformatie</h2>
       <ul>
-        <li>Verschuldigde bedrag per 6 maanden: <span data-fill="semesterPayment|euro"></span></li>
+        <li>Verschuldigde bedrag per 6 maanden: <span data-fill="semesterPayment|euro"></span><span data-visible="socialTariff"> (sociaal tarief)</span></li>
         <li class="big-top-margin">Betaald in winkel (excl. cirkelwaarde): <span data-fill="advancePayment|euro"></span></li>
         <li>Cirkelwaarde: <span data-fill="circleValue|euro"></span></li>
         <li class="big-top-margin">Rekeningnummer Digi-Mee: BE40 7330 6948 4463</li>
@@ -95,7 +95,6 @@
         <li>De Ontlener is minimaal 18 jaar oud bij het tekenen van de overeenkomst.</li>
         <li data-visible="contractType=non-paying !workshopException !workshopExceptionPriorCustomer">De Ontlener neemt deel aan een gratis opleiding digitale vaardigheden.</li>
         <li data-visible="contractType=non-paying">De Ontlener ontleent het toestel voor een periode van maximaal een jaar.</li>
-        <li data-visible="contractType=paying">De Ontlener ontleent het toestel voor een periode van minimaal een maand.</li>
         <li data-visible="contractType=non-paying !uitpasException">De Ontlener is inwoner van de gemeente Mechelen en heeft een UiTpas met kansenstatuut.</li>
         <li data-visible="contractType=non-paying uitpasException">De Ontlener heeft bijzondere toelating gekregen van de leidinggevenden van de Digibanken Mechelen bij het Sociaal Huis Mechelen.</li>
         <li>Het ontleende toestel is en blijft eigendom van Digi-Mee.</li>
@@ -110,7 +109,7 @@
         <li>De Ontlener meldt schade of defect zo vlug als mogelijk aan Digi-Mee.</li>
         <li data-visible="contractType=paying">Betalingen:
           <ul>
-            <li>De Ontlener betaalt het jaarlijkse bedrag als deze meteen een ontlening voor een jaar aangaat, anders betaalt deze het maandelijkse bedrag.</li>
+            <li>De Ontlener betaalt het afgesproken bedrag per periode van 6 maanden.</li>
             <li>De Ontlener betaalt de afgesproken cirkelwaarde. Bij het binnenbrengen van het apparaat krijgt de Ontlener de cirkelwaarde terug.</li>
             <li>De betaling kan ofwel in de winkel ofwel via overschijving naar het afgesproken rekeningnummer. De Ontlener gebruikt de afgesproken gestructureerde mededeling.</li>
             <li>Bij de afloop van de overeenkomst wordt de Ontlener gecontacteerd. Indien de Ontlener het toestel na afloop van de overeenkomst niet terugbrengt, kan Digi-Mee de overeenkomst maandelijks automatisch verlengen.</li>

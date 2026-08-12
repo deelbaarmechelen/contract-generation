@@ -46,7 +46,11 @@ async function autoPricing() {
 		}
 
 		if (loanFee !== null) {
-			form.semesterPayment.value = formatEuro(loanFee);
+			// Sociaal tarief: one third of the normal price, per Digi-Mee's published
+			// pricing. Rounded to whole euros to keep the contract amounts tidy.
+			// The cirkelwaarde is a fixed one-off and is not discounted.
+			const payable = form.socialTariff.checked ? Math.round(loanFee / 3) : loanFee;
+			form.semesterPayment.value = formatEuro(payable);
 			form.semesterPayment.dispatchEvent(new Event("input", { bubbles: true }));
 		}
 
@@ -198,4 +202,12 @@ export function initAutoFillButtons() {
     for (const [key, el] of Object.entries(buttons.autoFill)) {
 		el.addEventListener("click", autoFill[key]);
     }
+
+	// Toggling the social tariff changes the amount payable, so refresh the
+	// price if one has already been filled in.
+	form.socialTariff.addEventListener("change", () => {
+		if (form.semesterPayment.value.trim().length > 0) {
+			autoPricing();
+		}
+	});
 }
