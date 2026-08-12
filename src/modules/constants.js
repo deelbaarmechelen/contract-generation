@@ -2,7 +2,7 @@ export const linkUrls = {
 	contractNumber: "https://ateliermechelen-my.sharepoint.com/:x:/g/personal/admin_ecoso_be/EY1ECrzfjhpFlSSEhrp-RiMBZT3pM4V3VRYmWebgMV8htA?e=91aeJl",
 	clientNumber: "https://ateliermechelen-my.sharepoint.com/:x:/g/personal/admin_ecoso_be/EY1ECrzfjhpFlSSEhrp-RiMBZT3pM4V3VRYmWebgMV8htA?e=91aeJl",
 	beego: "https://platform.digi-portaal.be/login",
-	lendengine: "https://shop.digibankmechelen.be/admin/"
+	lendengine: "https://digi-mee.denideal.be/admin/"
 }
 
 // Prices are no longer held here: Lend Engine is the source of truth, and the

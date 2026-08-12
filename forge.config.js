@@ -63,7 +63,7 @@ module.exports = {
     asar: true,
     name: 'Contract Generator',
     executableName: 'contract-generator',
-    appCopyright: `Copyright (C) ${new Date().getFullYear()} Ecoso vzw`,
+    appCopyright: `Copyright (C) ${new Date().getFullYear()} Den Ideal vzw`,
     // icon: './resources/icon',  // supply icon.ico (Windows) / icon.icns (macOS) to brand the app
     // Keep development-only files out of the shipped package.
     //
