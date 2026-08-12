@@ -43,21 +43,7 @@
         <li>E-mailadres: <span data-fill="email"></span></li>
       </ul>
       </section>
-      <section data-visible="contractType=non-paying">
-        <h2>Contractinformatie</h2>
-        <p><span data-visible="!uitpasException">☑ </span><span data-visible="uitpasException">☐ </span>GRATIS ONTLENING MET EEN UITPAS</p>
-        <ul>
-          <li>UiTPAS-nummer: <span data-fill="uitpasNumber"></span></li>
-        </ul>
-        <p><span data-visible="!uitpasException">☐ </span><span data-visible="uitpasException">☑ </span> DOORVERWEZEN DOOR HET SOCIAAL HUIS</p>
-        <p data-visible="!workshopException !workshopExceptionPriorCustomer" class="warning">Deelname aan een gratis opleiding is verplicht.</p>
-        <p data-visible="workshopException">De Ontlener is vrijgesteld van de voorwaarde aan de gratis opleiding deel te nemen door het afleggen van een vaardigheidstest.</p>
-        <p data-visible="workshopExceptionPriorCustomer !workshopException">De Ontlener is vrijgesteld van de voorwaarde aan de gratis opleiding deel te nemen omdat deze een terugkerende klant is.</p>
-        <ul>
-          <li>De eerstvolgende opleidingsdatum: <span data-fill="workshopDate|datetime"></span></li>
-        </ul>
-      </section>
-      <section data-visible="contractType=paying">
+      <section>
         <h2>Betalingsinformatie</h2>
         <p>De ontlener betaalt een bedrag van <span data-fill="semesterPayment|euro"></span> per periode van 6 maanden.<span data-visible="socialTariff"> Dit bedrag is het sociaal tarief, één derde van de normale prijs.</span></p>
         <p>Rekeningnummer Ontlener: <span data-fill="ibanNumber|iban"></span></p>
@@ -76,7 +62,7 @@
         <ul>
           <li>Merk: <span data-fill="deviceBrand,deviceModel"></span></li>
           <li>T-nummer: <span data-fill="assetTag"></span></li>
-          <li>Accessoires: <span data-fill="includesCharger|checkbox"></span> Inclusief lader<span data-visibility="contractType=non-paying"> ; <span data-fill="includesMouse|checkbox"></span> Inclusief muis ; <span data-fill="includesSmartCardReader|checkbox"></span> Inclusief eID lezer</span></li>
+          <li>Accessoires: <span data-fill="includesCharger|checkbox"></span> Inclusief lader ; <span data-fill="includesMouse|checkbox"></span> Inclusief muis</li>
         </ul>
       </section>
       <section>
@@ -88,35 +74,9 @@
         <h2>Opmerking</h2>
         <p data-fill="comment"></p>
       </section>
-      <section>
-        <h2>Voorwaarden en afspraken</h2>
-        <p>De ondergetekenden, zijnde Digi-Mee en de Ontlener, gaan akkoord:</p>
-        <ul>
-          <li>De Ontlener is minimaal 18 jaar oud bij het tekenen van de overeenkomst.</li>
-          <li data-visible="contractType=non-paying">Een van de volgende twee zaken is waar op het moment van het tekenen van de overeenkomst:
-            <ul>
-              <li>De Ontlener is inwoner van de gemeente Mechelen en heeft een UiTpas met kansenstatuut.</li>
-              <li>De Ontlener heeft bijzondere toelating gekregen van de leidinggevenden van de Digibanken Mechelen bij het Sociaal Huis Mechelen.</li>
-            </ul>
-          </li>
-          <li>Het ontleende toestel is en blijft eigendom van Digi-Mee.</li>
-          <li>De Ontlener geeft toestemming om zijn gegevens te bewaren in functie van de ontlening.</li>
-          <li>De Ontlener <b>draagt zorg</b> voor het apparaat, en <b>eet of drinkt niet</b> tijdens het gebruik hiervan.</li>
-          <li>Het is aangeraden back-ups te maken van belangrijke gegevens. Digi-Mee is niet verantwoordelijk voor het verlies van gegevens bij hardware- of softwaredefect.</li>
-          <li><b>Diefstal:</b>
-            <ul>
-              <li>De Ontlener meldt diefstal <b>onmiddellijk</b> aan de verantwoordelijke van Digi-Mee.</li>
-              <li>De Ontlener doet aangifte bij de politie en bezorgt <b>een kopie van het Proces-Verbaal (PV)</b> aan Digi-Mee.</li>
-            </ul>
-          </li>
-          <li><b>Schade of defect:</b>
-            <ul>
-              <li>De Ontlener meldt schade of defect onmiddellijk aan Digi-Mee.</li>
-              <li>Eerste schadegeval gedekt is door de overeenkomst. Bij herhaaldelijke schade zijn de kosten ten laste van de Ontlener. De overeenkomst wordt opgeschort tot deze kosten vereffend zijn of tot het einde van de termijn.</li>
-            </ul>
-          </li>
-        </ul>
-      </section>
+      <!-- The terms text lives in voorwaarden.md so it can be edited without
+           touching this file. See that file for editing instructions. -->
+      <section data-markdown="voorwaarden.md"></section>
       <section>
         <p class="bold">Deze afspraken werden gemaakt op: <span data-fill="signatureDate|date"></span></p>
         <div class="signatures">

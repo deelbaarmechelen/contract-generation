@@ -61,6 +61,59 @@ describe('IBAN formatting', function () {
 	});
 });
 
+describe('markdown rendering for the terms file', function () {
+	// The renderer is an ES module and these tests run as CommonJS, so it is
+	// loaded dynamically.
+	let renderMarkdown;
+
+	before(async function () {
+		const url = require('url').pathToFileURL(
+			require('path').join(__dirname, '..', 'src', 'modules', 'markdown.js')
+		).href;
+		({ renderMarkdown } = await import(url));
+	});
+
+	function balanced(html) {
+		const count = (re) => (html.match(re) || []).length;
+		return count(/<ul>/g) === count(/<\/ul>/g) && count(/<li>/g) === count(/<\/li>/g);
+	}
+
+	it('nests sublists inside their parent list item', function () {
+		const html = renderMarkdown('- Parent\n  - Child\n- Sibling');
+		expect(html).to.match(/<li>Parent\s*<ul>/);
+		expect(balanced(html)).to.be.true;
+	});
+
+	it('produces balanced markup for the real terms file', function () {
+		const fs = require('fs');
+		const path = require('path');
+		const source = fs.readFileSync(
+			path.join(__dirname, '..', 'src', 'contract', 'voorwaarden.md'), 'utf8'
+		);
+		expect(balanced(renderMarkdown(source))).to.be.true;
+	});
+
+	it('strips the editing instructions in the HTML comment', function () {
+		expect(renderMarkdown('<!-- instructies -->\n- Tekst')).to.not.include('instructies');
+	});
+
+	it('renders bold text', function () {
+		expect(renderMarkdown('- Dit is **vet**')).to.include('<b>vet</b>');
+	});
+
+	it('escapes HTML so the terms file cannot inject markup', function () {
+		const html = renderMarkdown('- <script>alert(1)</script>');
+		expect(html).to.not.include('<script>');
+		expect(html).to.include('&lt;script&gt;');
+	});
+
+	it('renders headings and paragraphs', function () {
+		const html = renderMarkdown('## Titel\n\nEen zin.');
+		expect(html).to.include('<h2>Titel</h2>');
+		expect(html).to.include('<p>Een zin.</p>');
+	});
+});
+
 describe('sociaal tarief discount', function () {
 	// Mirrors the calculation in autofill.js: people with a verhoogde
 	// tegemoetkoming pay one third of the normal price. The cirkelwaarde is a
