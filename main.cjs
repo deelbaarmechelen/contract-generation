@@ -264,9 +264,29 @@ function fetchInventoryData(assetTag) {
   });
 }
 
+/** Opens a URL in the user's default browser.
+ * Only http(s) is allowed: shell.openExternal hands the string to the OS handler,
+ * so other schemes (file:, javascript:, custom app protocols) could launch local
+ * programs if an attacker ever influenced this value. */
 async function openExternal(e, url) {
-  console.log(url);
-  shell.openExternal(url);
+  if (typeof url !== 'string') {
+    return;
+  }
+
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    log.warn('Refusing to open malformed external URL:', url);
+    return;
+  }
+
+  if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+    log.warn('Refusing to open external URL with unsupported protocol:', parsed.protocol);
+    return;
+  }
+
+  shell.openExternal(parsed.href);
 }
 
 app.whenReady().then(() => {

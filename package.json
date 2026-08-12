@@ -13,30 +13,42 @@
   "author": "Ecoso vzw",
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^7.8.1",
-    "@electron-forge/maker-deb": "^7.8.1",
-    "@electron-forge/maker-rpm": "^7.8.1",
-    "@electron-forge/maker-squirrel": "^7.8.1",
-    "@electron-forge/maker-zip": "^7.8.1",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
-    "@electron-forge/plugin-fuses": "^7.8.1",
+    "@electron-forge/cli": "^7.11.2",
+    "@electron-forge/maker-deb": "^7.11.2",
+    "@electron-forge/maker-rpm": "^7.11.2",
+    "@electron-forge/maker-squirrel": "^7.11.2",
+    "@electron-forge/maker-zip": "^7.11.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.11.2",
+    "@electron-forge/plugin-fuses": "^7.11.2",
     "@electron/fuses": "^1.8.0",
-    "@eslint/css": "^0.8.1",
-    "@eslint/js": "^9.27.0",
-    "chai": "^5.2.0",
-    "electron": "^36.2.1",
+    "@eslint/css": "^1.4.0",
+    "@eslint/js": "^10.0.1",
+    "chai": "^6.2.2",
+    "electron": "^43.4.0",
     "electron-mocha": "^13.1.0",
-    "eslint": "^9.27.0",
-    "globals": "^16.1.0",
-    "mocha": "^11.3.0",
-    "spectron": "^19.0.0"
+    "eslint": "^10.8.1",
+    "globals": "^17.10.0",
+    "mocha": "^11.8.0"
   },
   "dependencies": {
     "dotenv": "^16.5.0",
-    "electron-log": "^5.4.0",
+    "electron-log": "^5.4.4",
     "electron-squirrel-startup": "^1.0.1",
-    "google-libphonenumber": "^3.2.40",
     "electron-store": "^8.0.1",
-    "ibantools": "^4.5.1"
+    "google-libphonenumber": "^3.2.46",
+    "ibantools": "^4.5.4"
+  },
+  "comments": {
+    "electron-store": "Pinned to v8: v9+ is pure ESM and main.cjs is CommonJS. No advisory affects v8.",
+    "overrides": "Patched-up transitive deps inside the electron-forge build toolchain. Build-time only; none of these ship in the packaged app. Revisit when forge updates its own dependencies."
+  },
+  "overrides": {
+    "tar": "^7.5.22",
+    "cacache": "^18.0.4",
+    "make-fetch-happen": "^13.0.1",
+    "tmp": "^0.2.7",
+    "minimatch": "^10.2.6",
+    "serialize-javascript": "^7.1.0",
+    "diff": "^9.0.0"
   }
 }
