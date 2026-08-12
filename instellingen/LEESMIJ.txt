@@ -1,0 +1,47 @@
+INSTELLINGEN
+============
+
+In deze map staan de bestanden die je kan aanpassen zonder programmeerkennis.
+Wat je hier wijzigt, verschijnt op de contracten die de app genereert.
+
+
+organisatie.json
+----------------
+De gegevens van de organisatie: naam, adres, e-mailadres, rekeningnummer en wie
+het contract ondertekent.
+
+Open het bestand met Kladblok (of een andere teksteditor) en pas de tekst tussen
+de aanhalingstekens aan. Bovenaan het bestand staat uitleg over de opmaak.
+
+Let op: elke regel eindigt op een komma, behalve de laatste van een blok. Als er
+een komma te veel of te weinig staat, toont de app een foutmelding wanneer je
+een contract probeert te maken.
+
+
+voorwaarden.md
+--------------
+De voorwaarden en afspraken die onderaan het contract staan.
+
+Je kan deze tekst gewoon aanpassen. Bovenaan het bestand staat uitleg over de
+opmaak (opsommingstekens, vette tekst, titels).
+
+Let op: dit is een juridisch document dat klanten ondertekenen. Overleg met de
+verantwoordelijke voor je inhoudelijke wijzigingen doorvoert.
+
+
+logo.png
+--------
+Het logo dat bovenaan het contract staat.
+
+Wil je een ander logo? Vervang dit bestand door een nieuwe afbeelding met
+dezelfde naam (logo.png). Een liggende afbeelding werkt het best; een vierkant
+logo wordt klein weergegeven naast de adresgegevens.
+
+
+Na een wijziging
+----------------
+Sluit de app en start ze opnieuw op. De volgende contracten gebruiken dan de
+nieuwe gegevens.
+
+Werkt er iets niet meer? Zet dan de vorige versie van het bestand terug. De
+foutmelding in de app vertelt welk bestand het probleem veroorzaakt.

@@ -64,7 +64,7 @@ describe('IBAN formatting', function () {
 describe('organisatie.json', function () {
 	const fs = require('fs');
 	const path = require('path');
-	const configPath = path.join(__dirname, '..', 'src', 'contract', 'organisatie.json');
+	const configPath = path.join(__dirname, '..', 'instellingen', 'organisatie.json');
 
 	it('is valid JSON', function () {
 		expect(() => JSON.parse(fs.readFileSync(configPath, 'utf8'))).to.not.throw();
@@ -124,7 +124,7 @@ describe('markdown rendering for the terms file', function () {
 		const fs = require('fs');
 		const path = require('path');
 		const source = fs.readFileSync(
-			path.join(__dirname, '..', 'src', 'contract', 'voorwaarden.md'), 'utf8'
+			path.join(__dirname, '..', 'instellingen', 'voorwaarden.md'), 'utf8'
 		);
 		expect(balanced(renderMarkdown(source))).to.be.true;
 	});

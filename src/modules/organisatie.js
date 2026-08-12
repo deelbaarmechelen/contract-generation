@@ -22,26 +22,29 @@ const REQUIRED_FIELDS = [
 
 /** Reads and validates organisatie.json. Throws a message meant to be readable
  * by whoever edited the file, not only by a developer. */
-export async function loadOrganisatie(source = "organisatie.json") {
+export async function loadOrganisatie(source = "../../instellingen/organisatie.json") {
+	// Error messages are read by whoever edits the file, so name it the way they
+	// see it in the instellingen folder rather than by its relative path.
+	const naam = source.split("/").pop();
 	let response;
 	try {
 		response = await fetch(source);
 	} catch (error) {
-		console.error(`Could not fetch "${source}":`, error);
-		throw new Error(`Kon het bestand "${source}" niet openen.`, { cause: error });
+		console.error(`Could not fetch "${naam}":`, error);
+		throw new Error(`Kon het bestand "${naam}" niet openen.`, { cause: error });
 	}
 
 	if (!response.ok) {
-		throw new Error(`Kon het bestand "${source}" niet openen (${response.status}).`);
+		throw new Error(`Kon het bestand "${naam}" niet openen (${response.status}).`);
 	}
 
 	let organisatie;
 	try {
 		organisatie = JSON.parse(await response.text());
 	} catch (error) {
-		console.error(`Could not parse "${source}":`, error);
+		console.error(`Could not parse "${naam}":`, error);
 		throw new Error(
-			`Er staat een fout in "${source}". Controleer of elke regel tussen ` +
+			`Er staat een fout in "${naam}". Controleer of elke regel tussen ` +
 			`aanhalingstekens staat en of er geen komma te veel of te weinig is.`,
 			{ cause: error }
 		);
@@ -53,11 +56,11 @@ export async function loadOrganisatie(source = "organisatie.json") {
 	});
 
 	if (missing.length > 0) {
-		throw new Error(`In "${source}" ontbreken de volgende gegevens: ${missing.join(", ")}.`);
+		throw new Error(`In "${naam}" ontbreken de volgende gegevens: ${missing.join(", ")}.`);
 	}
 
 	if (!Array.isArray(organisatie.adresregels)) {
-		throw new Error(`In "${source}" moet "adresregels" een lijst van regels zijn.`);
+		throw new Error(`In "${naam}" moet "adresregels" een lijst van regels zijn.`);
 	}
 
 	return organisatie;

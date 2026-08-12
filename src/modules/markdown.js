@@ -107,6 +107,8 @@ export async function fillMarkdownSections() {
 
 	for (const el of elements) {
 		const source = el.getAttribute("data-markdown");
+		// Report the file the way it appears in the instellingen folder.
+		const naam = source.split("/").pop();
 		try {
 			const response = await fetch(source);
 			if (!response.ok) {
@@ -115,7 +117,7 @@ export async function fillMarkdownSections() {
 			el.innerHTML = renderMarkdown(await response.text());
 		} catch (error) {
 			console.error(`Could not load markdown file "${source}":`, error);
-			throw new Error(`Kon het tekstbestand "${source}" niet laden.`, { cause: error });
+			throw new Error(`Kon het tekstbestand "${naam}" niet laden.`, { cause: error });
 		}
 	}
 }
