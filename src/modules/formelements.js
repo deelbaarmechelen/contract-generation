@@ -24,20 +24,19 @@ export const buttons = {
 	submit: document.getElementById("submit"),
 
 	autoFill: {
+		contactRef: document.getElementById("auto-contact-ref"),
+
 		signatureDate: document.getElementById("auto-signature-date"),
 		startDate: document.getElementById("auto-start-date"),
 		endDate: document.getElementById("auto-end-date"),
 
-		deviceBrand: document.getElementById("auto-device-brand"),
-		deviceModel: document.getElementById("auto-device-model"),
+		// One button per lookup, next to the field it is keyed on: the assettag
+		// fills merk, model, prijs and cirkelwaarde from a single Lend Engine call.
+		assetTag: document.getElementById("auto-asset-tag"),
 
-		semesterPayment: document.getElementById("auto-semester-payment"),
-		circleValue: document.getElementById("auto-circle-value"),
 		structuredCommunication: document.getElementById("auto-structured-communication"),
 
-		oldDeviceBrand: document.getElementById("auto-old-device-brand"),
-		oldDeviceModel: document.getElementById("auto-old-device-model"),
-		newDeviceBrand: document.getElementById("auto-new-device-brand"),
-		newDeviceModel: document.getElementById("auto-new-device-model")
+		oldAssetTag: document.getElementById("auto-old-asset-tag"),
+		newAssetTag: document.getElementById("auto-new-asset-tag")
 	}
 }

@@ -22,3 +22,15 @@ export const deviceTypes = {
 }
 
 export const postalCodesMechelen = [2800, 2801, 2811, 2812];
+
+// Lend Engine stores a country as an ISO code while the contract prints a Dutch
+// country name. Only the neighbouring countries are listed: an unknown code fills
+// nothing in, leaving whatever the form already had, rather than printing a code
+// like "FR" on a signed contract.
+export const landen = {
+	BE: "België",
+	NL: "Nederland",
+	FR: "Frankrijk",
+	DE: "Duitsland",
+	LU: "Luxemburg"
+}

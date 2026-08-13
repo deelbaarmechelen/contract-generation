@@ -2,6 +2,8 @@ import { form, buttons } from "./formelements.js";
 import { Prompt } from "./prompts.js";
 import { formatEuro } from "./utility.js";
 import { loadOrganisatie } from "./organisatie.js";
+import { landen } from "./constants.js";
+import { rememberLoanFee, forgetLoanFee, payableFor } from "./pricing.js";
 
 // The form lives in src/, the contract templates in src/contract/, so each needs
 // its own relative path to the settings file.
@@ -22,56 +24,118 @@ function fieldsValid(...prerequisiteFields) {
 	return fieldsValid
 }
 
-/** Fills the semester price and circle value from the Lend Engine record for the
- * asset tag on the form. Lend Engine is the source of truth for pricing, so both
- * fields come from the same lookup rather than from a table in the app. */
-async function autoPricing() {
-	if (!fieldsValid(form.assetTag)) {
+/** Fills the semester price and circle value from an already fetched Lend Engine
+ * asset record. Lend Engine is the source of truth for pricing, so both fields
+ * come from the device lookup rather than from a table in the app. */
+async function fillPricing(asset) {
+	const { loanFee } = asset;
+
+	// The cirkelwaarde is a fixed amount that Digi-Mee publishes, so it comes
+	// from instellingen/organisatie.json. Lend Engine's depositAmount is left
+	// alone: most items have no value set and the CRUD screen shows a default
+	// of 50, which would put an outdated amount on a signed contract.
+	const { cirkelwaarde } = await loadOrganisatie(ORGANISATIE_PAD);
+	if (cirkelwaarde !== undefined && cirkelwaarde !== null && cirkelwaarde !== "") {
+		form.circleValue.value = formatEuro(cirkelwaarde);
+		form.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
+	}
+
+	if (loanFee === null) {
+		// Nothing to compare a later tariff change against: the amount will be
+		// typed by hand, so it is not this module's to warn about.
+		forgetLoanFee();
+		Prompt.createProgressPrompt(
+			"Voor dit toestel staat geen prijs in Lend Engine. Gelieve de prijs per 6 maanden handmatig in te vullen.",
+			true
+		).show();
 		return
 	}
 
-	Prompt.createProgressPrompt("Prijsgegevens aan het opzoeken.", false).show();
+	// Sociaal tarief: one third of the normal price, per Digi-Mee's published
+	// pricing. Rounded to whole euros to keep the contract amounts tidy.
+	// The cirkelwaarde is not discounted.
+	//
+	// The checkbox is read here, when the user asks for the lookup -- toggling it
+	// afterwards deliberately does not rewrite the price. Instead the field warns
+	// that it no longer matches the tariff, the same way the rest of the form
+	// reports fields that need attention.
+	rememberLoanFee(loanFee);
+
+	const payable = payableFor(loanFee, form.socialTariff.checked);
+	form.semesterPayment.value = formatEuro(payable);
+	form.semesterPayment.dispatchEvent(new Event("input", { bubbles: true }));
+
+	Prompt.close();
+}
+
+/** Sets a field only when the lookup actually returned something, so an empty
+ * value in Lend Engine never wipes out what the user already typed. */
+function fillIfPresent(field, value) {
+	if (value === undefined || value === null || String(value).trim().length === 0) {
+		return
+	}
+
+	field.value = value;
+	field.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+/** Fills the customer's details from their Lend Engine contact record. The record
+ * is fetched by id from the link the user pasted: Lend Engine's API cannot search
+ * on the klantnummer, so the klantnummer comes back from the record instead.
+ *
+ * The details land in the form's own fields, where the name is in plain sight, so
+ * a wrongly pasted link shows up as the wrong person on screen. */
+async function autoClientDetails() {
+	if (!form.contactRef.value.trim()) {
+		Prompt.createProgressPrompt(
+			"Plak eerst de link naar de klant in Lend Engine, of typ het nummer.",
+			true
+		).show();
+		return
+	}
+
+	Prompt.createProgressPrompt("Klantgegevens aan het opzoeken.", false).show();
 
 	try {
-		const data = await window.inventoryAPI.getAssetDetails({ assetTag: form.assetTag.value });
+		const data = await window.inventoryAPI.getContactDetails({ contactRef: form.contactRef.value });
 
 		if (!data.success) {
-			Prompt.createProgressPrompt("Fout tijdens het opzoeken van de prijs:\n\"" + data.error + "\"", true).show();
+			Prompt.createProgressPrompt("Fout tijdens het opzoeken van de klant:\n\"" + data.error + "\"", true).show();
 			return
 		}
 
-		const { loanFee } = data.asset;
-
-		// The cirkelwaarde is a fixed amount that Digi-Mee publishes, so it comes
-		// from instellingen/organisatie.json. Lend Engine's depositAmount is left
-		// alone: most items have no value set and the CRUD screen shows a default
-		// of 50, which would put an outdated amount on a signed contract.
-		const { cirkelwaarde } = await loadOrganisatie(ORGANISATIE_PAD);
-		if (cirkelwaarde !== undefined && cirkelwaarde !== null && cirkelwaarde !== "") {
-			form.circleValue.value = formatEuro(cirkelwaarde);
-			form.circleValue.dispatchEvent(new Event("input", { bubbles: true }));
-		}
-
-		if (loanFee === null) {
-			Prompt.createProgressPrompt(
-				"Voor dit toestel staat geen prijs in Lend Engine. Gelieve de prijs per 6 maanden handmatig in te vullen.",
-				true
-			).show();
-			return
-		}
-
-		// Sociaal tarief: one third of the normal price, per Digi-Mee's published
-		// pricing. Rounded to whole euros to keep the contract amounts tidy.
-		// The cirkelwaarde is not discounted.
-		const payable = form.socialTariff.checked ? Math.round(loanFee / 3) : loanFee;
-		form.semesterPayment.value = formatEuro(payable);
-		form.semesterPayment.dispatchEvent(new Event("input", { bubbles: true }));
+		fillContact(data.contact);
 
 		Prompt.close();
 	} catch (err) {
-		Prompt.createProgressPrompt("Fout tijdens het opzoeken van de prijs.", true).show();
+		Prompt.createProgressPrompt("Fout tijdens het opzoeken van de klant.", true).show();
 		throw err;
 	}
+}
+
+/** Copies a contact's details onto the form. */
+function fillContact(contact) {
+	// The klantnummer is not searchable in Lend Engine, so it is filled in from
+	// the record rather than being what the lookup was keyed on.
+	fillIfPresent(form.clientNumber, contact.membershipNumber);
+
+	fillIfPresent(form.firstName, contact.firstName);
+	fillIfPresent(form.lastName, contact.lastName);
+
+	fillIfPresent(form.streetName, contact.streetName);
+	fillIfPresent(form.houseNumber, contact.houseNumber);
+	fillIfPresent(form.boxNumber, contact.boxNumber);
+	fillIfPresent(form.municipality, contact.municipality);
+	fillIfPresent(form.postalCode, contact.postalCode);
+	// Lend Engine stores an ISO code ("BE"); the contract prints a country name.
+	fillIfPresent(form.country, landen[contact.countryIsoCode]);
+
+	fillIfPresent(form.email, contact.email);
+	fillIfPresent(form.phoneNumber, contact.phoneNumber);
+
+	// Lend Engine is authoritative for the structured communication when it has
+	// one on file; otherwise the app's own calculation stands.
+	fillIfPresent(form.structuredCommunication, contact.structuredCommunication);
 }
 
 //// Autofill calculations
@@ -97,13 +161,16 @@ function calcStructuredCommunication() {
 
 //// Autofill function factories
 
-/** Function factory to create function that gets device brand and model based on assettag from the Lend Engine inventory.
+/** Function factory to create function that fills in a device from its assettag,
+ * using the Lend Engine inventory record.
  * @param { HTMLElement } assetTagEl - HTML element with value property representing the assettag.
  * @param { HTMLElement } brandEl - HTML element with value property representing the brand.
  * @param { HTMLElement } modelEl - HTML element with value property representing the model.
- * @returns { Function } Async event listener function to be associated with autoFill buttons for the brand and model.
+ * @param { Boolean } [withPricing=false] - Also fill the prijs and cirkelwaarde.
+ *   Only the main device has those fields; the addendum's old and new devices do not.
+ * @returns { Function } Async event listener function for the assettag's autofill button.
 */
-function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
+function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl, withPricing = false) {
 	const autoDeviceSpecs = async () => {
 		if (!assetTagEl.value) {
 			fieldsValid(assetTagEl);
@@ -125,10 +192,17 @@ function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
 			brandEl.value = data.asset.brand;
 			modelEl.value = data.asset.model;
 
-			Prompt.close();
-
 			brandEl.dispatchEvent(new Event("input", { bubbles: true }));
 			modelEl.dispatchEvent(new Event("input", { bubbles: true }));
+
+			if (!withPricing) {
+				Prompt.close();
+				return
+			}
+
+			// Prijs and cirkelwaarde come from the same record, so they are filled
+			// from the response already in hand rather than looked up again.
+			await fillPricing(data.asset);
 		} catch (err) {
 			Prompt.createProgressPrompt("Fout tijdens het opzoeken van asset.", true).show();
 			throw err;
@@ -138,7 +212,7 @@ function factoryAutoDeviceSpecs(assetTagEl, brandEl, modelEl) {
 }
 
 const autoDeviceSpecs = factoryAutoDeviceSpecs(
-	form.assetTag, form.deviceBrand, form.deviceModel
+	form.assetTag, form.deviceBrand, form.deviceModel, true
 );
 
 const autoOldDeviceSpecs = factoryAutoDeviceSpecs(
@@ -152,6 +226,7 @@ const autoNewDeviceSpecs = factoryAutoDeviceSpecs(
 //// Autofill click events
 
 const autoFill = {
+	contactRef: autoClientDetails,
 	signatureDate () {
 		form.signatureDate.valueAsDate = new Date();
 	
@@ -189,26 +264,13 @@ const autoFill = {
 	
 		form.structuredCommunication.dispatchEvent(new Event("input", { bubbles: true }));
 	},
-	deviceBrand: autoDeviceSpecs,
-	deviceModel: autoDeviceSpecs,
-	oldDeviceBrand: autoOldDeviceSpecs,
-	oldDeviceModel: autoOldDeviceSpecs,
-	newDeviceBrand: autoNewDeviceSpecs,
-	newDeviceModel: autoNewDeviceSpecs,
-	semesterPayment: autoPricing,
-	circleValue: autoPricing
+	assetTag: autoDeviceSpecs,
+	oldAssetTag: autoOldDeviceSpecs,
+	newAssetTag: autoNewDeviceSpecs
 }
 
 export function initAutoFillButtons() {
     for (const [key, el] of Object.entries(buttons.autoFill)) {
 		el.addEventListener("click", autoFill[key]);
     }
-
-	// Toggling the social tariff changes the amount payable, so refresh the
-	// price if one has already been filled in.
-	form.socialTariff.addEventListener("change", () => {
-		if (form.semesterPayment.value.trim().length > 0) {
-			autoPricing();
-		}
-	});
 }

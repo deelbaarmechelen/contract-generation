@@ -38,6 +38,30 @@
           </div>
         </div>
       </fieldset>
+      <!-- The klant lookup sits first. Lend Engine's API cannot search on the
+           klantnummer (the collection only filters on email, naam, isActive and
+           createdAt), so the client is fetched by id instead: paste the link to
+           the klant in Lend Engine and the magnifier fills in their gegevens.
+           Only that one client's record is fetched -- nothing is cached. -->
+      <fieldset class="fieldset non-paying paying addendum hidden">
+        <legend>Klant</legend>
+        <div class="field-box">
+          <label for="contact-ref">Lend Engine-link</label>
+          <input type="button" id="auto-contact-ref" value="&#x1F50E;&#xFE0E;">
+          <div class="field-box-inner">
+            <input id="contact-ref" type="text" name="contactRef" maxlength="250"
+              placeholder="https://digi-mee.denideal.be/admin/contact/67">
+            <div class="error" data-for="contact-ref"></div>
+          </div>
+        </div>
+        <!-- Sociaal tarief sits here rather than with the betaalgegevens because
+             it has to be known before the prijs is looked up: ticking it after the
+             fact means the price has to be fetched again. -->
+        <div class="checkbox-box paying full-width">
+          <input id="social-tariff" type="checkbox" name="socialTariff">
+          <label for="social-tariff">Sociaal tarief (één derde van de normale prijs)</label>
+        </div>
+      </fieldset>
       <fieldset class="fieldset non-paying hidden">
         <legend>UiTPAS</legend>
         <div class="field-box">
@@ -177,8 +201,12 @@
       </fieldset>
       <fieldset class="fieldset non-paying paying hidden">
         <legend>Apparaat</legend>
+        <!-- One lookup button on the assettag fills merk, model, prijs en
+             cirkelwaarde: it is a single Lend Engine call, so splitting it over
+             the filled-in fields only made it look like several. -->
         <div class="field-box">
           <label for="asset-tag">Assettag</label>
+          <input type="button" id="auto-asset-tag" value="&#x1F50E;&#xFE0E;">
           <div class="field-box-inner">
             <input id="asset-tag" type="text" name="assetTag" maxlength="40" required pattern="^[A-Z]*\d{6}$">
             <div class="error" data-for="asset-tag"></div>
@@ -187,7 +215,6 @@
         <fieldset class="fieldsubset">
           <div class="field-box">
             <label for="device-brand">Merk</label>
-            <input type="button" id="auto-device-brand" value="&#x1F50E;&#xFE0E;">
             <div class="field-box-inner">
               <input id="device-brand" type="text" name="deviceBrand" required maxlength="40">
               <div class="error" data-for="device-brand"></div>
@@ -195,7 +222,6 @@
           </div>
           <div class="field-box">
             <label for="device-model">Model</label>
-            <input type="button" id="auto-device-model" value="&#x1F50E;&#xFE0E;">
             <div class="field-box-inner">
               <input id="device-model" type="text" name="deviceModel" required maxlength="40">
               <div class="error" data-for="device-model"></div>
@@ -242,6 +268,7 @@
         <legend>Oud materiaal</legend>
         <div class="field-box">
           <label for="old-asset-tag">Assettag</label>
+          <input type="button" id="auto-old-asset-tag" value="&#x1F50E;&#xFE0E;">
           <div class="field-box-inner">
             <input id="old-asset-tag" type="text" name="oldAssetTag" maxlength="40" required pattern="^[A-Z]*\d{6}$">
             <div class="error" data-for="old-asset-tag"></div>
@@ -250,7 +277,6 @@
         <fieldset class="fieldsubset">
           <div class="field-box">
             <label for="old-device-brand">Merk</label>
-            <input type="button" id="auto-old-device-brand" value="&#x1F50E;&#xFE0E;">
             <div class="field-box-inner">
               <input id="old-device-brand" type="text" name="oldDeviceBrand" required maxlength="40">
               <div class="error" data-for="old-device-brand"></div>
@@ -258,7 +284,6 @@
           </div>
           <div class="field-box">
             <label for="old-device-model">Model</label>
-            <input type="button" id="auto-old-device-model" value="&#x1F50E;&#xFE0E;">
             <div class="field-box-inner">
               <input id="old-device-model" type="text" name="oldDeviceModel" required maxlength="40">
               <div class="error" data-for="old-device-model"></div>
@@ -296,6 +321,7 @@
         <legend>Nieuw materiaal</legend>
         <div class="field-box">
           <label for="new-asset-tag">Assettag</label>
+          <input type="button" id="auto-new-asset-tag" value="&#x1F50E;&#xFE0E;">
           <div class="field-box-inner">
             <input id="new-asset-tag" type="text" name="newAssetTag" maxlength="40" required pattern="^[A-Z]*\d{6}$">
             <div class="error" data-for="new-asset-tag"></div>
@@ -304,7 +330,6 @@
         <fieldset class="fieldsubset">
           <div class="field-box">
             <label for="new-device-brand">Merk</label>
-            <input type="button" id="auto-new-device-brand" value="&#x1F50E;&#xFE0E;">
             <div class="field-box-inner">
               <input id="new-device-brand" type="text" name="newDeviceBrand" required maxlength="40">
               <div class="error" data-for="new-device-brand"></div>
@@ -312,7 +337,6 @@
           </div>
           <div class="field-box">
             <label for="new-device-model">Model</label>
-            <input type="button" id="auto-new-device-model" value="&#x1F50E;&#xFE0E;">
             <div class="field-box-inner">
               <input id="new-device-model" type="text" name="newDeviceModel" required maxlength="40">
               <div class="error" data-for="new-device-model"></div>
@@ -378,14 +402,14 @@
         <legend class="non-paying paying">Contractgegevens</legend>
         <fieldset class="fieldsubset">
           <div class="field-box">
-            <label for="client-number">Klantnummer</label>
+            <label for="client-number">Klantnummer</label>
             <div class="field-box-inner">
               <input id="client-number" type="text" name="clientNumber" maxlength="40" required>
               <div class="error" data-for="client-number"></div>
             </div>
           </div>
           <div class="field-box">
-            <label for="contract-number">Contractnummer</label>
+            <label for="contract-number">Contractnummer</label>
             <div class="field-box-inner">
               <input id="contract-number" type="text" name="contractNumber" maxlength="40" required>
               <div class="error" data-for="contract-number"></div>
@@ -427,14 +451,13 @@
       </fieldset>
       <fieldset class="fieldset paying hidden">
         <legend>Betaalgegevens</legend>
-        <div class="checkbox-box paying full-width">
-          <input id="social-tariff" type="checkbox" name="socialTariff">
-          <label for="social-tariff">Sociaal tarief (één derde van de normale prijs)</label>
-        </div>
+        <!-- Sociaal tarief staat bovenaan bij de klant: het moet gekend zijn
+             voordat de prijs opgehaald wordt. -->
         <fieldset class="fieldsubset">
+          <!-- Prijs en cirkelwaarde komen uit hetzelfde Lend Engine-record als
+               merk en model, en worden dus door de knop bij de assettag ingevuld. -->
           <div class="field-box payment-field">
             <label for="semester-payment">Prijs per 6 maanden</label>
-            <input type="button" id="auto-semester-payment" value="&#x1F50E;&#xFE0E;">
             <div class="field-box-inner">
               <input id="semester-payment" type="text" name="semesterPayment" maxlength="40" required>
               <div class="error" data-for="semester-payment"></div>
@@ -442,7 +465,6 @@
           </div>
           <div class="field-box payment-field">
             <label for="circle-value">Cirkelwaarde</label>
-            <input type="button" id="auto-circle-value" value="&#x1F50E;&#xFE0E;">
             <div class="field-box-inner">
               <input id="circle-value" type="text" name="circleValue" maxlength="40" required>
               <div class="error" data-for="circle-value"></div>

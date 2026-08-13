@@ -35,6 +35,10 @@ export async function generateContract() {
 
 	let data = Object.fromEntries(new FormData(form));
 
+	// The Lend Engine link is only a lookup key for filling the form; it is not
+	// part of the contract, so it never reaches the PDF.
+	delete data.contactRef;
+
 	Prompt.createProgressPrompt("Contract aan het genereren.", false).show();
 
 	try {

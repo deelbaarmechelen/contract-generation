@@ -424,6 +424,352 @@ function fetchInventoryData(assetTag, token) {
   });
 }
 
+/** Splits Lend Engine's single-line address into street, house number and bus.
+ * Lend Engine keeps the whole address in one field while the contract form has
+ * three, so the trailing number and any bus are peeled off.
+ *
+ * Belgians write a bus in a lot of ways, all of which turn up in practice:
+ *
+ *   Battelsesteenweg 48 bus 3     the official spelling
+ *   Battelsesteenweg 48 bus3      without the space
+ *   Battelsesteenweg 48 b 3       abbreviated, with or without a dot
+ *   Battelsesteenweg 48/3         the slash form
+ *   Battelsesteenweg 48 - 3       with a dash
+ *   Battelsesteenweg 48A          a letter suffix, which is part of the number
+ *   Battelsesteenweg 48 A         the same, written apart
+ *
+ * A lone trailing letter stays with the house number (48A is one number, not bus
+ * A); a bus is only recognised when a separator says so. Anything unparseable is
+ * left whole in the street so nothing is silently dropped. */
+function splitAddress(address) {
+  const empty = { streetName: '', houseNumber: '', boxNumber: '' };
+
+  if (typeof address !== 'string' || address.trim().length === 0) {
+    return empty;
+  }
+
+  const trimmed = address.trim();
+
+  // street | house number (digits + optional letter) | separator | bus
+  const withBox = trimmed.match(
+    /^(.*?)\s+(\d+\s*[A-Za-z]?)\s*(?:\/|-|\s(?:bus|bs|b\.?)\s*)\s*([\dA-Za-z]+)$/i
+  );
+  if (withBox) {
+    return {
+      streetName: withBox[1].trim(),
+      houseNumber: withBox[2].replace(/\s+/g, '').trim(),
+      boxNumber: withBox[3].trim(),
+    };
+  }
+
+  const withoutBox = trimmed.match(/^(.*?)\s+(\d+\s*[A-Za-z]?)$/);
+  if (withoutBox) {
+    return {
+      streetName: withoutBox[1].trim(),
+      houseNumber: withoutBox[2].replace(/\s+/g, '').trim(),
+      boxNumber: '',
+    };
+  }
+
+  return { streetName: trimmed, houseNumber: '', boxNumber: '' };
+}
+
+/** Undoes the obfuscation staff apply to email addresses in Lend Engine.
+ *
+ * Addresses are stored with the @ replaced (`naam_@_domein.be`, `naam_at_domein.be`)
+ * so Lend Engine cannot send the client mail Digi-Mee does not want sent. The
+ * contract has to show the real address, so the @ is put back here.
+ *
+ * Only a form that leaves exactly one @ in a plausible address is undone; anything
+ * else is returned untouched, so an address that genuinely contains "_at_" in its
+ * local part is not mangled. */
+function deobfuscateEmail(email) {
+  if (typeof email !== 'string' || email.trim().length === 0) {
+    return '';
+  }
+
+  const trimmed = email.trim();
+  const valid = (s) => /^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$/.test(s);
+
+  // Tried in order; the underscore-fenced @ comes first because it is the form
+  // that still contains a literal @ and so would otherwise pass for valid.
+  const patterns = [
+    /_+\s*@\s*_+/,          // _@_  (the @ is there but fenced off by underscores)
+    /_+\s*at\s*_+/i,        // _at_
+    /\(\s*at\s*\)/i,        // (at)
+    /\[\s*at\s*\]/i,        // [at]
+    /\s+at\s+/i,            // naam at domein.be
+  ];
+
+  for (const pattern of patterns) {
+    if (!pattern.test(trimmed)) {
+      continue;
+    }
+
+    const candidate = trimmed.replace(pattern, '@');
+
+    // Accept only if the result looks like a single, complete address. This is
+    // what stops "nathalie@gmail.com" being rewritten: removing the "at" there
+    // does not produce a valid address, so the original stands.
+    if (valid(candidate)) {
+      return candidate;
+    }
+  }
+
+  return trimmed;
+}
+
+/** Normalises a Belgian structured communication to the form the contract uses.
+ *
+ * The value is typed by hand into a Lend Engine custom field, so it turns up
+ * written every which way: `+++123/4567/89012+++`, `123/4567/89012`, `***…***`,
+ * with spaces, or as twelve bare digits. Only the digits carry meaning, so they
+ * are the only thing read; the +++ and / are put back here.
+ *
+ * Returns an empty string unless there are exactly twelve digits, so a partial or
+ * mistyped value is left for the user rather than filled in as though it were
+ * checked. The checksum is not verified here -- the form already validates that
+ * and shows the user what is wrong. */
+function formatStructuredCommunication(value) {
+  if (typeof value !== 'string') {
+    return '';
+  }
+
+  const digits = value.replace(/\D/g, '');
+  if (digits.length !== 12) {
+    return '';
+  }
+
+  return '+++' + digits.slice(0, 3) + '/' + digits.slice(3, 7) + '/' + digits.slice(7, 12) + '+++';
+}
+
+/** Lend Engine serialises an empty custom field set as `[]` (a PHP empty array)
+ * and a populated one as an object keyed by the admin-facing label. Normalises
+ * both to a plain object so callers can index it safely. */
+function customFieldMap(customFields) {
+  if (!customFields || Array.isArray(customFields)) {
+    return {};
+  }
+  return typeof customFields === 'object' ? customFields : {};
+}
+
+/** Reads a custom field by label. The keys are display labels typed by Lend
+ * Engine administrators, so a rename silently removes the value rather than
+ * breaking the lookup: matching ignores case and surrounding whitespace, and a
+ * miss simply yields an empty string. */
+function customField(customFields, label) {
+  const fields = customFieldMap(customFields);
+  const wanted = label.trim().toLowerCase();
+
+  for (const [key, value] of Object.entries(fields)) {
+    if (key.trim().toLowerCase() === wanted) {
+      return typeof value === 'string' ? value : '';
+    }
+  }
+
+  return '';
+}
+
+/** Words that appear in the path of a Lend Engine page about a contact. */
+const CONTACT_PATH_WORDS = ['contact', 'contacts', 'member', 'members', 'customer'];
+
+/** Pulls the contact id out of what the user pasted. Accepts a Lend Engine URL
+ * (the address bar of the client's page, e.g. ".../admin/contact/67") or a bare
+ * id.
+ *
+ * A URL must name a contact somewhere in its path. Lend Engine's admin URLs for
+ * items, loans and payments look the same apart from that word, and every id is
+ * a valid contact id, so taking the number from any URL would quietly load an
+ * unrelated client instead of failing. Returns:
+ *   { id }            the contact id
+ *   { error: '...' }  what was pasted, explained
+ */
+function parseContactRef(input) {
+  const trimmed = String(input ?? '').trim();
+  if (trimmed === '') {
+    return { error: 'Plak de link naar de klant in Lend Engine, of typ het nummer.' };
+  }
+
+  // A bare id, possibly with a prefix like "DA-67" as used on the klantnummer.
+  const bare = trimmed.match(/^[A-Za-z]*[-\s]?(\d+)$/);
+  if (bare) {
+    return { id: bare[1] };
+  }
+
+  const looksLikeUrl = /^https?:\/\//i.test(trimmed) || trimmed.includes('/');
+  if (!looksLikeUrl) {
+    return { error: 'Geen nummer gevonden. Plak de link naar de klant in Lend Engine, of typ het nummer.' };
+  }
+
+  // Only the path is considered: a query string or fragment can carry numbers
+  // that have nothing to do with which record the page is about.
+  let pathname;
+  try {
+    pathname = new URL(trimmed, 'https://' + LENDENGINE_HOST).pathname;
+  } catch {
+    pathname = trimmed.split(/[?#]/)[0];
+  }
+
+  const segments = pathname.split('/').filter((s) => s.length > 0);
+  const wordIndex = segments.findIndex((s) => CONTACT_PATH_WORDS.includes(s.toLowerCase()));
+
+  if (wordIndex === -1) {
+    // Name the entity the link is actually about, so the mistake is obvious.
+    const entity = segments.find((s) => /^[A-Za-z][A-Za-z-]*$/.test(s) && s.toLowerCase() !== 'admin');
+    const what = entity ? `een "${entity}"-pagina` : 'geen klantenpagina';
+    return {
+      error: `Deze link wijst naar ${what}, niet naar een klant. Open de klant in Lend Engine en kopieer die link.`
+    };
+  }
+
+  // The id follows the contact segment; fall back to the last number in the path
+  // for shapes like /contact/67/edit where a later segment is not the id.
+  const after = segments.slice(wordIndex + 1).find((s) => /^\d+$/.test(s));
+  if (after) {
+    return { id: after };
+  }
+
+  return {
+    error: 'Geen klantnummer in deze link gevonden. Open de klant in Lend Engine en kopieer die link.'
+  };
+}
+
+async function handleGetContact(event, data) {
+  const ref = parseContactRef(data?.contactRef);
+
+  if (ref.error) {
+    return {
+      success: false,
+      error: ref.error
+    };
+  }
+
+  const contactId = ref.id;
+
+  if (!store.has('lendengine-refresh-token')) {
+    return {
+      success: false,
+      error: 'Geen API-sleutel ingesteld. Geef er een in met Ctrl + ,'
+    };
+  }
+
+  try {
+    let contact;
+    try {
+      contact = await fetchContactData(contactId, await getAccessToken());
+    } catch (error) {
+      if (!error.unauthorized) {
+        throw error;
+      }
+      contact = await fetchContactData(contactId, await getAccessToken(true));
+    }
+
+    const { streetName, houseNumber, boxNumber } = splitAddress(contact.address);
+
+    return {
+      success: true,
+      contact: {
+        // The klantnummer is not searchable, so it comes back from the record
+        // rather than being what was typed in. It fills the Klantnummer field.
+        membershipNumber: contact.membershipNumber || '',
+        firstName: contact.firstName || '',
+        lastName: contact.lastName || '',
+        streetName,
+        houseNumber,
+        boxNumber,
+        municipality: contact.city || '',
+        postalCode: contact.postcode || '',
+        countryIsoCode: contact.countryIsoCode || '',
+        // Staff obfuscate addresses in Lend Engine to stop it mailing clients;
+        // the contract needs the real one.
+        email: deobfuscateEmail(contact.email),
+        phoneNumber: contact.telephone || '',
+        // Hand-typed in Lend Engine, so only the digits are trusted and the
+        // +++___/____/_____+++ layout is rebuilt from them.
+        structuredCommunication: formatStructuredCommunication(
+          customField(contact.customFields, 'Gestructureerde Mededeling')
+        ),
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching contact data:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/** Looks a contact up in Lend Engine by its id.
+ *
+ * The collection endpoint only filters on email, firstName, lastName, isActive and
+ * createdAt -- there is no membershipNumber filter, and API Platform silently
+ * ignores unknown query parameters, so filtering on it would return page one of
+ * every contact instead of an error. Fetching the single record by id keeps the
+ * lookup to one request and, importantly, pulls only the one client's data onto
+ * the machine rather than the whole client list. */
+function fetchContactData(contactId, token) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: LENDENGINE_HOST,
+      path: '/api/2/contacts/' + encodeURIComponent(contactId),
+      method: 'GET',
+      headers: {
+        'Accept': 'application/ld+json',
+        'Authorization': 'Bearer ' + token,
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      res.on('end', () => {
+        if (res.statusCode === 401 || res.statusCode === 403) {
+          const error = new Error('Toegang geweigerd door Lend Engine.');
+          error.unauthorized = true;
+          reject(error);
+          return;
+        }
+
+        if (res.statusCode === 404) {
+          reject(new Error(`Geen klant gevonden met nummer ${contactId}.`));
+          return;
+        }
+
+        if (res.statusCode !== 200) {
+          reject(new Error(`Request failed with status code ${res.statusCode}`));
+          return;
+        }
+
+        let parsed;
+        try {
+          parsed = JSON.parse(data);
+        } catch {
+          reject(new Error('Could not read the response from Lend Engine'));
+          return;
+        }
+
+        if (!parsed || parsed.id === undefined) {
+          reject(new Error('Onleesbaar antwoord van Lend Engine bij het opzoeken van de klant.'));
+          return;
+        }
+
+        resolve(parsed);
+      });
+    });
+
+    req.on('error', (e) => {
+      reject(e);
+    });
+
+    req.end();
+  });
+}
+
 /** Opens a URL in the user's default browser.
  * Only http(s) is allowed: shell.openExternal hands the string to the OS handler,
  * so other schemes (file:, javascript:, custom app protocols) could launch local
@@ -453,6 +799,7 @@ app.whenReady().then(() => {
   ipcMain.handle('dialog:openFile', handleFileOpen);
   ipcMain.handle('generatePdf', handleRenderPdf);
   ipcMain.handle('getAsset', handleGetAsset);
+  ipcMain.handle('getContact', handleGetContact);
   ipcMain.handle('formatPhoneNumber', formatPhoneNumber);
   ipcMain.handle('extractIbanNumber', extractIbanNumber);
   ipcMain.handle('formatIbanNumber', formatIbanNumber);

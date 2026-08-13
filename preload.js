@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld('carbone', {
 
 contextBridge.exposeInMainWorld('inventoryAPI', {
 	getAssetDetails: (data) => ipcRenderer.invoke('getAsset', data),
+	getContactDetails: (data) => ipcRenderer.invoke('getContact', data),
 	setSnipeApiKey: (key) => ipcRenderer.invoke('setSnipeApiKey', key)
 })
 

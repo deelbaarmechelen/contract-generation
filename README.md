@@ -95,16 +95,81 @@ Vink **Sociaal tarief** aan voor klanten met een verhoogde tegemoetkoming. De
 prijs per 6 maanden wordt dan automatisch één derde van de normale prijs. De
 cirkelwaarde verandert niet.
 
+Het vinkje staat bovenaan bij de klantgegevens, omdat het gekend moet zijn
+voordat de prijs opgehaald wordt. Vink je het pas achteraf aan, dan verandert de
+al ingevulde prijs **niet** vanzelf — het veld *Prijs per 6 maanden* geeft dan
+een waarschuwing dat het bedrag niet meer bij het tarief past, met het bedrag dat
+het wél zou moeten zijn. Klik opnieuw op 🔎 bij de assettag, of pas het bedrag
+met de hand aan.
+
+Een prijs die je zelf intypte wordt niet gecontroleerd: de app weet dan niet wat
+het bedrag zou moeten zijn.
+
 ---
 
 ## Een contract maken
 
-1. Vul de gegevens van de klant in.
-2. Vul het T-nummer van het toestel in en klik op 🔎 om merk en model op te
-   halen.
-3. Klik op 🔎 naast *Prijs per 6 maanden* om de prijs op te halen.
-4. Klik onderaan op verzenden. Kies een map en de PDF wordt daar opgeslagen en
+1. Zoek de klant op in Lend Engine en kopieer de link uit de adresbalk van hun
+   pagina. Plak die bovenaan bij *Lend Engine-link* en klik op 🔎.
+2. Klantnummer, naam, adres, e-mailadres en telefoonnummer worden ingevuld.
+   Kijk na of het de juiste klant is.
+3. Vink *Sociaal tarief* aan als de klant een verhoogde tegemoetkoming heeft.
+   Doe dat vóór stap 5: het vinkje wordt gelezen op het moment dat je de prijs
+   opvraagt.
+4. Vul de overige gegevens van de klant aan.
+5. Vul het T-nummer van het toestel in en klik op 🔎. Merk, model, prijs per
+   6 maanden en cirkelwaarde worden in één keer ingevuld.
+6. Klik onderaan op verzenden. Kies een map en de PDF wordt daar opgeslagen en
    meteen geopend.
+
+Elke opzoeking heeft één 🔎-knop, en die staat telkens naast het veld dat je
+zelf invult: de link bij de klant, het T-nummer bij het toestel. De velden die
+daarmee ingevuld worden, hebben zelf geen knop meer.
+
+De link naar de klant komt zelf niet op het contract; ze dient enkel om de
+gegevens op te halen.
+
+> **Waarom een link en geen klantnummer?** De API van Lend Engine kan niet op
+> klantnummer zoeken. Ze kan enkel zoeken op e-mailadres, voornaam, achternaam
+> en aanmaakdatum, of één klant ophalen via het nummer in de link. Daarom vult
+> de app het klantnummer net andersom in: het komt uit de opgehaalde klant.
+
+> **Controleer altijd de ingevulde naam.** Omdat er op nummer wordt opgezocht,
+> geeft een verkeerd geplakte link gewoon een *andere* klant terug in plaats van
+> een foutmelding.
+
+Plak je per ongeluk de link van een toestel of een uitlening, dan meldt de app
+dat de link niet naar een klant wijst. De app gebruikt dat nummer dus niet: elk
+nummer bestaat ook als klantnummer, dus anders zou er zomaar een willekeurige
+andere klant ingevuld worden.
+
+De opzoeking overschrijft nooit een veld dat al ingevuld is met een leeg
+antwoord. Wat in Lend Engine leeg staat, blijft dus staan zoals jij het typte.
+
+**Adressen** staan in Lend Engine op één lijn. De app splitst ze in straatnaam,
+huisnummer en bus. De gangbare Belgische schrijfwijzen worden herkend:
+`48 bus 3`, `48 bus3`, `48 b 3`, `48 bs 3`, `48/3` en `48 - 3`. Een losse letter
+achter het nummer (`48A`) hoort bij het huisnummer, niet bij de bus.
+
+**E-mailadressen** worden in Lend Engine bewust verminkt (`naam_@_domein.be`,
+`naam_at_domein.be`) zodat Lend Engine de klant geen mails stuurt. Op het
+contract hoort het echte adres te staan, dus de app zet de `@` terug. Adressen
+die al gewoon geschreven zijn, blijven ongemoeid — ook als er toevallig "at" in
+staat, zoals *nathalie@…*.
+
+> Staat er in Lend Engine bij de klant een *Gestructureerde Mededeling*, dan
+> wordt die overgenomen. Anders blijft de mededeling die de app zelf berekent
+> staan.
+
+**De gestructureerde mededeling** wordt met de hand ingetypt in Lend Engine en
+staat er dus in allerlei schrijfwijzen: `+++123/4567/89012+++`, `123/4567/89012`,
+`***123/4567/89012***`, met spaties, of gewoon twaalf cijfers na elkaar. De app
+kijkt enkel naar de cijfers en zet de `+++` en `/` zelf terug.
+
+Staan er geen twaalf cijfers, dan wordt het veld níét ingevuld: een half of fout
+overgetypt nummer laat de app liever open dan het als gecontroleerd op het
+contract te zetten. Het controlegetal wordt daarna nog door het formulier zelf
+nagerekend.
 
 ---
 

@@ -13,6 +13,8 @@ export function testFill() {
 		form.contractType.value = "non-paying";
 	}
 
+	form.clientNumber.value = "1000001";
+
 	form.firstName.value = "Pietje";
 	form.lastName.value = "De Laptopwiller";
 	form.birthDate.valueAsDate = new Date("1995-12-17T03:24:00");
@@ -28,8 +30,6 @@ export function testFill() {
 	form.phoneNumber.value = "0469123123";
 
 	form.referrer.value = "Sinterklaas";
-
-	form.clientNumber.value = "1000001";
 
 	form.assetTag.value = "PC990200";
 	form.deviceBrand.value = "LapInc.";

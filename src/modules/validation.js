@@ -1,7 +1,8 @@
 import { form } from "./formelements.js";
 import { fillErrorDiv } from "./display.js";
-import { getAge, formatPhoneNumber, extractIbanNumber, isSameDay, euroStrToNum } from "./utility.js";
+import { getAge, formatPhoneNumber, extractIbanNumber, isSameDay, euroStrToNum, formatEuro } from "./utility.js";
 import { postalCodesMechelen } from "./constants.js";
+import { expectedPayable } from "./pricing.js";
 
 /** Applies custom validity message to field if condition fails. */
 function customValidate(field, condition, invalidMessage) {
@@ -82,16 +83,30 @@ const validate = {
 		);
 	},
 
-	/** Warns the user if the amount does not look like a euro amount. Prices come
-	 * from Lend Engine rather than a table in this app, so there is no fixed
-	 * expected amount to check against -- only that what is typed parses. */
+	/** Warns the user if the amount does not look like a euro amount, or if it
+	 * differs from what Lend Engine's price comes to under the tariff that is
+	 * ticked now.
+	 *
+	 * The price is filled in when the user presses the magnifier and never
+	 * rewrites itself afterwards, so this is what reports that the field and the
+	 * fetched price have drifted apart -- whether that is because the sociaal
+	 * tarief was toggled or because the amount was edited by hand. When no price
+	 * has been fetched there is nothing to compare against and the field is left
+	 * alone. */
 	semesterPayment () {
 		const value = form.semesterPayment.value;
-		const condition = value.trim().length === 0 || !Number.isNaN(euroStrToNum(value));
+
+		if (value.trim().length > 0 && Number.isNaN(euroStrToNum(value))) {
+			customValidate(form.semesterPayment, false, "Onleesbaar bedrag.");
+			return
+		}
+
+		const expected = expectedPayable(form.socialTariff.checked);
 
 		customValidate(
-			form.semesterPayment, condition,
-			"Onleesbaar bedrag."
+			form.semesterPayment,
+			expected === null || euroStrToNum(value) === expected,
+			`Volgens Lend Engine is dit ${formatEuro(expected)}${form.socialTariff.checked ? " met sociaal tarief" : ""}. Klik opnieuw op 🔎 of pas het bedrag aan.`
 		);
 	},
 
@@ -132,7 +147,10 @@ const validate = {
 
 /** Contains information about what validation functions depend on what prior field values. */
 const validationDependencies = {
-	postalCode: ["uitpasException"]
+	postalCode: ["uitpasException"],
+	// Toggling the tariff does not rewrite the price, so re-check whether the two
+	// still agree and warn on the field if they do not.
+	semesterPayment: ["socialTariff"]
 }
 
 export function initValidation() {
