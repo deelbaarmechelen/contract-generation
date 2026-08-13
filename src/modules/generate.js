@@ -7,12 +7,6 @@ function showFinalPrompt() {
 		content: "Contract succesvol gegenereerd.",
 		buttons: [
 			{
-				text: "\u{1F517}\uFE0E BEEGO",
-				onClick() {
-					window.openExternal.openExternal(linkUrls['beego']);
-				}
-			},
-			{
 				text: "\u{1F517}\uFE0E Lend Engine",
 				onClick() {
 					window.openExternal.openExternal(linkUrls['lendengine']);

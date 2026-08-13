@@ -1,8 +1,7 @@
 // De links naar het klantnummer- en contractnummeroverzicht wezen naar een
 // SharePoint van Ecoso. Die omgeving bestaat niet meer, dus de knoppen ernaast
-// zijn uit het formulier gehaald.
+// zijn uit het formulier gehaald. BEEGO is om dezelfde reden weg.
 export const linkUrls = {
-	beego: "https://platform.digi-portaal.be/login",
 	lendengine: "https://digi-mee.denideal.be/admin/"
 }
 
