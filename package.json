@@ -27,11 +27,11 @@
     "electron": "^43.4.0",
     "electron-mocha": "^13.1.0",
     "eslint": "^10.8.1",
-    "globals": "^17.10.0",
+    "globals": "^17.11.0",
     "mocha": "^11.8.0"
   },
   "dependencies": {
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.4.2",
     "electron-log": "^5.4.4",
     "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^11.0.2",

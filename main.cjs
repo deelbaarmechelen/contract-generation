@@ -18,7 +18,9 @@ const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 
 const ibantools = require('ibantools');
 
-require('dotenv').config();
+// `quiet: true` keeps dotenv v17 from logging an "injected env" line on every
+// start; v16 was silent by default and the flag restores that.
+require('dotenv').config({ quiet: true });
 
 const debugging = false;
 
