@@ -67,21 +67,6 @@ export function formatDateLong(date) {
 	return date ? date.toLocaleDateString("nl-BE", { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
 }
 
-/** Calculates a person's age according to their birth date. 
- * Shamelessly stolen from codeandcloud on StackExchange.
- * https://stackoverflow.com/a/7091965/15709119
- * CC BY-SA 3.0 applicable */
-export function getAge(birthDate) {
-	var today = new Date();
-	var age = today.getFullYear() - birthDate.getFullYear();
-	var m = today.getMonth() - birthDate.getMonth();
-	if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-		age--;
-	}
-	return age;
-}
-
-
 export function isSameDay(a, b) {
 	return a.getFullYear() == b.getFullYear()
 		&& a.getMonth() == b.getMonth()

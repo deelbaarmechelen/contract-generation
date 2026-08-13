@@ -1,6 +1,6 @@
 import { form } from "./formelements.js";
 import { fillErrorDiv } from "./display.js";
-import { getAge, formatPhoneNumber, extractIbanNumber, isSameDay, euroStrToNum, formatEuro } from "./utility.js";
+import { formatPhoneNumber, extractIbanNumber, isSameDay, euroStrToNum, formatEuro } from "./utility.js";
 import { postalCodesMechelen } from "./constants.js";
 import { expectedPayable } from "./pricing.js";
 
@@ -19,17 +19,6 @@ function customValidate(field, condition, invalidMessage) {
 
 /** Contains all field validation functions. */
 const validate = {
-	/** Validates that customer is at least 18 years of age. */
-	birthDate () {
-		const birthDate = form.birthDate.valueAsDate;
-		const condition = birthDate === null || getAge(birthDate) >= 18; // If `birthDate === null` we want to let normal input validation handle it.
-
-		customValidate(
-			form.birthDate, condition,
-			"Klant is onder 18."
-		);
-	},
-
 	/** Validates postal code. Only Mechelaars can get a non-paying contract, unless they have an exception. */
 	postalCode () {
 		const condition = !(form.contractType.value == "non-paying") 

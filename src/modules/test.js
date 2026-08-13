@@ -17,7 +17,6 @@ export function testFill() {
 
 	form.firstName.value = "Pietje";
 	form.lastName.value = "De Laptopwiller";
-	form.birthDate.valueAsDate = new Date("1995-12-17T03:24:00");
 
 	form.streetName.value = "Ergensstraat";
 	form.houseNumber.value = "1337";
@@ -54,7 +53,6 @@ export function testFill() {
 		// clicking the autofill buttons (which would need a live API lookup).
 		form.semesterPayment.value = "€ 60";
 		form.circleValue.value = "€ 60";
-		form.advancePayment.value = "€ 50";
 	} else if (form.contractType.value == "addendum") {
 		form.contractNumber.value = "C-B-25-100002";
 		form.replacement.checked = true;
